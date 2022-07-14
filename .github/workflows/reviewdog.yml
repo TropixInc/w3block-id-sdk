@@ -1,0 +1,17 @@
+name: reviewdog
+on:
+  pull_request:
+    types: [synchronize, opened]
+jobs:
+  eslint:
+    name: runner / eslint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.17.x
+      - run: npm install
+      - uses: reviewdog/action-eslint@v1
+        with:
+          reporter: github-pr-review
