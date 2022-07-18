@@ -28,3 +28,9 @@ main().then(() => {
 
 
 ```
+
+
+
+## Generate Api from Swagger
+
+`SWAGGER_JSON_PATH=http://localhost:6007/sdk-json npm run gen:api`

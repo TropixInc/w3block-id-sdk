@@ -1,5 +1,5 @@
 // import 'dotenv/config';
-// import { PixChain, ERC721Sample } from '@tropixinc/pixwayid-sdk';
+// import {  } from '@tropixinc/pixwayid-sdk';
 
 // async function main() {
 //   const address = '0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9';
