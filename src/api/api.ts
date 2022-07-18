@@ -1,11 +1,9 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
- * ##                                                           ##
- * ## AUTHOR: acacode                                           ##
  * ## SOURCE: https://github.com/acacode/swagger-typescript-api ##
  * ---------------------------------------------------------------
  */
@@ -145,8 +143,8 @@ export class HttpClient<SecurityDataType = unknown> {
         property instanceof Blob
           ? property
           : typeof property === 'object' && property !== null
-            ? JSON.stringify(property)
-            : `${property}`,
+          ? JSON.stringify(property)
+          : `${property}`,
       );
       return formData;
     }, new FormData());

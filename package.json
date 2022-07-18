@@ -27,7 +27,7 @@
     "git:commit": "git-cz",
     "git": "npm run git:add && npm run git:commit",
     "check-types": "tsc --incremental false --noEmit",
-    "gen:api": "swagger-typescript-api -p ${SWAGGER_JSON_PATH} -o ./src/api -n api.ts --axios"
+    "gen:api": "node tools/generate-api.js"
   },
   "publishConfig": {
     "access": "restricted",
