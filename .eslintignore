@@ -3,5 +3,5 @@
 *.test.js
 *.test.ts
 dist
-src/api
 src/api/index.ts
+tools/generate-api.js
