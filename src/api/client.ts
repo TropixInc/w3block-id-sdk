@@ -1,8 +1,11 @@
 import { Api } from './api';
 import { ClientOptions, isUserCredential, isAppCredential, UserCredential, AppCredential } from '../interfaces';
+import { AxiosError, AxiosRequestConfig } from 'axios';
+
+export type ApiSecurityDataType = { bearer: string };
 
 export class Client {
-  api: Api<any>;
+  api: Api<ApiSecurityDataType>;
   authToken = '';
   refreshToken = '';
   options: ClientOptions;
@@ -10,14 +13,27 @@ export class Client {
   constructor(options: ClientOptions) {
     this.options = options;
 
-    this.api = new Api({
+    this.api = new Api<ApiSecurityDataType>({
       baseURL: options.baseURL || 'https://api.pixwayid.io',
+      securityWorker: (securityData): AxiosRequestConfig => {
+        if (!securityData?.bearer) {
+          return {};
+        }
+
+        return {
+          headers: {
+            Authorization: `Bearer ${securityData?.bearer}`,
+          },
+        };
+      },
     });
 
     this.hookInterceptors();
   }
 
   private hookInterceptors() {
+    const refreshTokenUsed = new Set<string>();
+
     this.api.instance.interceptors.request.use((config) => {
       // TODO hook token refresh
       return config;
@@ -27,11 +43,19 @@ export class Client {
       (response) => {
         return response;
       },
-      async (error) => {
-        if (error.response.status === 401 && this.authToken) {
+      async (error: AxiosError) => {
+        if (
+          error?.response?.status === 401 &&
+          this.authToken &&
+          this.refreshToken &&
+          !refreshTokenUsed.has(this.refreshToken)
+        ) {
+          refreshTokenUsed.add(this.refreshToken);
+
           try {
             await this.refreshTokens();
           } catch (error) {
+            console.error('Refresh token failed', error?.response?.data);
             this.clearTokens();
           }
         }
@@ -57,7 +81,7 @@ export class Client {
   }
 
   public isAuthenticated(): boolean {
-    return this.authToken !== '';
+    return this.authToken.length > 0;
   }
 
   public getAuthToken(): string {
@@ -88,7 +112,8 @@ export class Client {
     }
 
     this.authToken = data.token;
-    this.api.setSecurityData({ token: this.authToken });
+    this.refreshToken = data.refreshToken;
+    this.api.setSecurityData({ bearer: this.authToken });
 
     return data.token;
   }
