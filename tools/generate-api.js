@@ -21,9 +21,7 @@ generateApi({
     name: FILENAME,
     url: process.env.SWAGGER_JSON_PATH || 'http://localhost:6007/sdk-json',
     httpClientType: 'axios',
-    filePrefix: ` /* eslint-disable */
-`,
-
+    generateRouteTypes: true,
   })
   .then(({ files, configuration }) => {
     files.forEach(({ content, name }) => {

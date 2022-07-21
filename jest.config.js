@@ -15,5 +15,8 @@ module.exports = {
   },
   setupFiles: [
     "<rootDir>/test/setupTests.ts"
-  ]
+  ],
+  "bail": 1,
+  "verbose": true,
+  testTimeout: 30000,
 }
