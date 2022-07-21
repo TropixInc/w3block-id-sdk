@@ -19,6 +19,10 @@ export type Credential = UserCredential | AppCredential;
 export interface ClientOptions {
   credential: UserCredential | AppCredential;
   baseURL?: string;
+  tokens?: {
+    authToken: string;
+    refreshToken: string;
+  };
 }
 
 export const isUserCredential = (credential: Credential): credential is UserCredential => {
