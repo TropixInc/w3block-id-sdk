@@ -1,6 +1,6 @@
 {
   "name": "@tropixinc/pixwayid-sdk",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Pixway ID SDK",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -96,6 +96,8 @@
     }
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": "^16.13.2",
+    "npm": "^8.1.2",
+    "yarn": "use npm!"
   }
 }
