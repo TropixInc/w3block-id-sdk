@@ -42,7 +42,8 @@ jobs:
       - name: Setup .npmrc file to publish to GitHub Packages
         uses: actions/setup-node@v1
         with:
-          node-version: '14.x'
+          node-version: ^16.13.2
+          npm_version: ^8.1.2
           registry-url: 'https://npm.pkg.github.com'
           scope: '@tropixinc'
       - run: npm run addscope

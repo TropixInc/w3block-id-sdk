@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/TropixInc/pixwayid-sdk/compare/v0.0.3...v0.0.4) (2022-07-22)
+
+
+### Features
+
+* add auth token auto refresh ([374b77a](https://github.com/TropixInc/pixwayid-sdk/commit/374b77af2bfab6c0bd6c7c61f3107164dddf0dab))
+
+
+### Bug Fixes
+
+* fix jest axios requests ([#4](https://github.com/TropixInc/pixwayid-sdk/issues/4)) ([94629c9](https://github.com/TropixInc/pixwayid-sdk/commit/94629c946fd9aa9b4620935b849d7210261df44c))
+
 ### [0.0.3](https://github.com/TropixInc/pixwayid-sdk/compare/v0.0.1...v0.0.3) (2022-07-21)
 
 
