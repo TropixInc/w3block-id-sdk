@@ -16,13 +16,14 @@ export interface AppCredential {
 
 export type Credential = UserCredential | AppCredential;
 
-export interface ClientOptions {
+export interface PixwayIdSDKOptions {
   credential: UserCredential | AppCredential;
   baseURL?: string;
   tokens?: {
     authToken: string;
     refreshToken: string;
   };
+  autoRefresh?: boolean;
 }
 
 export const isUserCredential = (credential: Credential): credential is UserCredential => {
