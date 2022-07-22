@@ -1,0 +1,1257 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/tenant": {
+      "post": {
+        "operationId": "create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantEntityDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbstractBase"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant/{id}": {
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "Need user with one of these roles: superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTenantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "403": {
+            "description": "Need user with one of these roles: superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "Need user with one of these roles: superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant/profile/{id}": {
+      "put": {
+        "operationId": "updateProfile",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTenantProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "403": {
+            "description": "Need user with one of these roles: superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/verify-sign-up": {
+      "get": {
+        "operationId": "verifySignUp",
+        "parameters": [
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "example": "user@example.com",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect the user to the sign in page."
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/request-confirmation-email": {
+      "post": {
+        "operationId": "requestConfirmationEmail",
+        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestConfirmationEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/request-password-reset": {
+      "post": {
+        "operationId": "requestPasswordReset",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPasswordResetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "operationId": "resetPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/signin": {
+      "post": {
+        "operationId": "signIn",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "operationId": "refreshToken",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "logOut",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/jwks.json": {
+      "get": {
+        "operationId": "getJWKS",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Pixway ID",
+    "description": "",
+    "version": "0.1.3",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "http://localhost:6007",
+      "description": "Pixway ID Server",
+      "variables": {}
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "name": "JWT",
+        "description": "Enter JWT token",
+        "in": "header"
+      }
+    },
+    "schemas": {
+      "CountryCodeEnum": {
+        "type": "string",
+        "enum": [
+          "BGD",
+          "BEL",
+          "BFA",
+          "BGR",
+          "BIH",
+          "BRB",
+          "WLF",
+          "BLM",
+          "BMU",
+          "BRN",
+          "BOL",
+          "BHR",
+          "BDI",
+          "BEN",
+          "BTN",
+          "JAM",
+          "BVT",
+          "BWA",
+          "WSM",
+          "BES",
+          "BRA",
+          "BHS",
+          "JEY",
+          "BLR",
+          "BLZ",
+          "RUS",
+          "RWA",
+          "SRB",
+          "TLS",
+          "REU",
+          "TKM",
+          "TJK",
+          "ROU",
+          "TKL",
+          "GNB",
+          "GUM",
+          "GTM",
+          "SGS",
+          "GRC",
+          "GNQ",
+          "GLP",
+          "JPN",
+          "GUY",
+          "GGY",
+          "GUF",
+          "GEO",
+          "GRD",
+          "GBR",
+          "GAB",
+          "SLV",
+          "GIN",
+          "GMB",
+          "GRL",
+          "GIB",
+          "GHA",
+          "OMN",
+          "TUN",
+          "JOR",
+          "HRV",
+          "HTI",
+          "HUN",
+          "HKG",
+          "HND",
+          "HMD",
+          "VEN",
+          "PRI",
+          "PSE",
+          "PLW",
+          "PRT",
+          "SJM",
+          "PRY",
+          "IRQ",
+          "PAN",
+          "PYF",
+          "PNG",
+          "PER",
+          "PAK",
+          "PHL",
+          "PCN",
+          "POL",
+          "SPM",
+          "ZMB",
+          "ESH",
+          "EST",
+          "EGY",
+          "ZAF",
+          "ECU",
+          "ITA",
+          "VNM",
+          "SLB",
+          "ETH",
+          "SOM",
+          "ZWE",
+          "SAU",
+          "ESP",
+          "ERI",
+          "MNE",
+          "MDA",
+          "MDG",
+          "MAF",
+          "MAR",
+          "MCO",
+          "UZB",
+          "MMR",
+          "MLI",
+          "MAC",
+          "MNG",
+          "MHL",
+          "MKD",
+          "MUS",
+          "MLT",
+          "MWI",
+          "MDV",
+          "MTQ",
+          "MNP",
+          "MSR",
+          "MRT",
+          "IMN",
+          "UGA",
+          "TZA",
+          "MYS",
+          "MEX",
+          "ISR",
+          "FRA",
+          "IOT",
+          "SHN",
+          "FIN",
+          "FJI",
+          "FLK",
+          "FSM",
+          "FRO",
+          "NIC",
+          "NLD",
+          "NOR",
+          "NAM",
+          "VUT",
+          "NCL",
+          "NER",
+          "NFK",
+          "NGA",
+          "NZL",
+          "NPL",
+          "NRU",
+          "NIU",
+          "COK",
+          "XKX",
+          "CIV",
+          "CHE",
+          "COL",
+          "CHN",
+          "CMR",
+          "CHL",
+          "CCK",
+          "CAN",
+          "COG",
+          "CAF",
+          "COD",
+          "CZE",
+          "CYP",
+          "CXR",
+          "CRI",
+          "CUW",
+          "CPV",
+          "CUB",
+          "SWZ",
+          "SYR",
+          "SXM",
+          "KGZ",
+          "KEN",
+          "SSD",
+          "SUR",
+          "KIR",
+          "KHM",
+          "KNA",
+          "COM",
+          "STP",
+          "SVK",
+          "KOR",
+          "SVN",
+          "PRK",
+          "KWT",
+          "SEN",
+          "SMR",
+          "SLE",
+          "SYC",
+          "KAZ",
+          "CYM",
+          "SGP",
+          "SWE",
+          "SDN",
+          "DOM",
+          "DMA",
+          "DJI",
+          "DNK",
+          "VGB",
+          "DEU",
+          "YEM",
+          "DZA",
+          "USA",
+          "URY",
+          "MYT",
+          "UMI",
+          "LBN",
+          "LCA",
+          "LAO",
+          "TUV",
+          "TWN",
+          "TTO",
+          "TUR",
+          "LKA",
+          "LIE",
+          "LVA",
+          "TON",
+          "LTU",
+          "LUX",
+          "LBR",
+          "LSO",
+          "THA",
+          "ATF",
+          "TGO",
+          "TCD",
+          "TCA",
+          "LBY",
+          "VAT",
+          "VCT",
+          "ARE",
+          "AND",
+          "ATG",
+          "AFG",
+          "AIA",
+          "VIR",
+          "ISL",
+          "IRN",
+          "ARM",
+          "ALB",
+          "AGO",
+          "ATA",
+          "ASM",
+          "ARG",
+          "AUS",
+          "AUT",
+          "ABW",
+          "IND",
+          "ALA",
+          "AZE",
+          "IRL",
+          "IDN",
+          "UKR",
+          "QAT",
+          "MOZ"
+        ]
+      },
+      "CreateTenantDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "document": {
+            "type": "string"
+          },
+          "countryCode": {
+            "example": "BRA",
+            "$ref": "#/components/schemas/CountryCodeEnum"
+          }
+        },
+        "required": [
+          "name",
+          "document",
+          "countryCode"
+        ]
+      },
+      "TenantEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "document": {
+            "type": "string"
+          },
+          "countryCode": {
+            "default": "BRA",
+            "example": "BRA",
+            "$ref": "#/components/schemas/CountryCodeEnum"
+          },
+          "wallets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "client": {
+            "type": "object"
+          },
+          "clientId": {
+            "type": "object"
+          },
+          "info": {
+            "type": "object"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "document",
+          "countryCode",
+          "wallets",
+          "info"
+        ]
+      },
+      "HttpExceptionDto": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "statusCode": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "timestamp",
+          "path",
+          "error",
+          "statusCode",
+          "message"
+        ]
+      },
+      "OrderByEnum": {
+        "type": "string",
+        "enum": [
+          "ASC",
+          "DESC"
+        ]
+      },
+      "PaginationMetaDto": {
+        "type": "object",
+        "properties": {
+          "itemCount": {
+            "type": "number",
+            "example": 1
+          },
+          "totalItems": {
+            "type": "number",
+            "example": 1
+          },
+          "itemsPerPage": {
+            "type": "number",
+            "example": 1
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 1
+          },
+          "currentPage": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "required": [
+          "itemCount",
+          "itemsPerPage",
+          "currentPage"
+        ]
+      },
+      "PaginationLinksDto": {
+        "type": "object",
+        "properties": {
+          "first": {
+            "type": "string",
+            "example": "http://example.com?page=1"
+          },
+          "prev": {
+            "type": "string",
+            "example": "http://example.com?page=1"
+          },
+          "next": {
+            "type": "string",
+            "example": "http://example.com?page=2"
+          },
+          "last": {
+            "type": "string",
+            "example": "http://example.com?page=3"
+          }
+        }
+      },
+      "AbstractBase": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
+      "UpdateTenantProfileDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateTenantDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "document": {
+            "type": "string"
+          },
+          "countryCode": {
+            "example": "BRA",
+            "$ref": "#/components/schemas/CountryCodeEnum"
+          }
+        }
+      },
+      "RequestConfirmationEmailDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "RequestPasswordResetDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "ResetPasswordDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "example": "P@ssw0rd",
+            "description": "Password should include lowercase, uppercase and digits"
+          },
+          "confirmation": {
+            "type": "string",
+            "example": "P@ssw0rd"
+          },
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "password",
+          "confirmation",
+          "email",
+          "token"
+        ]
+      },
+      "SignInResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "token",
+          "refreshToken",
+          "data"
+        ]
+      },
+      "LoginUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "P@ssw0rd"
+          },
+          "tenantId": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "RefreshTokenDto": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiI4NGViM2Q2NC01OTk4LTRjM2UtODliMS0yZTgyZmQ2NDRjMDciLCJpc3MiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJhdWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJjb21wYW55SWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJ0b2tlbkhhc2giOiI5NGFkMzFjMjcwMWI0NzQxNjk5ZjI1YTA4NWM0NmQyNDE4ZTk2MjNhYTcyYjM3MGZhZWZkNWJhYWYzYzM3YzgzIiwiaWF0IjoxNjU3MzEwMzQwLCJleHAiOjE2NTc0ODMxNDB9.epg4Grc6LkJMMxNlFbsdEc5Rq2nupXZTsFQeD-JgKZMWg4ey_ialD-mmSBehHD_xFF4Ho_BbWG1ld9aCuQBQcft4zxDfMdxogM5fMfdhAnAccM7a4J0NyKECzYHhIDe_jnrpT4QVHs4x78NIookQiKguANuSa7dNViFphpC9K5LRcxVwS6sEqT8"
+          }
+        },
+        "required": [
+          "refreshToken"
+        ]
+      },
+      "RefreshTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "refreshToken"
+        ]
+      }
+    }
+  }
+}

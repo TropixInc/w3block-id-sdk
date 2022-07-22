@@ -29,7 +29,8 @@
     "git:commit": "git-cz",
     "git": "npm run git:add && npm run git:commit",
     "check-types": "tsc --incremental false --noEmit",
-    "gen:api": "node tools/generate-api.js"
+    "api:gen": "node tools/generate-api.js",
+    "api:pull": "node tools/pull-api-swagger.js"
   },
   "publishConfig": {
     "access": "restricted",
