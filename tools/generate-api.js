@@ -16,18 +16,21 @@ const filePrefix = `/* eslint-disable */
  */
 
 `;
-
-generateApi({
+async function run() {
+  const { files, configuration } = await generateApi({
     name: FILENAME,
-    url: process.env.SWAGGER_JSON_PATH || 'http://localhost:6007/sdk-json',
+    input: path.resolve(OUTPUT_PATH, 'api-swagger.json'),
+    // url: process.env.SWAGGER_JSON_PATH || 'http://localhost:6007/sdk-json',
     httpClientType: 'axios',
     generateRouteTypes: true,
   })
-  .then(({ files, configuration }) => {
-    files.forEach(({ content, name }) => {
-      console.log('TARGET PATH => ', OUTPUT_PATH, name);
-      fs.writeFileSync(path.resolve(OUTPUT_PATH, name), `${filePrefix}${content}`, );
 
-    });
-  })
-  .catch((e) => console.error(e));
+  files.forEach(({ content, name }) => {
+    const fullPath = path.resolve(OUTPUT_PATH, name);
+
+    fs.writeFileSync(fullPath, `${filePrefix}${content}`, );
+    console.log(`Generated ${name} to ${fullPath}`);
+  });
+};
+
+run().catch((e) => console.error(e));
