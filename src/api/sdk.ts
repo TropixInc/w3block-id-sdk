@@ -1,11 +1,5 @@
 import { Api } from './api';
-import {
-  ClientOptions as PixwayIdSDKOptions,
-  isUserCredential,
-  isAppCredential,
-  UserCredential,
-  AppCredential,
-} from '../interfaces';
+import { PixwayIdSDKOptions, isUserCredential, isAppCredential, UserCredential, AppCredential } from '../interfaces';
 import { AxiosError, AxiosRequestConfig } from 'axios';
 import { default as jwt_decode, JwtPayload } from 'jwt-decode';
 import * as datefns from 'date-fns';
@@ -20,8 +14,12 @@ export class PixwayIdSDK {
   protected options: PixwayIdSDKOptions;
   protected timer: NodeJS.Timer | undefined;
 
+  protected defaultOptions: Partial<PixwayIdSDKOptions> = {
+    autoRefresh: true,
+  };
+
   constructor(options: PixwayIdSDKOptions) {
-    this.options = options;
+    this.options = Object.assign({}, this.defaultOptions, options);
 
     this.api = new Api<ApiSecurityDataType>({
       baseURL: options.baseURL || 'https://api.pixwayid.io',
@@ -48,8 +46,9 @@ export class PixwayIdSDK {
   }
 
   private hookTimer() {
+    if (!this.options.autoRefresh) return;
     if (this.timer) {
-      clearTimeout(this.timer);
+      clearInterval(this.timer);
     }
 
     // TODO change to a timeout approach
@@ -93,11 +92,19 @@ export class PixwayIdSDK {
     );
   }
 
+  /**
+   * It clears the tokens from the class properties
+   */
   public clearTokens(): void {
     this.authToken = '';
+    this.authTokenDecoded = undefined;
     this.refreshToken = '';
   }
 
+  /**
+   * If the credential is a user credential, authenticate as a user. If the credential is an app
+   * credential, authenticate as an app. If the credential is neither, throw an error
+   */
   public async connect(): Promise<void> {
     if (isUserCredential(this.options.credential)) {
       await this.authenticateAsUser(this.options.credential);
@@ -109,10 +116,19 @@ export class PixwayIdSDK {
     this.hookTimer();
   }
 
+  /**
+   * If the length of the authToken is greater than 0, then the user is connected
+   * @returns A boolean value.
+   */
   public isConnected(): boolean {
     return this.authToken.length > 0;
   }
 
+  /**
+   * If the token is valid, set the token and the decoded token
+   * @param {string} token - The token to set.
+   * @returns The token is being returned.
+   */
   protected setAuthToken(token: string): void {
     if (!token || token?.length === 0) throw new Error('Invalid token');
     if (this.authToken === token) return;
@@ -131,7 +147,6 @@ export class PixwayIdSDK {
    * @returns a promise that resolves to void.
    */
   public async triggerRefreshToken(): Promise<void> {
-    console.log('Refresh token triggered');
     if (!this.authToken || !this.refreshToken) {
       return this.clearTokens();
     }
@@ -139,10 +154,6 @@ export class PixwayIdSDK {
     if (!this.authTokenDecoded?.exp) {
       return;
     }
-
-    // const expiresAt = this.authTokenDecoded.exp * 1000;
-    // const minutesBeforeExpiration = 5;
-    // const shouldRefresh = datefns.isPast(datefns.subMinutes(expiresAt, minutesBeforeExpiration));
 
     if (this.isTokenExpired(5)) {
       await this.refreshTokens();
@@ -164,31 +175,52 @@ export class PixwayIdSDK {
     return datefns.isPast(datefns.subMinutes(expiresAt, offset));
   }
 
+  /**
+   * It returns the value of the authToken property
+   * @returns The authToken
+   */
   public getAuthToken(): string {
     return this.authToken;
   }
 
+  /**
+   * If the new token is the same as the old token, do nothing. Otherwise, set the new token
+   * @param {string} token - The token to be set.
+   * @returns The refresh token is being returned.
+   */
   protected setRefreshToken(token: string): void {
     if (this.refreshToken === token) return;
     this.refreshToken = token;
   }
 
+  /**
+   * This function returns the refresh token
+   * @returns The refresh token.
+   */
   public getRefreshToken(): string {
     return this.refreshToken;
   }
 
+  /**
+   * It sends a request to the API to refresh the access token, and if the response is successful, it
+   * updates the access token and refresh token in the local storage
+   */
   public async refreshTokens(): Promise<void> {
     const { data } = await this.api.auth.refreshToken({
       refreshToken: this.refreshToken,
     });
 
     if (!data.token) {
-      this.authToken = '';
-      this.refreshToken = '';
+      this.clearTokens();
       throw new Error('Invalid response');
     }
   }
 
+  /**
+   * It takes a user credential, sends it to the API, and if the API returns a token, it sets the token
+   * and refresh token in the local storage
+   * @param {UserCredential} credential - UserCredential
+   */
   private async authenticateAsUser(credential: UserCredential): Promise<void> {
     const { data } = await this.api.auth.signIn(credential);
 
@@ -200,6 +232,10 @@ export class PixwayIdSDK {
     this.setRefreshToken(data.refreshToken);
   }
 
+  /**
+   * This function is not implemented.
+   * @param {AppCredential} credential - The credential to use for authentication.
+   */
   private async authenticateAsApp(credential: AppCredential): Promise<void> {
     throw new Error('Not implemented');
   }
