@@ -1,11 +1,13 @@
-import { Client } from '../src/index'
+import { PixwayIdSDK } from '../src/index'
+// jest.useFakeTimers();
+// jest.spyOn(global, 'setTimeout');
+
 
 describe("Client", () => {
   const baseURL = process.env.API_BASE_URL || 'http://localhost:6007'
 
-
   it("should be able to create a client as user", async () => {
-    const client = new Client({
+    const sdk = new PixwayIdSDK({
       credential: {
         email: 'pixway@w3block.io',
         password: 'ABC123def456',
@@ -13,8 +15,25 @@ describe("Client", () => {
       },
       baseURL,
     });
-    expect(client).toBeDefined();
-    await client.init();
+    expect(sdk).toBeDefined();
+    // await sdk.connect();
+
+    // jest.runOnlyPendingTimers();
+
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, 5000);
+    }
+    );
+
+    // await client.api.auth.refreshToken({
+    //   refreshToken: client.getRefreshToken(),
+    // });
+
+    // const { data } = await client.api.tenant.findAll();
+    // expect(data).toBeDefined();
+
+    // console.dir({ tenant: data })
   }
   );
   // it("should be able to create a client with a token", async () => {

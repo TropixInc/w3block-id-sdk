@@ -1,2 +1,2 @@
-export { Client } from './api/client';
+export { PixwayIdSDK } from './api/sdk';
 export * from './interfaces';
