@@ -1,6 +1,393 @@
 {
   "openapi": "3.0.0",
   "paths": {
+    "/users": {
+      "post": {
+        "operationId": "create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublicResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/find-user-by-email": {
+      "get": {
+        "operationId": "getUserByOrFail",
+        "parameters": [
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "example": "email@example.com",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublicResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "operationId": "getProfileByUserLogged",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublicResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, admin, user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateProfileByUserLogged",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublicResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, admin, user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{id}": {
+      "patch": {
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublicResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{id}/change-password": {
+      "patch": {
+        "operationId": "changePassword",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, admin, user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{id}/main-wallet": {
+      "patch": {
+        "operationId": "setWalletDefault",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MainWalletDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{id}/token": {
+      "patch": {
+        "operationId": "updateTokenAndReturn",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserTokenResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/account-complete/retry": {
+      "post": {
+        "operationId": "accountCompleteRetry",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountCompleteRetryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/tenant": {
       "post": {
         "operationId": "create",
@@ -669,6 +1056,436 @@
       }
     },
     "schemas": {
+      "UserRoleEnum": {
+        "type": "string",
+        "enum": [
+          "superAdmin",
+          "admin",
+          "user"
+        ]
+      },
+      "I18nLocaleEnum": {
+        "type": "string",
+        "enum": [
+          "pt-br",
+          "en"
+        ]
+      },
+      "CreateAddressDto": {
+        "type": "object",
+        "properties": {
+          "street": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "complement": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "coordinates": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city",
+          "state",
+          "country"
+        ]
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "example": "P@ssw0rd",
+            "description": "Password should include lowercase, uppercase and digits"
+          },
+          "confirmation": {
+            "type": "string",
+            "example": "P@ssw0rd"
+          },
+          "tenantId": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000000"
+          },
+          "role": {
+            "example": "user",
+            "$ref": "#/components/schemas/UserRoleEnum"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "i18nLocale": {
+            "example": "en",
+            "$ref": "#/components/schemas/I18nLocaleEnum"
+          },
+          "address": {
+            "$ref": "#/components/schemas/CreateAddressDto"
+          },
+          "sendEmail": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "password",
+          "confirmation",
+          "role",
+          "name",
+          "email"
+        ]
+      },
+      "AddressResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "street": {
+            "type": "string",
+            "example": "Street"
+          },
+          "number": {
+            "type": "string",
+            "example": "123"
+          },
+          "district": {
+            "type": "string",
+            "example": null
+          },
+          "complement": {
+            "type": "string",
+            "example": null
+          },
+          "city": {
+            "type": "string",
+            "example": "Sao Paulo"
+          },
+          "state": {
+            "type": "string",
+            "example": "Sao Paulo"
+          },
+          "country": {
+            "type": "string",
+            "example": "Brazil"
+          },
+          "postalCode": {
+            "type": "string",
+            "example": null
+          },
+          "coordinates": {
+            "type": "string",
+            "example": null
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "UserEntity": {
+        "type": "object",
+        "properties": {}
+      },
+      "WalletTypes": {
+        "type": "string",
+        "enum": [
+          "vault",
+          "metamask"
+        ]
+      },
+      "WalletStatus": {
+        "type": "string",
+        "enum": [
+          "unverified",
+          "ready",
+          "blocked"
+        ]
+      },
+      "WalletResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "address": {
+            "type": "string",
+            "example": "0x0000000000000000000000000000000000000000"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/UserEntity"
+          },
+          "type": {
+            "example": "vault",
+            "$ref": "#/components/schemas/WalletTypes"
+          },
+          "status": {
+            "example": "ready",
+            "$ref": "#/components/schemas/WalletStatus"
+          }
+        },
+        "required": [
+          "id",
+          "address",
+          "owner",
+          "type",
+          "status"
+        ]
+      },
+      "UserPublicResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "example": "email@example.com"
+          },
+          "verified": {
+            "type": "boolean",
+            "example": true
+          },
+          "role": {
+            "type": "string",
+            "example": true
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "mainWalletId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "addressId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "address": {
+            "$ref": "#/components/schemas/AddressResponseDto"
+          },
+          "mainWallet": {
+            "$ref": "#/components/schemas/WalletResponseDto"
+          },
+          "wallets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WalletResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "verified",
+          "role"
+        ]
+      },
+      "HttpExceptionDto": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "statusCode": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "timestamp",
+          "path",
+          "error",
+          "statusCode",
+          "message"
+        ]
+      },
+      "UpdateAddressDto": {
+        "type": "object",
+        "properties": {
+          "street": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "complement": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "coordinates": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateProfileUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "i18nLocale": {
+            "example": "en",
+            "$ref": "#/components/schemas/I18nLocaleEnum"
+          },
+          "address": {
+            "$ref": "#/components/schemas/UpdateAddressDto"
+          }
+        }
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "example": "P@ssw0rd",
+            "description": "Password should include lowercase, uppercase and digits"
+          },
+          "role": {
+            "example": "user",
+            "$ref": "#/components/schemas/UserRoleEnum"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "i18nLocale": {
+            "example": "en",
+            "$ref": "#/components/schemas/I18nLocaleEnum"
+          },
+          "sendEmail": {
+            "type": "boolean",
+            "example": true
+          },
+          "address": {
+            "$ref": "#/components/schemas/UpdateAddressDto"
+          }
+        }
+      },
+      "ChangePasswordDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "example": "P@ssw0rd",
+            "description": "Password should include lowercase, uppercase and digits"
+          },
+          "confirmation": {
+            "type": "string",
+            "example": "P@ssw0rd"
+          },
+          "oldPassword": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "password",
+          "confirmation",
+          "oldPassword"
+        ]
+      },
+      "MainWalletDto": {
+        "type": "object",
+        "properties": {
+          "walletId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "walletId"
+        ]
+      },
+      "UserTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "email@example.com"
+          },
+          "token": {
+            "type": "string",
+            "example": "b8ee934f8d9c6704b982c14b95ba3266fef9bba7798ed4885a05c70dbb4545435517cdd25f851e7522ad503e04ccb691a18f507b792866c3282d13abc2a09cb2;1654178219308"
+          }
+        }
+      },
+      "AccountCompleteRetryDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "tenantId"
+        ]
+      },
       "CountryCodeEnum": {
         "type": "string",
         "enum": [
@@ -996,36 +1813,6 @@
           "countryCode",
           "wallets",
           "info"
-        ]
-      },
-      "HttpExceptionDto": {
-        "type": "object",
-        "properties": {
-          "timestamp": {
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
-          },
-          "error": {
-            "type": "string"
-          },
-          "statusCode": {
-            "type": "number"
-          },
-          "message": {
-            "type": "string"
-          },
-          "data": {
-            "type": "object"
-          }
-        },
-        "required": [
-          "timestamp",
-          "path",
-          "error",
-          "statusCode",
-          "message"
         ]
       },
       "OrderByEnum": {

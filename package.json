@@ -1,6 +1,6 @@
 {
   "name": "@tropixinc/pixwayid-sdk",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Pixway ID SDK",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -86,6 +86,7 @@
   "dependencies": {
     "axios": "^0.24.0",
     "date-fns": "2.28.0",
+    "dotenv": "^16.0.1",
     "jwt-decode": "3.1.2",
     "lodash": "^4.17.21",
     "node-polyfill-webpack-plugin": "^1.1.4",
