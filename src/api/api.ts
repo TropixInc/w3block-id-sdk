@@ -8,6 +8,232 @@
  * ---------------------------------------------------------------
  */
 
+export enum UserRoleEnum {
+  SuperAdmin = 'superAdmin',
+  Admin = 'admin',
+  User = 'user',
+}
+
+export enum I18NLocaleEnum {
+  PtBr = 'pt-br',
+  En = 'en',
+}
+
+export interface CreateAddressDto {
+  street?: string;
+  number?: string;
+  district?: string;
+  complement?: string;
+  city: string;
+  state: string;
+  country: string;
+  postalCode?: string;
+  coordinates?: string;
+}
+
+export interface CreateUserDto {
+  /**
+   * Password should include lowercase, uppercase and digits
+   * @example P@ssw0rd
+   */
+  password: string;
+
+  /** @example P@ssw0rd */
+  confirmation: string;
+
+  /** @example 00000000-0000-0000-0000-000000000000 */
+  tenantId?: string;
+
+  /** @example user */
+  role: UserRoleEnum;
+  name: string;
+
+  /** @example user@example.com */
+  email: string;
+
+  /** @example en */
+  i18nLocale?: I18NLocaleEnum;
+  address?: CreateAddressDto;
+
+  /** @example true */
+  sendEmail?: boolean;
+}
+
+export interface AddressResponseDto {
+  /** @format uuid */
+  id: string;
+
+  /** @example Street */
+  street?: string;
+
+  /** @example 123 */
+  number?: string;
+
+  /** @example null */
+  district?: string;
+
+  /** @example null */
+  complement?: string;
+
+  /** @example Sao Paulo */
+  city?: string;
+
+  /** @example Sao Paulo */
+  state?: string;
+
+  /** @example Brazil */
+  country?: string;
+
+  /** @example null */
+  postalCode?: string;
+
+  /** @example null */
+  coordinates?: string;
+}
+
+export type UserEntity = object;
+
+export enum WalletTypes {
+  Vault = 'vault',
+  Metamask = 'metamask',
+}
+
+export enum WalletStatus {
+  Unverified = 'unverified',
+  Ready = 'ready',
+  Blocked = 'blocked',
+}
+
+export interface WalletResponseDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format uuid */
+  tenantId?: string;
+
+  /** @example 0x0000000000000000000000000000000000000000 */
+  address: string;
+
+  /** @format uuid */
+  ownerId?: string;
+  owner: UserEntity;
+
+  /** @example vault */
+  type: WalletTypes;
+
+  /** @example ready */
+  status: WalletStatus;
+}
+
+export interface UserPublicResponseDto {
+  /** @format uuid */
+  id: string;
+
+  /** @example email@example.com */
+  email: string;
+
+  /** @example true */
+  verified: boolean;
+
+  /** @example true */
+  role: string;
+
+  /** @example John Doe */
+  name?: string;
+
+  /** @format uuid */
+  tenantId?: string;
+
+  /** @format uuid */
+  mainWalletId?: string;
+
+  /** @format uuid */
+  addressId?: string;
+  address?: AddressResponseDto;
+  mainWallet?: WalletResponseDto;
+  wallets?: WalletResponseDto[];
+}
+
+export interface HttpExceptionDto {
+  timestamp: string;
+  path: string;
+  error: string;
+  statusCode: number;
+  message: string;
+  data?: object;
+}
+
+export interface UpdateAddressDto {
+  street?: string;
+  number?: string;
+  district?: string;
+  complement?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  postalCode?: string;
+  coordinates?: string;
+}
+
+export interface UpdateProfileUserDto {
+  name?: string;
+
+  /** @example en */
+  i18nLocale?: I18NLocaleEnum;
+  address?: UpdateAddressDto;
+}
+
+export interface UpdateUserDto {
+  /**
+   * Password should include lowercase, uppercase and digits
+   * @example P@ssw0rd
+   */
+  password?: string;
+
+  /** @example user */
+  role?: UserRoleEnum;
+  name?: string;
+
+  /** @example user@example.com */
+  email?: string;
+
+  /** @example en */
+  i18nLocale?: I18NLocaleEnum;
+
+  /** @example true */
+  sendEmail?: boolean;
+  address?: UpdateAddressDto;
+}
+
+export interface ChangePasswordDto {
+  /**
+   * Password should include lowercase, uppercase and digits
+   * @example P@ssw0rd
+   */
+  password: string;
+
+  /** @example P@ssw0rd */
+  confirmation: string;
+  oldPassword: string;
+}
+
+export interface MainWalletDto {
+  walletId: string;
+}
+
+export interface UserTokenResponseDto {
+  /** @example email@example.com */
+  email?: string;
+
+  /** @example b8ee934f8d9c6704b982c14b95ba3266fef9bba7798ed4885a05c70dbb4545435517cdd25f851e7522ad503e04ccb691a18f507b792866c3282d13abc2a09cb2;1654178219308 */
+  token?: string;
+}
+
+export interface AccountCompleteRetryDto {
+  email: string;
+  tenantId: string;
+}
+
 export enum CountryCodeEnum {
   BGD = 'BGD',
   BEL = 'BEL',
@@ -291,15 +517,6 @@ export interface TenantEntityDto {
   deletedAt?: string;
 }
 
-export interface HttpExceptionDto {
-  timestamp: string;
-  path: string;
-  error: string;
-  statusCode: number;
-  message: string;
-  data?: object;
-}
-
 export enum OrderByEnum {
   ASC = 'ASC',
   DESC = 'DESC',
@@ -404,6 +621,135 @@ export interface RefreshTokenDto {
 export interface RefreshTokenResponseDto {
   token: string;
   refreshToken: string;
+}
+
+export namespace Users {
+  /**
+   * No description
+   * @tags Users
+   * @name Create
+   * @request POST:/users
+   * @secure
+   */
+  export namespace Create {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = CreateUserDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserPublicResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name GetUserByOrFail
+   * @request GET:/users/find-user-by-email
+   * @secure
+   */
+  export namespace GetUserByOrFail {
+    export type RequestParams = {};
+    export type RequestQuery = { email: string };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserPublicResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name GetProfileByUserLogged
+   * @request GET:/users/profile
+   * @secure
+   */
+  export namespace GetProfileByUserLogged {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserPublicResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name UpdateProfileByUserLogged
+   * @request PATCH:/users/profile
+   * @secure
+   */
+  export namespace UpdateProfileByUserLogged {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = UpdateProfileUserDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserPublicResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name Update
+   * @request PATCH:/users/{id}
+   * @secure
+   */
+  export namespace Update {
+    export type RequestParams = { id: string };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateUserDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserPublicResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name ChangePassword
+   * @request PATCH:/users/{id}/change-password
+   * @secure
+   */
+  export namespace ChangePassword {
+    export type RequestParams = { id: string };
+    export type RequestQuery = {};
+    export type RequestBody = ChangePasswordDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name SetWalletDefault
+   * @request PATCH:/users/{id}/main-wallet
+   * @secure
+   */
+  export namespace SetWalletDefault {
+    export type RequestParams = { id: string };
+    export type RequestQuery = {};
+    export type RequestBody = MainWalletDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name UpdateTokenAndReturn
+   * @request PATCH:/users/{id}/token
+   * @secure
+   */
+  export namespace UpdateTokenAndReturn {
+    export type RequestParams = { id: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserTokenResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name AccountCompleteRetry
+   * @request POST:/users/account-complete/retry
+   * @secure
+   */
+  export namespace AccountCompleteRetry {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = AccountCompleteRetryDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
 }
 
 export namespace Tenant {
@@ -733,6 +1079,170 @@ export class HttpClient<SecurityDataType = unknown> {
  * @contact
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  users = {
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name Create
+     * @request POST:/users
+     * @secure
+     */
+    create: (data: CreateUserDto, params: RequestParams = {}) =>
+      this.request<UserPublicResponseDto, HttpExceptionDto>({
+        path: `/users`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name GetUserByOrFail
+     * @request GET:/users/find-user-by-email
+     * @secure
+     */
+    getUserByOrFail: (query: { email: string }, params: RequestParams = {}) =>
+      this.request<UserPublicResponseDto, HttpExceptionDto>({
+        path: `/users/find-user-by-email`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name GetProfileByUserLogged
+     * @request GET:/users/profile
+     * @secure
+     */
+    getProfileByUserLogged: (params: RequestParams = {}) =>
+      this.request<UserPublicResponseDto, HttpExceptionDto>({
+        path: `/users/profile`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UpdateProfileByUserLogged
+     * @request PATCH:/users/profile
+     * @secure
+     */
+    updateProfileByUserLogged: (data: UpdateProfileUserDto, params: RequestParams = {}) =>
+      this.request<UserPublicResponseDto, HttpExceptionDto>({
+        path: `/users/profile`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name Update
+     * @request PATCH:/users/{id}
+     * @secure
+     */
+    update: (id: string, data: UpdateUserDto, params: RequestParams = {}) =>
+      this.request<UserPublicResponseDto, HttpExceptionDto>({
+        path: `/users/${id}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name ChangePassword
+     * @request PATCH:/users/{id}/change-password
+     * @secure
+     */
+    changePassword: (id: string, data: ChangePasswordDto, params: RequestParams = {}) =>
+      this.request<void, HttpExceptionDto>({
+        path: `/users/${id}/change-password`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name SetWalletDefault
+     * @request PATCH:/users/{id}/main-wallet
+     * @secure
+     */
+    setWalletDefault: (id: string, data: MainWalletDto, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/users/${id}/main-wallet`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UpdateTokenAndReturn
+     * @request PATCH:/users/{id}/token
+     * @secure
+     */
+    updateTokenAndReturn: (id: string, params: RequestParams = {}) =>
+      this.request<UserTokenResponseDto, HttpExceptionDto>({
+        path: `/users/${id}/token`,
+        method: 'PATCH',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name AccountCompleteRetry
+     * @request POST:/users/account-complete/retry
+     * @secure
+     */
+    accountCompleteRetry: (data: AccountCompleteRetryDto, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/users/account-complete/retry`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+  };
   tenant = {
     /**
      * No description

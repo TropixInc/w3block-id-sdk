@@ -1,4 +1,5 @@
 /* eslint-disable */
+require('dotenv/config');
 const fs = require('fs')
 const Path = require('path')
 /* eslint-enable */
