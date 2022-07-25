@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/TropixInc/pixwayid-sdk/compare/v0.0.4...v0.0.5) (2022-07-25)
+
+
+### Features
+
+* pull swagger file ([#6](https://github.com/TropixInc/pixwayid-sdk/issues/6)) ([79dc454](https://github.com/TropixInc/pixwayid-sdk/commit/79dc454901ff27272020ff3d07dedefd2decc8cf))
+* **users:** adding users api ([1228ccb](https://github.com/TropixInc/pixwayid-sdk/commit/1228ccb9bc4594a398525c9025a382055e727619))
+
 ### [0.0.4](https://github.com/TropixInc/pixwayid-sdk/compare/v0.0.3...v0.0.4) (2022-07-22)
 
 
