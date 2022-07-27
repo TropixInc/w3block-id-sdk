@@ -593,6 +593,17 @@ export interface AbstractBase {
   links?: PaginationLinksDto;
 }
 
+export interface TenantClientResponseDto {
+  /** @example 193d34cd9f6ca1f2661357e346822a3643bd5c3d0590a670ee896af6ca9a8141 */
+  apiKey: string;
+
+  /** @format uuid  */
+  clientId: string;
+
+  /** @example ef9b4f3cc540501fa1d7c4f0fc1216851500ed52aa85f2adb34d978f70688f37 */
+  signatureKey: string;
+}
+
 export interface UpdateTenantProfileDto {
   name?: string;
 }
@@ -909,6 +920,20 @@ export namespace Tenant {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Tenant
+   * @name GetTenantClientOrFail
+   * @request GET:/tenant/client/{id}
+   * @secure
+   */
+  export namespace GetTenantClientOrFail {
+    export type RequestParams = { id: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantClientResponseDto;
   }
   /**
    * No description
@@ -1478,6 +1503,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/tenant/${id}`,
         method: 'DELETE',
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant
+     * @name GetTenantClientOrFail
+     * @request GET:/tenant/client/{id}
+     * @secure
+     */
+    getTenantClientOrFail: (id: string, params: RequestParams = {}) =>
+      this.request<TenantClientResponseDto, HttpExceptionDto>({
+        path: `/tenant/client/${id}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
         ...params,
       }),
 
