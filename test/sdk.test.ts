@@ -1,9 +1,10 @@
 import axios from "axios";
-import { PixwayIdSDK } from '../src/index';
+import { W3blockIdSDK } from '../src/index';
 
 import MockAdapter from "axios-mock-adapter";
-import { SignInResponseDto } from "../src/api/api";
+
 import { AUTH_REFRESH, AUTH_TOKEN } from "./fixtures/token";
+import { SignInResponseDto } from "../src/w3blockid/api/api";
 const mock = new MockAdapter(axios);
 
 
@@ -24,7 +25,7 @@ describe("SDK", () => {
 
   describe("connect user credential", () => {
     it("should be able to instantiate", async () => {
-      const sdk = new PixwayIdSDK({
+      const sdk = new W3blockIdSDK({
         credential: {
           email: 'pixway@w3block.io',
           password: 'ABC123def456',
@@ -38,7 +39,7 @@ describe("SDK", () => {
 
 
     it("should be able to connect", async () => {
-      const sdk = new PixwayIdSDK({
+      const sdk = new W3blockIdSDK({
         credential: {
           email: 'pixway@w3block.io',
           password: 'ABC123def456',
@@ -56,7 +57,7 @@ describe("SDK", () => {
 
   describe("connect app credential", () => {
     xit("should be able to instantiate", async () => {
-      const sdk = new PixwayIdSDK({
+      const sdk = new W3blockIdSDK({
         credential: {
           key: 'app-key',
           secret: 'app-secret',
@@ -69,7 +70,7 @@ describe("SDK", () => {
     );
 
     xit("should be able to connect", async () => {
-      const sdk = new PixwayIdSDK({
+      const sdk = new W3blockIdSDK({
         credential: {
           key: 'app-key',
           secret: 'app-secret',

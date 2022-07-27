@@ -1,28 +1,28 @@
-import { Api } from './api';
-import { PixwayIdSDKOptions, isUserCredential, isAppCredential, UserCredential, AppCredential } from '../interfaces';
+import { W3blockIdSDKOptions, isUserCredential, isAppCredential, UserCredential, AppCredential } from '../interfaces';
 import { AxiosError, AxiosRequestConfig } from 'axios';
 import { default as jwt_decode, JwtPayload } from 'jwt-decode';
 import * as datefns from 'date-fns';
+import { Api } from './api/api';
 
 export type ApiSecurityDataType = { bearer: string };
 
-export class PixwayIdSDK {
+export class W3blockIdSDK {
   public api: Api<ApiSecurityDataType>;
   protected authToken = '';
   protected authTokenDecoded: JwtPayload | undefined;
   protected refreshToken = '';
-  protected options: PixwayIdSDKOptions;
+  protected options: W3blockIdSDKOptions;
   protected timer: NodeJS.Timer | undefined;
 
-  protected defaultOptions: Partial<PixwayIdSDKOptions> = {
+  protected defaultOptions: Partial<W3blockIdSDKOptions> = {
     autoRefresh: true,
   };
 
-  constructor(options: PixwayIdSDKOptions) {
+  constructor(options: W3blockIdSDKOptions) {
     this.options = Object.assign({}, this.defaultOptions, options);
 
     this.api = new Api<ApiSecurityDataType>({
-      baseURL: options.baseURL || 'https://api.pixwayid.io',
+      baseURL: options.baseURL || 'https://api.w3block.io',
       securityWorker: (securityData): AxiosRequestConfig => {
         if (!securityData?.bearer) {
           return {};

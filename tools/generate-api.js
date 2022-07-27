@@ -1,10 +1,7 @@
-require('dotenv/config');
+const { getConfig } = require('./config');
 const { generateApi } = require('swagger-typescript-api');
-const path = require('path');
 const fs = require('fs');
-
-const FILENAME = 'api.ts';
-const OUTPUT_PATH = path.resolve(process.cwd(), './src/api');
+const path = require('path');
 
 const filePrefix = `/* eslint-disable */
 /* tslint:disable */
@@ -18,19 +15,16 @@ const filePrefix = `/* eslint-disable */
 
 `;
 async function run() {
-  const { files, configuration } = await generateApi({
-    name: FILENAME,
-    input: path.resolve(OUTPUT_PATH, 'api-swagger.json'),
-    // url: process.env.SWAGGER_JSON_PATH || 'http://localhost:6007/sdk-json',
+  const config = getConfig();
+  const { files } = await generateApi({
+    input: path.resolve(config.swagger.dest, config.swagger.filename),
     httpClientType: 'axios',
     generateRouteTypes: true,
   })
 
   files.forEach(({ content, name }) => {
-    const fullPath = path.resolve(OUTPUT_PATH, name);
-
-    fs.writeFileSync(fullPath, `${filePrefix}${content}`, );
-    console.log(`Generated ${name} to ${fullPath}`);
+    fs.writeFileSync(config.output.api, `${filePrefix}${content}`, );
+    console.log(`Generated ${name} to ${config.output.api}`);
   });
 };
 

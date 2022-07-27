@@ -5,10 +5,12 @@
     "dictionaries": [],
     "words": [
         "bignumber",
+        "blockid",
         "datefns",
         "ethersproject",
         "Eventix",
         "Numberish",
+        "openapi",
         "Pixway",
         "Tropix",
         "tropixinc"
