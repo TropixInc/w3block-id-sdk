@@ -720,6 +720,51 @@
         ]
       }
     },
+    "/tenant/client/{id}": {
+      "get": {
+        "operationId": "getTenantClientOrFail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantClientResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/tenant/profile/{id}": {
       "put": {
         "operationId": "updateProfile",
@@ -2144,6 +2189,28 @@
         "required": [
           "items",
           "meta"
+        ]
+      },
+      "TenantClientResponseDto": {
+        "type": "object",
+        "properties": {
+          "apiKey": {
+            "type": "string",
+            "example": "193d34cd9f6ca1f2661357e346822a3643bd5c3d0590a670ee896af6ca9a8141"
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid "
+          },
+          "signatureKey": {
+            "type": "string",
+            "example": "ef9b4f3cc540501fa1d7c4f0fc1216851500ed52aa85f2adb34d978f70688f37"
+          }
+        },
+        "required": [
+          "apiKey",
+          "clientId",
+          "signatureKey"
         ]
       },
       "UpdateTenantProfileDto": {
