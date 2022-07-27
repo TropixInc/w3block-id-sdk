@@ -1,3 +1,3 @@
-export { W3blockIdSDK } from './w3blockid/sdk';
-export * from './w3blockid/api/api';
+export { W3blockIdSDK } from './id/sdk';
+export * from './id/api/api';
 export * from './interfaces';

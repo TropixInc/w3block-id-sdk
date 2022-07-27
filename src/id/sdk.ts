@@ -2,7 +2,7 @@ import { W3blockIdSDKOptions, isUserCredential, isAppCredential, UserCredential,
 import { AxiosError, AxiosRequestConfig } from 'axios';
 import { default as jwt_decode, JwtPayload } from 'jwt-decode';
 import * as datefns from 'date-fns';
-import { Api } from './api/api';
+import { Api } from '../id/api/api';
 
 export type ApiSecurityDataType = { bearer: string };
 
@@ -237,6 +237,13 @@ export class W3blockIdSDK {
    * @param {AppCredential} credential - The credential to use for authentication.
    */
   private async authenticateAsApp(credential: AppCredential): Promise<void> {
-    throw new Error('Not implemented');
+    const { data } = await this.api.auth.signInTenant(credential);
+
+    if (!data.token) {
+      throw new Error('Authentication failed. Please check your credentials.');
+    }
+
+    this.setAuthToken(data.token);
+    this.setRefreshToken(data.refreshToken);
   }
 }
