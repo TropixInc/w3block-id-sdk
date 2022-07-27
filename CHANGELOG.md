@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/TropixInc/pixwayid-sdk/compare/v0.0.6...v0.0.7) (2022-07-27)
+
+
+### Features
+
+* **api:** adding returning tenant client #TK-404 ([328137e](https://github.com/TropixInc/pixwayid-sdk/commit/328137e784dde403f7573604ae4c03af22b3001b)), closes [#TK-404](https://github.com/TropixInc/pixwayid-sdk/issues/TK-404)
+
+### [0.0.6](https://github.com/TropixInc/pixwayid-sdk/compare/v0.0.5...v0.0.6) (2022-07-26)
+
+
+### Features
+
+* adding returning api interface ([9d74279](https://github.com/TropixInc/pixwayid-sdk/commit/9d742792b03db37cc973e33be4614ca3bcbee6d5))
+
 ### [0.0.5](https://github.com/TropixInc/pixwayid-sdk/compare/v0.0.4...v0.0.5) (2022-07-25)
 
 

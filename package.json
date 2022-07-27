@@ -1,6 +1,6 @@
 {
   "name": "@tropixinc/pixwayid-sdk",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "Pixway ID SDK",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -29,6 +29,7 @@
     "git:commit": "git-cz",
     "git": "npm run git:add && npm run git:commit",
     "check-types": "tsc --incremental false --noEmit",
+    "api": "npm run api:pull && npm run api:gen",
     "api:gen": "node tools/generate-api.js",
     "api:pull": "node tools/pull-api-swagger.js"
   },

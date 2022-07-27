@@ -47,15 +47,70 @@
         ]
       }
     },
+    "/users/invite": {
+      "post": {
+        "operationId": "invite",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublicResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/users/find-user-by-email": {
       "get": {
-        "operationId": "getUserByOrFail",
+        "operationId": "getUserByEmail",
         "parameters": [
           {
             "name": "email",
             "required": true,
             "in": "query",
             "example": "email@example.com",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "query",
+            "example": "00000000-0000-0000-0000-000000000001",
             "schema": {
               "type": "string"
             }
@@ -174,6 +229,49 @@
       }
     },
     "/users/{id}": {
+      "get": {
+        "operationId": "getProfileUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublicResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
       "patch": {
         "operationId": "update",
         "parameters": [
@@ -316,7 +414,7 @@
     },
     "/users/{id}/token": {
       "patch": {
-        "operationId": "updateTokenAndReturn",
+        "operationId": "updateToken",
         "parameters": [
           {
             "name": "id",
@@ -622,6 +720,51 @@
         ]
       }
     },
+    "/tenant/client/{id}": {
+      "get": {
+        "operationId": "getTenantClientOrFail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantClientResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/tenant/profile/{id}": {
       "put": {
         "operationId": "updateProfile",
@@ -659,6 +802,52 @@
         },
         "tags": [
           "Tenant"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant_access": {
+      "post": {
+        "operationId": "create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenantAccessDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OmitTypeClass"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Access"
         ],
         "security": [
           {
@@ -780,7 +969,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
           },
           "401": {
             "description": "",
@@ -874,7 +1070,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "",
             "content": {
               "application/json": {
@@ -925,12 +1121,63 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RefreshTokenResponseDto"
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/signin/tenant": {
+      "post": {
+        "operationId": "signInTenant",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginTenantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
                 }
               }
             }
@@ -1136,7 +1383,7 @@
             "example": "user@example.com"
           },
           "i18nLocale": {
-            "example": "en",
+            "example": "pt-br",
             "$ref": "#/components/schemas/I18nLocaleEnum"
           },
           "address": {
@@ -1152,7 +1399,8 @@
           "confirmation",
           "role",
           "name",
-          "email"
+          "email",
+          "i18nLocale"
         ]
       },
       "AddressResponseDto": {
@@ -1255,7 +1503,9 @@
         },
         "required": [
           "id",
+          "tenantId",
           "address",
+          "ownerId",
           "owner",
           "type",
           "status"
@@ -1279,6 +1529,10 @@
           "role": {
             "type": "string",
             "example": true
+          },
+          "i18nLocale": {
+            "example": "pt-br",
+            "$ref": "#/components/schemas/I18nLocaleEnum"
           },
           "name": {
             "type": "string",
@@ -1313,29 +1567,34 @@
           "id",
           "email",
           "verified",
-          "role"
+          "role",
+          "i18nLocale"
         ]
       },
       "HttpExceptionDto": {
         "type": "object",
         "properties": {
           "timestamp": {
-            "type": "string"
+            "type": "string",
+            "example": "2022-07-25T17:24:07.042Z"
           },
           "path": {
-            "type": "string"
+            "type": "string",
+            "example": "/api/foo/bar"
           },
           "error": {
             "type": "string"
           },
           "statusCode": {
-            "type": "number"
+            "type": "number",
+            "example": 500
           },
           "message": {
             "type": "string"
           },
           "data": {
-            "type": "object"
+            "type": "object",
+            "example": null
           }
         },
         "required": [
@@ -1344,6 +1603,44 @@
           "error",
           "statusCode",
           "message"
+        ]
+      },
+      "InviteUserDto": {
+        "type": "object",
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "example": "email@example.com"
+          },
+          "i18nLocale": {
+            "example": "pt-br",
+            "$ref": "#/components/schemas/I18nLocaleEnum"
+          },
+          "sendEmail": {
+            "type": "boolean",
+            "example": true
+          },
+          "generateRandomPassword": {
+            "type": "boolean",
+            "example": false
+          },
+          "password": {
+            "type": "string",
+            "example": "P@ssw0rd",
+            "description": "Password should include lowercase, uppercase and digits"
+          }
+        },
+        "required": [
+          "tenantId",
+          "email",
+          "i18nLocale"
         ]
       },
       "UpdateAddressDto": {
@@ -1385,7 +1682,7 @@
             "type": "string"
           },
           "i18nLocale": {
-            "example": "en",
+            "example": "pt-br",
             "$ref": "#/components/schemas/I18nLocaleEnum"
           },
           "address": {
@@ -1413,7 +1710,7 @@
             "example": "user@example.com"
           },
           "i18nLocale": {
-            "example": "en",
+            "example": "pt-br",
             "$ref": "#/components/schemas/I18nLocaleEnum"
           },
           "sendEmail": {
@@ -1894,6 +2191,28 @@
           "meta"
         ]
       },
+      "TenantClientResponseDto": {
+        "type": "object",
+        "properties": {
+          "apiKey": {
+            "type": "string",
+            "example": "193d34cd9f6ca1f2661357e346822a3643bd5c3d0590a670ee896af6ca9a8141"
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid "
+          },
+          "signatureKey": {
+            "type": "string",
+            "example": "ef9b4f3cc540501fa1d7c4f0fc1216851500ed52aa85f2adb34d978f70688f37"
+          }
+        },
+        "required": [
+          "apiKey",
+          "clientId",
+          "signatureKey"
+        ]
+      },
       "UpdateTenantProfileDto": {
         "type": "object",
         "properties": {
@@ -1916,6 +2235,49 @@
             "$ref": "#/components/schemas/CountryCodeEnum"
           }
         }
+      },
+      "CreateTenantAccessDto": {
+        "type": "object",
+        "properties": {
+          "tenantId": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "tenantId"
+        ]
+      },
+      "OmitTypeClass": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "key": {
+            "type": "string"
+          },
+          "secret": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "key",
+          "secret",
+          "tenantId",
+          "active"
+        ]
       },
       "RequestConfirmationEmailDto": {
         "type": "object",
@@ -2024,19 +2386,24 @@
           "refreshToken"
         ]
       },
-      "RefreshTokenResponseDto": {
+      "LoginTenantDto": {
         "type": "object",
         "properties": {
-          "token": {
+          "key": {
             "type": "string"
           },
-          "refreshToken": {
+          "secret": {
             "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
           }
         },
         "required": [
-          "token",
-          "refreshToken"
+          "key",
+          "secret",
+          "tenantId"
         ]
       }
     }
