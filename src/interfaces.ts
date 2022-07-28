@@ -12,11 +12,12 @@ export interface UserCredential {
 export interface AppCredential {
   key: string;
   secret: string;
+  tenantId: string;
 }
 
 export type Credential = UserCredential | AppCredential;
 
-export interface PixwayIdSDKOptions {
+export interface W3blockIdSDKOptions {
   credential: UserCredential | AppCredential;
   baseURL?: string;
   tokens?: {

@@ -4,5 +4,5 @@
 *.test.ts
 dist
 src/api/index.ts
-tools/generate-api.js
-tools/pull-api-swagger.js
+tools/*.js
+

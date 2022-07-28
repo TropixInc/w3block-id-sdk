@@ -1,3 +1,3 @@
-export { PixwayIdSDK } from './api/sdk';
+export { W3blockIdSDK } from './id/sdk';
+export * from './id/api/api';
 export * from './interfaces';
-export * from './api/api';
