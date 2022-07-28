@@ -56,7 +56,7 @@ describe("SDK", () => {
     });
   })
 
-  describe("connect app credential", () => {
+  describe("connect tenant credential", () => {
     it("should be able to instantiate", async () => {
       const sdk = new W3blockIdSDK({
         credential: {
