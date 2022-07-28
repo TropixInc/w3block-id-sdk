@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](https://github.com/TropixInc/w3block-sdk/compare/v0.0.7...v0.0.8) (2022-07-28)
+
+
+### Bug Fixes
+
+* fix jest axios requests ([8023af4](https://github.com/TropixInc/w3block-sdk/commit/8023af40be0c7016bb8898c9cf07a392e38d0f5e))
+
 ### [0.0.7](https://github.com/TropixInc/pixwayid-sdk/compare/v0.0.6...v0.0.7) (2022-07-27)
 
 

@@ -1,7 +1,7 @@
 {
-  "name": "@tropixinc/pixwayid-sdk",
-  "version": "0.0.7",
-  "description": "Pixway ID SDK",
+  "name": "@tropixinc/sdk-id",
+  "version": "0.0.8",
+  "description": "W3block ID SDK",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "umd:main": "dist/umd/index.js",
@@ -21,7 +21,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage --no-cache --runInBand",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
-    "addscope": "node tools/packagejson name @tropixinc/pixwayid-sdk",
+    "addscope": "node tools/packagejson name @tropixinc/sdk-id",
     "copy-dts": "copyfiles -u 1 \"src/**/*.d.ts\" dist/types",
     "lint": "eslint . --fix",
     "release": "standard-version",
@@ -44,15 +44,15 @@
     "pixchain",
     "sdk"
   ],
-  "author": "Gislainy Velasco <gislainy@tropix.io>",
+  "author": "Mario Junior <mario@w3block.io>",
   "license": "MIT",
-  "homepage": "https://github.com/TropixInc/pixwayid-sdk",
+  "homepage": "https://github.com/TropixInc/w3block-sdk",
   "repository": {
     "type": "git",
-    "url": "git@github.com:TropixInc/pixwayid-sdk.git"
+    "url": "git@github.com:TropixInc/w3block-sdk.git"
   },
   "bugs": {
-    "url": "https://github.com/TropixInc/pixwayid-sdk/issues"
+    "url": "https://github.com/TropixInc/w3block-sdk/issues"
   },
   "devDependencies": {
     "@commitlint/cli": "^15.0.0",
