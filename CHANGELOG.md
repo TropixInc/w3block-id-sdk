@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://github.com/TropixInc/w3block-sdk/compare/v0.0.8...v0.0.9) (2022-07-29)
+
+
+### Features
+
+* add interfaces and helpers ([612d503](https://github.com/TropixInc/w3block-sdk/commit/612d50388b45e8e6f88fb3881f5d6c3aba9445ba))
+
 ### [0.0.8](https://github.com/TropixInc/w3block-sdk/compare/v0.0.7...v0.0.8) (2022-07-28)
 
 
