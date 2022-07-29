@@ -1,4 +1,10 @@
-import { W3blockIdSDKOptions, isUserCredential, isAppCredential, UserCredential, AppCredential } from '../interfaces';
+import {
+  W3blockIdSDKOptions,
+  isUserCredential,
+  isTenantCredential,
+  UserCredential,
+  TenantCredential,
+} from '../interfaces';
 import { AxiosError, AxiosRequestConfig } from 'axios';
 import { default as jwt_decode, JwtPayload } from 'jwt-decode';
 import * as datefns from 'date-fns';
@@ -51,7 +57,6 @@ export class W3blockIdSDK {
       clearInterval(this.timer);
     }
 
-    // TODO change to a timeout approach
     this.timer = setInterval(() => {
       this.triggerRefreshToken().catch((error) => console.error(error?.response?.data || error));
     }, 60_000);
@@ -102,14 +107,14 @@ export class W3blockIdSDK {
   }
 
   /**
-   * If the credential is a user credential, authenticate as a user. If the credential is an app
-   * credential, authenticate as an app. If the credential is neither, throw an error
+   * If the credential is a user credential, authenticate as a user. If the credential is an tenant
+   * credential, authenticate as an tenant. If the credential is neither, throw an error
    */
   public async connect(): Promise<void> {
     if (isUserCredential(this.options.credential)) {
       await this.authenticateAsUser(this.options.credential);
-    } else if (isAppCredential(this.options.credential)) {
-      await this.authenticateAsApp(this.options.credential);
+    } else if (isTenantCredential(this.options.credential)) {
+      await this.authenticateAsTenant(this.options.credential);
     } else {
       throw new Error('Invalid credentials');
     }
@@ -234,9 +239,9 @@ export class W3blockIdSDK {
 
   /**
    * This function is not implemented.
-   * @param {AppCredential} credential - The credential to use for authentication.
+   * @param {TenantCredential} credential - The credential to use for authentication.
    */
-  private async authenticateAsApp(credential: AppCredential): Promise<void> {
+  private async authenticateAsTenant(credential: TenantCredential): Promise<void> {
     const { data } = await this.api.auth.signInTenant(credential);
 
     if (!data.token) {
