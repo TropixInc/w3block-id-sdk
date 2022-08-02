@@ -268,6 +268,24 @@ export interface AccountCompleteRetryDto {
   tenantId: string;
 }
 
+export enum ChainId {
+  Local = 1337,
+  Mumbai = 80001,
+}
+
+export interface RequestMetamaskDto {
+  /** @example 0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9 */
+  address: string;
+
+  /** @example 1337 */
+  chainId: ChainId;
+}
+
+export interface ClaimMetamaskDto {
+  /** @example 6ef8fe3b-d901-4f01-9aeb-20fecc545521 */
+  signature: string;
+}
+
 export enum CountryCodeEnum {
   BGD = 'BGD',
   BEL = 'BEL',
@@ -529,6 +547,12 @@ export interface CreateTenantDto {
   countryCode: CountryCodeEnum;
 }
 
+export enum TenantRoleEnum {
+  Application = 'application',
+  Administrator = 'administrator',
+  Integration = 'integration',
+}
+
 export interface TenantEntityDto {
   id: string;
   name: string;
@@ -536,6 +560,9 @@ export interface TenantEntityDto {
 
   /** @example BRA */
   countryCode: CountryCodeEnum;
+
+  /** @example ["application"] */
+  roles: TenantRoleEnum;
   wallets: string[];
   client?: object;
   clientId?: object;
@@ -839,6 +866,78 @@ export namespace Users {
     export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = AccountCompleteRetryDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users Wallet
+   * @name Create2
+   * @request POST:/users/{tenantId}/wallets/vault/claim
+   * @originalName create
+   * @duplicate
+   * @secure
+   */
+  export namespace Create2 {
+    export type RequestParams = { tenantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users Wallet
+   * @name FindAll
+   * @request GET:/users/{tenantId}/wallets
+   * @secure
+   */
+  export namespace FindAll {
+    export type RequestParams = { tenantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users Wallet
+   * @name FindOne
+   * @request GET:/users/{tenantId}/wallets/{id}
+   * @secure
+   */
+  export namespace FindOne {
+    export type RequestParams = { id: string; tenantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users Wallet
+   * @name RequestMetamask
+   * @request POST:/users/{tenantId}/wallets/metamask/request
+   * @secure
+   */
+  export namespace RequestMetamask {
+    export type RequestParams = { tenantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = RequestMetamaskDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users Wallet
+   * @name ClaimMetamask
+   * @request POST:/users/{tenantId}/wallets/metamask/claim
+   * @secure
+   */
+  export namespace ClaimMetamask {
+    export type RequestParams = { tenantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = ClaimMetamaskDto;
     export type RequestHeaders = {};
     export type ResponseBody = void;
   }
@@ -1408,6 +1507,92 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     accountCompleteRetry: (data: AccountCompleteRetryDto, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/users/account-complete/retry`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Wallet
+     * @name Create2
+     * @request POST:/users/{tenantId}/wallets/vault/claim
+     * @originalName create
+     * @duplicate
+     * @secure
+     */
+    create2: (tenantId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/users/${tenantId}/wallets/vault/claim`,
+        method: 'POST',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Wallet
+     * @name FindAll
+     * @request GET:/users/{tenantId}/wallets
+     * @secure
+     */
+    findAll: (tenantId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/users/${tenantId}/wallets`,
+        method: 'GET',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Wallet
+     * @name FindOne
+     * @request GET:/users/{tenantId}/wallets/{id}
+     * @secure
+     */
+    findOne: (id: string, tenantId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/users/${tenantId}/wallets/${id}`,
+        method: 'GET',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Wallet
+     * @name RequestMetamask
+     * @request POST:/users/{tenantId}/wallets/metamask/request
+     * @secure
+     */
+    requestMetamask: (tenantId: string, data: RequestMetamaskDto, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/users/${tenantId}/wallets/metamask/request`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Wallet
+     * @name ClaimMetamask
+     * @request POST:/users/{tenantId}/wallets/metamask/claim
+     * @secure
+     */
+    claimMetamask: (tenantId: string, data: ClaimMetamaskDto, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/users/${tenantId}/wallets/metamask/claim`,
         method: 'POST',
         body: data,
         secure: true,
