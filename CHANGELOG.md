@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.10](https://github.com/TropixInc/w3block-sdk/compare/v0.0.9...v0.0.10) (2022-08-02)
+
+
+### Bug Fixes
+
+* chainid enum override ([706e3dc](https://github.com/TropixInc/w3block-sdk/commit/706e3dc2aca9b6aefd54f5ce00cce42d290502be))
+
 ### [0.0.9](https://github.com/TropixInc/w3block-sdk/compare/v0.0.8...v0.0.9) (2022-07-29)
 
 
