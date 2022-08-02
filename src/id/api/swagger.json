@@ -73,7 +73,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin",
+            "description": "Need user with one of these roles: superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -128,7 +128,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin",
+            "description": "Need user with one of these roles: superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -253,7 +253,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin",
+            "description": "Need user with one of these roles: superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -306,7 +306,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin",
+            "description": "Need user with one of these roles: superAdmin, user, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -437,7 +437,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin",
+            "description": "Need user with one of these roles: superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -486,6 +486,174 @@
         ]
       }
     },
+    "/users/{tenantId}/wallets/vault/claim": {
+      "post": {
+        "operationId": "create",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users Wallet"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/wallets": {
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users Wallet"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/wallets/{id}": {
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users Wallet"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/wallets/metamask/request": {
+      "post": {
+        "operationId": "requestMetamask",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestMetamaskDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users Wallet"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/wallets/metamask/claim": {
+      "post": {
+        "operationId": "claimMetamask",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimMetamaskDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users Wallet"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/tenant": {
       "post": {
         "operationId": "create",
@@ -512,7 +680,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin",
+            "description": "Need user with one of these roles: superAdmin, integration, administrator",
             "content": {
               "application/json": {
                 "schema": {
@@ -589,7 +757,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin",
+            "description": "Need user with one of these roles: superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -624,7 +792,7 @@
         ],
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: superAdmin",
+            "description": "Need user with one of these roles: superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -667,7 +835,7 @@
         },
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: superAdmin",
+            "description": "Need user with one of these roles: superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -700,7 +868,7 @@
         ],
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: superAdmin",
+            "description": "Need user with one of these roles: superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -745,7 +913,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin",
+            "description": "Need user with one of these roles: integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -790,7 +958,7 @@
         },
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: superAdmin",
+            "description": "Need user with one of these roles: superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1783,6 +1951,43 @@
           "tenantId"
         ]
       },
+      "ChainId": {
+        "type": "string",
+        "enum": [
+          "1337",
+          "80001"
+        ]
+      },
+      "RequestMetamaskDto": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "example": "0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9"
+          },
+          "chainId": {
+            "default": 1337,
+            "example": 1337,
+            "$ref": "#/components/schemas/ChainId"
+          }
+        },
+        "required": [
+          "address",
+          "chainId"
+        ]
+      },
+      "ClaimMetamaskDto": {
+        "type": "object",
+        "properties": {
+          "signature": {
+            "type": "string",
+            "example": "6ef8fe3b-d901-4f01-9aeb-20fecc545521"
+          }
+        },
+        "required": [
+          "signature"
+        ]
+      },
       "CountryCodeEnum": {
         "type": "string",
         "enum": [
@@ -2058,6 +2263,14 @@
           "countryCode"
         ]
       },
+      "TenantRoleEnum": {
+        "type": "string",
+        "enum": [
+          "application",
+          "administrator",
+          "integration"
+        ]
+      },
       "TenantEntityDto": {
         "type": "object",
         "properties": {
@@ -2074,6 +2287,13 @@
             "default": "BRA",
             "example": "BRA",
             "$ref": "#/components/schemas/CountryCodeEnum"
+          },
+          "roles": {
+            "default": "application",
+            "example": [
+              "application"
+            ],
+            "$ref": "#/components/schemas/TenantRoleEnum"
           },
           "wallets": {
             "type": "array",
@@ -2108,6 +2328,7 @@
           "name",
           "document",
           "countryCode",
+          "roles",
           "wallets",
           "info"
         ]
