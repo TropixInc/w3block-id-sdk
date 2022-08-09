@@ -266,7 +266,11 @@ export interface AccountCompleteRetryDto {
 }
 
 export enum ChainId {
+  Mainnet = 1,
+  Ropsten = 3,
   Rinkeby = 4,
+  Kovan = 42,
+  Local = 1337,
   Mumbai = 80001,
   Polygon = 137,
 }
