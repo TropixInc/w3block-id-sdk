@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.11](https://github.com/TropixInc/w3block-sdk/compare/v0.0.10...v0.0.11) (2022-08-09)
+
+
+### Features
+
+* **chain:** add all chain ids ([9448022](https://github.com/TropixInc/w3block-sdk/commit/94480226fa65ff9d15fbca377784f48b54abfda6))
+
 ### [0.0.10](https://github.com/TropixInc/w3block-sdk/compare/v0.0.9...v0.0.10) (2022-08-02)
 
 

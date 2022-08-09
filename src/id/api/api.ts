@@ -91,8 +91,6 @@ export interface AddressResponseDto {
   coordinates?: string;
 }
 
-export type UserEntity = object;
-
 export enum WalletTypes {
   Vault = 'vault',
   Metamask = 'metamask',
@@ -116,7 +114,6 @@ export interface WalletResponseDto {
 
   /** @format uuid */
   ownerId: string;
-  owner: UserEntity;
 
   /** @example vault */
   type: WalletTypes;
@@ -269,16 +266,38 @@ export interface AccountCompleteRetryDto {
 }
 
 export enum ChainId {
+  Mainnet = 1,
+  Ropsten = 3,
+  Rinkeby = 4,
+  Kovan = 42,
   Local = 1337,
   Mumbai = 80001,
+  Polygon = 137,
 }
 
 export interface RequestMetamaskDto {
   /** @example 0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9 */
   address: string;
 
-  /** @example 1337 */
+  /** @example 4 */
   chainId: ChainId;
+}
+
+export interface RequestMetamaskResponseDto {
+  /** @example 0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9 */
+  address: string;
+
+  /** @example 4 */
+  chainId: ChainId;
+
+  /** @example  */
+  message: string;
+
+  /** @example 1666581369815 */
+  nonce: number;
+
+  /** @format uuid */
+  userId: string;
 }
 
 export interface ClaimMetamaskDto {
@@ -624,7 +643,7 @@ export interface TenantClientResponseDto {
   /** @example 193d34cd9f6ca1f2661357e346822a3643bd5c3d0590a670ee896af6ca9a8141 */
   apiKey: string;
 
-  /** @format uuid  */
+  /** @format uuid */
   clientId: string;
 
   /** @example ef9b4f3cc540501fa1d7c4f0fc1216851500ed52aa85f2adb34d978f70688f37 */
@@ -872,46 +891,44 @@ export namespace Users {
   /**
    * No description
    * @tags Users Wallet
-   * @name Create2
+   * @name CreateVault
    * @request POST:/users/{tenantId}/wallets/vault/claim
-   * @originalName create
-   * @duplicate
    * @secure
    */
-  export namespace Create2 {
+  export namespace CreateVault {
     export type RequestParams = { tenantId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = void;
+    export type ResponseBody = WalletResponseDto;
   }
   /**
    * No description
    * @tags Users Wallet
-   * @name FindAll
-   * @request GET:/users/{tenantId}/wallets
+   * @name FindAllWalletByUserId
+   * @request GET:/users/{tenantId}/wallets/{userId}
    * @secure
    */
-  export namespace FindAll {
-    export type RequestParams = { tenantId: string };
+  export namespace FindAllWalletByUserId {
+    export type RequestParams = { userId: string; tenantId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = void;
+    export type ResponseBody = WalletResponseDto[];
   }
   /**
    * No description
    * @tags Users Wallet
-   * @name FindOne
-   * @request GET:/users/{tenantId}/wallets/{id}
+   * @name FindWallet
+   * @request GET:/users/{tenantId}/wallets/{userId}/{walletId}
    * @secure
    */
-  export namespace FindOne {
-    export type RequestParams = { id: string; tenantId: string };
+  export namespace FindWallet {
+    export type RequestParams = { walletId: string; userId: string; tenantId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = void;
+    export type ResponseBody = WalletResponseDto;
   }
   /**
    * No description
@@ -925,7 +942,7 @@ export namespace Users {
     export type RequestQuery = {};
     export type RequestBody = RequestMetamaskDto;
     export type RequestHeaders = {};
-    export type ResponseBody = void;
+    export type ResponseBody = RequestMetamaskResponseDto;
   }
   /**
    * No description
@@ -939,7 +956,21 @@ export namespace Users {
     export type RequestQuery = {};
     export type RequestBody = ClaimMetamaskDto;
     export type RequestHeaders = {};
-    export type ResponseBody = void;
+    export type ResponseBody = WalletResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users Wallet
+   * @name FindByAddress
+   * @request GET:/users/{tenantId}/wallets/by-address/{address}
+   * @secure
+   */
+  export namespace FindByAddress {
+    export type RequestParams = { address: string; tenantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = WalletResponseDto;
   }
 }
 
@@ -1138,6 +1169,7 @@ export namespace Auth {
    * @tags Authentication
    * @name RefreshToken
    * @request POST:/auth/refresh-token
+   * @secure
    */
   export namespace RefreshToken {
     export type RequestParams = {};
@@ -1164,6 +1196,7 @@ export namespace Auth {
    * @tags Authentication
    * @name LogOut
    * @request POST:/auth/logout
+   * @secure
    */
   export namespace LogOut {
     export type RequestParams = {};
@@ -1309,7 +1342,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.1.3
+ * @version 0.1.4
  * @baseUrl http://localhost:6007
  * @contact
  */
@@ -1518,17 +1551,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users Wallet
-     * @name Create2
+     * @name CreateVault
      * @request POST:/users/{tenantId}/wallets/vault/claim
-     * @originalName create
-     * @duplicate
      * @secure
      */
-    create2: (tenantId: string, params: RequestParams = {}) =>
-      this.request<void, any>({
+    createVault: (tenantId: string, params: RequestParams = {}) =>
+      this.request<WalletResponseDto, any>({
         path: `/users/${tenantId}/wallets/vault/claim`,
         method: 'POST',
         secure: true,
+        format: 'json',
         ...params,
       }),
 
@@ -1536,15 +1568,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users Wallet
-     * @name FindAll
-     * @request GET:/users/{tenantId}/wallets
+     * @name FindAllWalletByUserId
+     * @request GET:/users/{tenantId}/wallets/{userId}
      * @secure
      */
-    findAll: (tenantId: string, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/users/${tenantId}/wallets`,
+    findAllWalletByUserId: (userId: string, tenantId: string, params: RequestParams = {}) =>
+      this.request<WalletResponseDto[], any>({
+        path: `/users/${tenantId}/wallets/${userId}`,
         method: 'GET',
         secure: true,
+        format: 'json',
         ...params,
       }),
 
@@ -1552,15 +1585,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users Wallet
-     * @name FindOne
-     * @request GET:/users/{tenantId}/wallets/{id}
+     * @name FindWallet
+     * @request GET:/users/{tenantId}/wallets/{userId}/{walletId}
      * @secure
      */
-    findOne: (id: string, tenantId: string, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/users/${tenantId}/wallets/${id}`,
+    findWallet: (walletId: string, userId: string, tenantId: string, params: RequestParams = {}) =>
+      this.request<WalletResponseDto, any>({
+        path: `/users/${tenantId}/wallets/${userId}/${walletId}`,
         method: 'GET',
         secure: true,
+        format: 'json',
         ...params,
       }),
 
@@ -1573,12 +1607,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     requestMetamask: (tenantId: string, data: RequestMetamaskDto, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<RequestMetamaskResponseDto, any>({
         path: `/users/${tenantId}/wallets/metamask/request`,
         method: 'POST',
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: 'json',
         ...params,
       }),
 
@@ -1591,12 +1626,30 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     claimMetamask: (tenantId: string, data: ClaimMetamaskDto, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<WalletResponseDto, any>({
         path: `/users/${tenantId}/wallets/metamask/claim`,
         method: 'POST',
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Wallet
+     * @name FindByAddress
+     * @request GET:/users/{tenantId}/wallets/by-address/{address}
+     * @secure
+     */
+    findByAddress: (address: string, tenantId: string, params: RequestParams = {}) =>
+      this.request<WalletResponseDto, HttpExceptionDto>({
+        path: `/users/${tenantId}/wallets/by-address/${address}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
         ...params,
       }),
   };
@@ -1835,12 +1888,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Authentication
      * @name RefreshToken
      * @request POST:/auth/refresh-token
+     * @secure
      */
     refreshToken: (data: RefreshTokenDto, params: RequestParams = {}) =>
       this.request<SignInResponseDto, HttpExceptionDto>({
         path: `/auth/refresh-token`,
         method: 'POST',
         body: data,
+        secure: true,
         type: ContentType.Json,
         format: 'json',
         ...params,
@@ -1869,11 +1924,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Authentication
      * @name LogOut
      * @request POST:/auth/logout
+     * @secure
      */
     logOut: (params: RequestParams = {}) =>
       this.request<void, HttpExceptionDto>({
         path: `/auth/logout`,
         method: 'POST',
+        secure: true,
         ...params,
       }),
 
