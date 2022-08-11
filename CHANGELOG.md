@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.14](https://github.com/TropixInc/w3block-sdk/compare/v0.0.13...v0.0.14) (2022-08-11)
+
+
+### Features
+
+* changing publish to npm ([d35695f](https://github.com/TropixInc/w3block-sdk/commit/d35695f412c55d82d666bd0c5588438bec8d61dc))
+
 ### [0.0.13](https://github.com/TropixInc/w3block-sdk/compare/v0.0.12...v0.0.13) (2022-08-11)
 
 ### [0.0.12](https://github.com/TropixInc/w3block-sdk/compare/v0.0.11...v0.0.12) (2022-08-11)

@@ -1,6 +1,6 @@
 {
-  "name": "@tropixinc/sdk-id",
-  "version": "0.0.13",
+  "name": "@w3block/sdk-id",
+  "version": "0.0.14",
   "description": "W3block ID SDK",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -21,7 +21,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage --no-cache --runInBand",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
-    "addscope": "node tools/packagejson name @tropixinc/sdk-id",
+    "addscope": "node tools/packagejson name @w3block/sdk-id",
     "copy-dts": "copyfiles -u 1 \"src/**/*.d.ts\" dist/types",
     "lint": "eslint . --fix",
     "release": "standard-version",
@@ -34,8 +34,8 @@
     "api:pull": "node tools/pull-api-swagger.js"
   },
   "publishConfig": {
-    "access": "restricted",
-    "registry": "https://npm.pkg.github.com/"
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "files": [
     "dist"
