@@ -521,6 +521,59 @@
         ]
       }
     },
+    "/users/{tenantId}/wallets/by-address/{address}": {
+      "get": {
+        "operationId": "findByAddress",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalletResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: administrator, integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Wallet"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/users/{tenantId}/wallets/{userId}": {
       "get": {
         "operationId": "findAllWalletByUserId",
@@ -693,51 +746,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WalletResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users Wallet"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/wallets/by-address/{address}": {
-      "get": {
-        "operationId": "findByAddress",
-        "parameters": [
-          {
-            "name": "address",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WalletResponseDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: administrator, integration",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
                 }
               }
             }
@@ -1830,6 +1838,14 @@
             "items": {
               "$ref": "#/components/schemas/WalletResponseDto"
             }
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
           }
         },
         "required": [
@@ -2072,8 +2088,8 @@
             "example": "0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9"
           },
           "chainId": {
-            "default": 4,
-            "example": 4,
+            "default": 1337,
+            "example": 1337,
             "$ref": "#/components/schemas/ChainId"
           }
         },
@@ -2090,8 +2106,8 @@
             "example": "0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9"
           },
           "chainId": {
-            "default": 4,
-            "example": 4,
+            "default": 1337,
+            "example": 1337,
             "$ref": "#/components/schemas/ChainId"
           },
           "message": {
