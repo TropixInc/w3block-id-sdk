@@ -170,6 +170,8 @@ export interface HttpExceptionDto {
 
   /** @example 500 */
   statusCode: number;
+
+  /** @example INTERNAL_SERVER_ERROR */
   message: string;
 
   /** @example null */
@@ -709,10 +711,117 @@ export interface ResetPasswordDto {
   token: string;
 }
 
+export interface JwtPayloadDto {
+  /** @example 00000000-0000-0000-0000-000000000001 */
+  sub: string;
+
+  /** @example 00000000-0000-0000-0000-000000000001 */
+  iss: string;
+
+  /** @example 00000000-0000-0000-0000-000000000001 */
+  aud?: string[];
+
+  /** @example 1516239022 */
+  exp?: number;
+
+  /** @example 1516239022 */
+  iat?: number;
+
+  /** @example 00000000-0000-0000-0000-000000000001 */
+  tenantId: string;
+}
+
+export enum JwtType {
+  User = 'user',
+  Tenant = 'tenant',
+}
+
+export interface UserJwtPayloadDto {
+  /** @example 00000000-0000-0000-0000-000000000001 */
+  sub: string;
+
+  /** @example 00000000-0000-0000-0000-000000000001 */
+  iss: string;
+
+  /** @example 00000000-0000-0000-0000-000000000001 */
+  aud?: string[];
+
+  /** @example 1516239022 */
+  exp?: number;
+
+  /** @example 1516239022 */
+  iat?: number;
+
+  /** @example 00000000-0000-0000-0000-000000000001 */
+  tenantId: string;
+
+  /** @example user@example.com */
+  email: string;
+
+  /** @example Jon Doe */
+  name?: string;
+
+  /** @example user */
+  roles: UserRoleEnum[];
+
+  /** @example true */
+  verified: boolean;
+
+  /** @example user */
+  type: JwtType;
+}
+
+export interface TenantJwtPayloadDto {
+  /** @example 00000000-0000-0000-0000-000000000001 */
+  sub: string;
+
+  /** @example 00000000-0000-0000-0000-000000000001 */
+  iss: string;
+
+  /** @example 00000000-0000-0000-0000-000000000001 */
+  aud?: string[];
+
+  /** @example 1516239022 */
+  exp?: number;
+
+  /** @example 1516239022 */
+  iat?: number;
+
+  /** @example 00000000-0000-0000-0000-000000000001 */
+  tenantId: string;
+
+  /** @example application */
+  roles: TenantRoleEnum[];
+
+  /** @example tenant */
+  type: JwtType;
+}
+
 export interface SignInResponseDto {
+  /** @example eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJlbWFpbCI6InBpeHdheUB3M2Jsb2NrLmlvIiwibmFtZSI6IlBpeHdheSIsInJvbGUiOiJhZG1pbiIsImNvbXBhbnlJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRlbmFudElkIjoiNWJkOTZhYWYtMTg4OC00OTNlLWI4NGUtN2M1NGE0NzMxODY4IiwidmVyaWZpZWQiOnRydWUsImlhdCI6MTY1ODUwODE3OSwiZXhwIjoxNjkwMDQ0MTc5fQ.L_0Py_M_1Ija_QnFKl7uNZr9fpkcVpZSv-tnNf07YQOcIEuR-TU0S9DMkLkHtmYrHKJe_vzzf14FS7J43NYVILn3NrXb-pC5-YO8V3JnMX4yBsgM2t0xdqEW6fqILk8_oxXsDFAhNkaNeBa2ljNilDncSepps7q69PP-TP7JVkjKQg2Za_E6ZwU */
   token: string;
+
+  /** @example eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJ0ZW5hbnRJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRva2VuSGFzaCI6ImJiMmFjMzE4M2EzZDZlMDljYTI2ZDkzNDEzNjQyNzU4MGY3Yjc5NWVlYWU3YTFlYzUzNDU2MjU5NThjMDZhYWQiLCJpYXQiOjE2NTg1MDgxNzksImV4cCI6MTY5MDA0NDE3OX0.au6dcpbcSmF134J335G4CymEUlwK39TT-4jXQwEUm0zRokFBiHpkXZzy23fTufyo_XzW_Tr_IUfO9b_y5e0thjIfvng4dS7akdeQAykcN7nRhwNBtqCVZxFHyZE39yzz38JLMwC00EtaKowM6lPykJYC5qZC0bBj4g4Yb1GG9IU5dQodibdXj00 */
   refreshToken: string;
-  data: object;
+  data: UserJwtPayloadDto | TenantJwtPayloadDto;
+}
+
+export interface BadRequestExceptionDto {
+  /** @example 2022-07-25T17:24:07.042Z */
+  timestamp: string;
+
+  /** @example /api/foo/bar */
+  path: string;
+  error: string;
+
+  /** @example 400 */
+  statusCode: number;
+
+  /** @example Bad request */
+  message: string;
+
+  /** @example null */
+  data?: object;
 }
 
 export interface LoginUserDto {
@@ -726,9 +835,45 @@ export interface LoginUserDto {
   tenantId?: string;
 }
 
+export interface UnauthorizedExceptionDto {
+  /** @example 2022-07-25T17:24:07.042Z */
+  timestamp: string;
+
+  /** @example /api/foo/bar */
+  path: string;
+  error: string;
+
+  /** @example 401 */
+  statusCode: number;
+
+  /** @example Unauthorized */
+  message: string;
+
+  /** @example null */
+  data?: object;
+}
+
 export interface RefreshTokenDto {
   /** @example eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiI4NGViM2Q2NC01OTk4LTRjM2UtODliMS0yZTgyZmQ2NDRjMDciLCJpc3MiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJhdWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJjb21wYW55SWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJ0b2tlbkhhc2giOiI5NGFkMzFjMjcwMWI0NzQxNjk5ZjI1YTA4NWM0NmQyNDE4ZTk2MjNhYTcyYjM3MGZhZWZkNWJhYWYzYzM3YzgzIiwiaWF0IjoxNjU3MzEwMzQwLCJleHAiOjE2NTc0ODMxNDB9.epg4Grc6LkJMMxNlFbsdEc5Rq2nupXZTsFQeD-JgKZMWg4ey_ialD-mmSBehHD_xFF4Ho_BbWG1ld9aCuQBQcft4zxDfMdxogM5fMfdhAnAccM7a4J0NyKECzYHhIDe_jnrpT4QVHs4x78NIookQiKguANuSa7dNViFphpC9K5LRcxVwS6sEqT8 */
   refreshToken: string;
+}
+
+export interface ForbiddenExceptionDto {
+  /** @example 2022-07-25T17:24:07.042Z */
+  timestamp: string;
+
+  /** @example /api/foo/bar */
+  path: string;
+  error: string;
+
+  /** @example 403 */
+  statusCode: number;
+
+  /** @example Forbidden */
+  message: string;
+
+  /** @example null */
+  data?: object;
 }
 
 export interface LoginTenantDto {
@@ -737,6 +882,21 @@ export interface LoginTenantDto {
 
   /** @example 00000000-0000-0000-0000-000000000001 */
   tenantId: string;
+}
+
+export interface JSONWebKeyDto {
+  /** @example RSA */
+  kty: string;
+
+  /** @example LySdYaP3_-DOrOElTtHy9TAM9EZ8veMzPftUWibTTNI */
+  kid: string;
+  alg?: string;
+  n?: string;
+  e?: string;
+}
+
+export interface JSONWebKeySetDto {
+  keys: JSONWebKeyDto[];
 }
 
 export namespace Users {
@@ -1142,7 +1302,7 @@ export namespace Auth {
     export type RequestQuery = {};
     export type RequestBody = RequestPasswordResetDto;
     export type RequestHeaders = {};
-    export type ResponseBody = any;
+    export type ResponseBody = void;
   }
   /**
    * No description
@@ -1209,7 +1369,7 @@ export namespace Auth {
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = void;
+    export type ResponseBody = any;
   }
   /**
    * No description
@@ -1222,7 +1382,7 @@ export namespace Auth {
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = void;
+    export type ResponseBody = JSONWebKeySetDto;
   }
 }
 
@@ -1814,7 +1974,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/auth/verify-sign-up
      */
     verifySignUp: (query: { email: string; token: string }, params: RequestParams = {}) =>
-      this.request<any, void | HttpExceptionDto>({
+      this.request<any, void>({
         path: `/auth/verify-sign-up`,
         method: 'GET',
         query: query,
@@ -1829,7 +1989,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/auth/request-confirmation-email
      */
     requestConfirmationEmail: (data: RequestConfirmationEmailDto, params: RequestParams = {}) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, any>({
         path: `/auth/request-confirmation-email`,
         method: 'POST',
         body: data,
@@ -1845,12 +2005,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/auth/request-password-reset
      */
     requestPasswordReset: (data: RequestPasswordResetDto, params: RequestParams = {}) =>
-      this.request<any, HttpExceptionDto>({
+      this.request<void, any>({
         path: `/auth/request-password-reset`,
         method: 'POST',
         body: data,
         type: ContentType.Json,
-        format: 'json',
         ...params,
       }),
 
@@ -1862,7 +2021,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/auth/reset-password
      */
     resetPassword: (data: ResetPasswordDto, params: RequestParams = {}) =>
-      this.request<SignInResponseDto, HttpExceptionDto>({
+      this.request<SignInResponseDto, BadRequestExceptionDto>({
         path: `/auth/reset-password`,
         method: 'POST',
         body: data,
@@ -1879,7 +2038,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/auth/signin
      */
     signIn: (data: LoginUserDto, params: RequestParams = {}) =>
-      this.request<SignInResponseDto, HttpExceptionDto>({
+      this.request<SignInResponseDto, UnauthorizedExceptionDto>({
         path: `/auth/signin`,
         method: 'POST',
         body: data,
@@ -1897,7 +2056,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     refreshToken: (data: RefreshTokenDto, params: RequestParams = {}) =>
-      this.request<SignInResponseDto, HttpExceptionDto>({
+      this.request<SignInResponseDto, ForbiddenExceptionDto>({
         path: `/auth/refresh-token`,
         method: 'POST',
         body: data,
@@ -1915,7 +2074,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/auth/signin/tenant
      */
     signInTenant: (data: LoginTenantDto, params: RequestParams = {}) =>
-      this.request<SignInResponseDto, HttpExceptionDto>({
+      this.request<SignInResponseDto, UnauthorizedExceptionDto>({
         path: `/auth/signin/tenant`,
         method: 'POST',
         body: data,
@@ -1933,7 +2092,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     logOut: (params: RequestParams = {}) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<any, ForbiddenExceptionDto>({
         path: `/auth/logout`,
         method: 'POST',
         secure: true,
@@ -1948,9 +2107,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/auth/jwks.json
      */
     getJwks: (params: RequestParams = {}) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<JSONWebKeySetDto, any>({
         path: `/auth/jwks.json`,
         method: 'GET',
+        format: 'json',
         ...params,
       }),
   };

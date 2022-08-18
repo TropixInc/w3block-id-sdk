@@ -1154,28 +1154,8 @@
           }
         ],
         "responses": {
-          "302": {
+          "301": {
             "description": "Redirect the user to the sign in page."
-          },
-          "401": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
           }
         },
         "tags": [
@@ -1186,7 +1166,6 @@
     "/auth/request-confirmation-email": {
       "post": {
         "operationId": "requestConfirmationEmail",
-        "summary": "",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1199,28 +1178,8 @@
           }
         },
         "responses": {
-          "201": {
+          "204": {
             "description": ""
-          },
-          "401": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
           }
         },
         "tags": [
@@ -1244,34 +1203,7 @@
         },
         "responses": {
           "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -1304,22 +1236,12 @@
               }
             }
           },
-          "401": {
+          "400": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
+                  "$ref": "#/components/schemas/BadRequestExceptionDto"
                 }
               }
             }
@@ -1360,17 +1282,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
+                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
                 }
               }
             }
@@ -1406,22 +1318,12 @@
               }
             }
           },
-          "401": {
+          "403": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
+                  "$ref": "#/components/schemas/ForbiddenExceptionDto"
                 }
               }
             }
@@ -1467,17 +1369,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
+                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
                 }
               }
             }
@@ -1493,25 +1385,12 @@
         "operationId": "logOut",
         "parameters": [],
         "responses": {
-          "204": {
-            "description": ""
-          },
-          "401": {
+          "403": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
+                  "$ref": "#/components/schemas/ForbiddenExceptionDto"
                 }
               }
             }
@@ -1533,24 +1412,11 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
-          },
-          "401": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
+                  "$ref": "#/components/schemas/JSONWebKeySetDto"
                 }
               }
             }
@@ -1875,7 +1741,8 @@
             "example": 500
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "example": "INTERNAL_SERVER_ERROR"
           },
           "data": {
             "type": "object",
@@ -2710,23 +2577,229 @@
           "token"
         ]
       },
+      "JwtPayloadDto": {
+        "type": "object",
+        "properties": {
+          "sub": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          },
+          "iss": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          },
+          "aud": {
+            "example": "00000000-0000-0000-0000-000000000001",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "exp": {
+            "type": "number",
+            "example": 1516239022
+          },
+          "iat": {
+            "type": "number",
+            "example": 1516239022
+          },
+          "tenantId": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          }
+        },
+        "required": [
+          "sub",
+          "iss",
+          "tenantId"
+        ]
+      },
+      "JwtType": {
+        "type": "string",
+        "enum": [
+          "user",
+          "tenant"
+        ]
+      },
+      "UserJwtPayloadDto": {
+        "type": "object",
+        "properties": {
+          "sub": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          },
+          "iss": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          },
+          "aud": {
+            "example": "00000000-0000-0000-0000-000000000001",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "exp": {
+            "type": "number",
+            "example": 1516239022
+          },
+          "iat": {
+            "type": "number",
+            "example": 1516239022
+          },
+          "tenantId": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          },
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "name": {
+            "type": "string",
+            "example": "Jon Doe"
+          },
+          "roles": {
+            "type": "array",
+            "example": "user",
+            "default": "user",
+            "items": {
+              "$ref": "#/components/schemas/UserRoleEnum"
+            }
+          },
+          "verified": {
+            "type": "boolean",
+            "example": true
+          },
+          "type": {
+            "example": "user",
+            "default": "user",
+            "$ref": "#/components/schemas/JwtType"
+          }
+        },
+        "required": [
+          "sub",
+          "iss",
+          "tenantId",
+          "email",
+          "roles",
+          "verified",
+          "type"
+        ]
+      },
+      "TenantJwtPayloadDto": {
+        "type": "object",
+        "properties": {
+          "sub": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          },
+          "iss": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          },
+          "aud": {
+            "example": "00000000-0000-0000-0000-000000000001",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "exp": {
+            "type": "number",
+            "example": 1516239022
+          },
+          "iat": {
+            "type": "number",
+            "example": 1516239022
+          },
+          "tenantId": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          },
+          "roles": {
+            "type": "array",
+            "example": "application",
+            "default": "application",
+            "items": {
+              "$ref": "#/components/schemas/TenantRoleEnum"
+            }
+          },
+          "type": {
+            "example": "tenant",
+            "default": "tenant",
+            "$ref": "#/components/schemas/JwtType"
+          }
+        },
+        "required": [
+          "sub",
+          "iss",
+          "tenantId",
+          "roles",
+          "type"
+        ]
+      },
       "SignInResponseDto": {
         "type": "object",
         "properties": {
           "token": {
-            "type": "string"
+            "type": "string",
+            "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJlbWFpbCI6InBpeHdheUB3M2Jsb2NrLmlvIiwibmFtZSI6IlBpeHdheSIsInJvbGUiOiJhZG1pbiIsImNvbXBhbnlJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRlbmFudElkIjoiNWJkOTZhYWYtMTg4OC00OTNlLWI4NGUtN2M1NGE0NzMxODY4IiwidmVyaWZpZWQiOnRydWUsImlhdCI6MTY1ODUwODE3OSwiZXhwIjoxNjkwMDQ0MTc5fQ.L_0Py_M_1Ija_QnFKl7uNZr9fpkcVpZSv-tnNf07YQOcIEuR-TU0S9DMkLkHtmYrHKJe_vzzf14FS7J43NYVILn3NrXb-pC5-YO8V3JnMX4yBsgM2t0xdqEW6fqILk8_oxXsDFAhNkaNeBa2ljNilDncSepps7q69PP-TP7JVkjKQg2Za_E6ZwU"
           },
           "refreshToken": {
-            "type": "string"
+            "type": "string",
+            "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJ0ZW5hbnRJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRva2VuSGFzaCI6ImJiMmFjMzE4M2EzZDZlMDljYTI2ZDkzNDEzNjQyNzU4MGY3Yjc5NWVlYWU3YTFlYzUzNDU2MjU5NThjMDZhYWQiLCJpYXQiOjE2NTg1MDgxNzksImV4cCI6MTY5MDA0NDE3OX0.au6dcpbcSmF134J335G4CymEUlwK39TT-4jXQwEUm0zRokFBiHpkXZzy23fTufyo_XzW_Tr_IUfO9b_y5e0thjIfvng4dS7akdeQAykcN7nRhwNBtqCVZxFHyZE39yzz38JLMwC00EtaKowM6lPykJYC5qZC0bBj4g4Yb1GG9IU5dQodibdXj00"
           },
           "data": {
-            "type": "object"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/UserJwtPayloadDto"
+              },
+              {
+                "$ref": "#/components/schemas/TenantJwtPayloadDto"
+              }
+            ]
           }
         },
         "required": [
           "token",
           "refreshToken",
           "data"
+        ]
+      },
+      "BadRequestExceptionDto": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "example": "2022-07-25T17:24:07.042Z"
+          },
+          "path": {
+            "type": "string",
+            "example": "/api/foo/bar"
+          },
+          "error": {
+            "type": "string"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 400
+          },
+          "message": {
+            "type": "string",
+            "example": "Bad request"
+          },
+          "data": {
+            "type": "object",
+            "example": null
+          }
+        },
+        "required": [
+          "timestamp",
+          "path",
+          "error",
+          "statusCode",
+          "message"
         ]
       },
       "LoginUserDto": {
@@ -2750,6 +2823,41 @@
           "password"
         ]
       },
+      "UnauthorizedExceptionDto": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "example": "2022-07-25T17:24:07.042Z"
+          },
+          "path": {
+            "type": "string",
+            "example": "/api/foo/bar"
+          },
+          "error": {
+            "type": "string"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 401
+          },
+          "message": {
+            "type": "string",
+            "example": "Unauthorized"
+          },
+          "data": {
+            "type": "object",
+            "example": null
+          }
+        },
+        "required": [
+          "timestamp",
+          "path",
+          "error",
+          "statusCode",
+          "message"
+        ]
+      },
       "RefreshTokenDto": {
         "type": "object",
         "properties": {
@@ -2760,6 +2868,41 @@
         },
         "required": [
           "refreshToken"
+        ]
+      },
+      "ForbiddenExceptionDto": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "example": "2022-07-25T17:24:07.042Z"
+          },
+          "path": {
+            "type": "string",
+            "example": "/api/foo/bar"
+          },
+          "error": {
+            "type": "string"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 403
+          },
+          "message": {
+            "type": "string",
+            "example": "Forbidden"
+          },
+          "data": {
+            "type": "object",
+            "example": null
+          }
+        },
+        "required": [
+          "timestamp",
+          "path",
+          "error",
+          "statusCode",
+          "message"
         ]
       },
       "LoginTenantDto": {
@@ -2780,6 +2923,46 @@
           "key",
           "secret",
           "tenantId"
+        ]
+      },
+      "JSONWebKeyDto": {
+        "type": "object",
+        "properties": {
+          "kty": {
+            "type": "string",
+            "example": "RSA"
+          },
+          "kid": {
+            "type": "string",
+            "example": "LySdYaP3_-DOrOElTtHy9TAM9EZ8veMzPftUWibTTNI"
+          },
+          "alg": {
+            "type": "string"
+          },
+          "n": {
+            "type": "string"
+          },
+          "e": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kty",
+          "kid"
+        ]
+      },
+      "JSONWebKeySetDto": {
+        "type": "object",
+        "properties": {
+          "keys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JSONWebKeyDto"
+            }
+          }
+        },
+        "required": [
+          "keys"
         ]
       }
     }
