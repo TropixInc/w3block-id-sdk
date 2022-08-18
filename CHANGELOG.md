@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/TropixInc/w3block-sdk/compare/v0.0.16...v0.1.0) (2022-08-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* **auth:** options and connection was changed
+
+* **auth:** change authentication ([1a02a10](https://github.com/TropixInc/w3block-sdk/commit/1a02a10c87be714e48c7be1482352758e6d013db))
+
 ### [0.0.16](https://github.com/TropixInc/w3block-sdk/compare/v0.0.15...v0.0.16) (2022-08-16)
 
 
