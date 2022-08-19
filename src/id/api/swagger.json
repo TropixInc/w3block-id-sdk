@@ -341,7 +341,7 @@
         ]
       }
     },
-    "/users/token": {
+    "/users/{id}/token": {
       "patch": {
         "operationId": "updateToken",
         "parameters": [
@@ -386,7 +386,7 @@
         ]
       }
     },
-    "/users/edit/{id}": {
+    "/users/{id}/edit": {
       "patch": {
         "operationId": "update",
         "parameters": [

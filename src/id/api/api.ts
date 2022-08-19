@@ -1059,7 +1059,7 @@ export namespace Users {
    * No description
    * @tags Users
    * @name UpdateToken
-   * @request PATCH:/users/token
+   * @request PATCH:/users/{id}/token
    * @secure
    */
   export namespace UpdateToken {
@@ -1073,7 +1073,7 @@ export namespace Users {
    * No description
    * @tags Users
    * @name Update
-   * @request PATCH:/users/edit/{id}
+   * @request PATCH:/users/{id}/edit
    * @secure
    */
   export namespace Update {
@@ -1754,12 +1754,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Users
      * @name UpdateToken
-     * @request PATCH:/users/token
+     * @request PATCH:/users/{id}/token
      * @secure
      */
     updateToken: (id: string, params: RequestParams = {}) =>
       this.request<UserTokenResponseDto, HttpExceptionDto>({
-        path: `/users/token`,
+        path: `/users/${id}/token`,
         method: 'PATCH',
         secure: true,
         format: 'json',
@@ -1771,12 +1771,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Users
      * @name Update
-     * @request PATCH:/users/edit/{id}
+     * @request PATCH:/users/{id}/edit
      * @secure
      */
     update: (id: string, data: UpdateUserDto, params: RequestParams = {}) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
-        path: `/users/edit/${id}`,
+        path: `/users/${id}/edit`,
         method: 'PATCH',
         body: data,
         secure: true,
