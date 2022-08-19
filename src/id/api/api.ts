@@ -42,11 +42,11 @@ export interface CreateUserDto {
   confirmation: string;
 
   /** @example 00000000-0000-0000-0000-000000000000 */
-  tenantId?: string;
+  tenantId: string;
 
   /** @example user */
   role: UserRoleEnum;
-  name: string;
+  name?: string;
 
   /** @example user@example.com */
   email: string;
@@ -56,7 +56,8 @@ export interface CreateUserDto {
   address?: CreateAddressDto;
 
   /** @example true */
-  sendEmail?: boolean;
+  sendEmail?: object;
+  callbackUrl?: string;
 }
 
 export interface AddressResponseDto {
@@ -132,8 +133,8 @@ export interface UserPublicResponseDto {
   /** @example true */
   verified: boolean;
 
-  /** @example true */
-  role: string;
+  /** @example user */
+  roles: any[][];
 
   /** @example pt-br */
   i18nLocale: I18NLocaleEnum;
@@ -200,6 +201,7 @@ export interface InviteUserDto {
    * @example P@ssw0rd
    */
   password?: string;
+  callbackUrl?: string;
 }
 
 export interface UpdateAddressDto {
@@ -219,28 +221,6 @@ export interface UpdateProfileUserDto {
 
   /** @example pt-br */
   i18nLocale?: I18NLocaleEnum;
-  address?: UpdateAddressDto;
-}
-
-export interface UpdateUserDto {
-  /**
-   * Password should include lowercase, uppercase and digits
-   * @example P@ssw0rd
-   */
-  password?: string;
-
-  /** @example user */
-  role?: UserRoleEnum;
-  name?: string;
-
-  /** @example user@example.com */
-  email?: string;
-
-  /** @example pt-br */
-  i18nLocale?: I18NLocaleEnum;
-
-  /** @example true */
-  sendEmail?: boolean;
   address?: UpdateAddressDto;
 }
 
@@ -266,6 +246,29 @@ export interface UserTokenResponseDto {
 
   /** @example b8ee934f8d9c6704b982c14b95ba3266fef9bba7798ed4885a05c70dbb4545435517cdd25f851e7522ad503e04ccb691a18f507b792866c3282d13abc2a09cb2;1654178219308 */
   token?: string;
+}
+
+export interface UpdateUserDto {
+  /**
+   * Password should include lowercase, uppercase and digits
+   * @example P@ssw0rd
+   */
+  password?: string;
+
+  /** @example user */
+  role?: UserRoleEnum;
+  name?: string;
+
+  /** @example user@example.com */
+  email?: string;
+
+  /** @example pt-br */
+  i18nLocale?: I18NLocaleEnum;
+
+  /** @example true */
+  sendEmail?: object;
+  callbackUrl?: string;
+  address?: UpdateAddressDto;
 }
 
 export interface AccountCompleteRetryDto {
@@ -642,7 +645,7 @@ export interface PaginationLinksDto {
 }
 
 export interface AbstractBase {
-  items: TenantEntityDto[];
+  items: TenantAccessEntityDto[];
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
 }
@@ -686,13 +689,29 @@ export interface OmitTypeClass {
   active: boolean;
 }
 
+export type TenantEntity = object;
+
+export interface TenantAccessEntityDto {
+  /** @format uuid */
+  id: string;
+  key: string;
+  secret: string;
+  tenant: TenantEntity;
+  tenantId: string;
+  active: boolean;
+}
+
 export interface RequestConfirmationEmailDto {
   email: string;
-  tenantId?: string;
+  tenantId: string;
+  callbackUrl: string;
 }
 
 export interface RequestPasswordResetDto {
+  /** @example email@example.com */
   email: string;
+
+  /** @example 00000000-0000-0000-0000-000000000001 */
   tenantId?: string;
 }
 
@@ -824,15 +843,28 @@ export interface BadRequestExceptionDto {
   data?: object;
 }
 
-export interface LoginUserDto {
-  /** @example user@example.com */
-  email: string;
-
-  /** @example P@ssw0rd */
+export interface SignupUserDto {
+  /**
+   * Password should include lowercase, uppercase and digits
+   * @example P@ssw0rd
+   */
   password: string;
 
-  /** @example 00000000-0000-0000-0000-000000000001 */
-  tenantId?: string;
+  /** @example P@ssw0rd */
+  confirmation: string;
+
+  /** @example 00000000-0000-0000-0000-000000000000 */
+  tenantId: string;
+
+  /** @example email@example.com */
+  email: string;
+
+  /** @example Jon Doe */
+  name?: string;
+
+  /** @example pt-br */
+  i18nLocale?: I18NLocaleEnum;
+  callbackUrl: string;
 }
 
 export interface UnauthorizedExceptionDto {
@@ -851,6 +883,17 @@ export interface UnauthorizedExceptionDto {
 
   /** @example null */
   data?: object;
+}
+
+export interface LoginUserDto {
+  /** @example user@example.com */
+  email: string;
+
+  /** @example P@ssw0rd */
+  password: string;
+
+  /** @example 00000000-0000-0000-0000-000000000001 */
+  tenantId?: string;
 }
 
 export interface RefreshTokenDto {
@@ -987,26 +1030,12 @@ export namespace Users {
   /**
    * No description
    * @tags Users
-   * @name Update
-   * @request PATCH:/users/{id}
-   * @secure
-   */
-  export namespace Update {
-    export type RequestParams = { id: string };
-    export type RequestQuery = {};
-    export type RequestBody = UpdateUserDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = UserPublicResponseDto;
-  }
-  /**
-   * No description
-   * @tags Users
    * @name ChangePassword
-   * @request PATCH:/users/{id}/change-password
+   * @request PATCH:/users/change-password
    * @secure
    */
   export namespace ChangePassword {
-    export type RequestParams = { id: string };
+    export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = ChangePasswordDto;
     export type RequestHeaders = {};
@@ -1016,11 +1045,11 @@ export namespace Users {
    * No description
    * @tags Users
    * @name SetWalletDefault
-   * @request PATCH:/users/{id}/main-wallet
+   * @request PATCH:/users/main-wallet
    * @secure
    */
   export namespace SetWalletDefault {
-    export type RequestParams = { id: string };
+    export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = MainWalletDto;
     export type RequestHeaders = {};
@@ -1030,7 +1059,7 @@ export namespace Users {
    * No description
    * @tags Users
    * @name UpdateToken
-   * @request PATCH:/users/{id}/token
+   * @request PATCH:/users/token
    * @secure
    */
   export namespace UpdateToken {
@@ -1039,6 +1068,20 @@ export namespace Users {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = UserTokenResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name Update
+   * @request PATCH:/users/edit/{id}
+   * @secure
+   */
+  export namespace Update {
+    export type RequestParams = { id: string };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateUserDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserPublicResponseDto;
   }
   /**
    * No description
@@ -1262,6 +1305,40 @@ export namespace TenantAccess {
     export type RequestHeaders = {};
     export type ResponseBody = OmitTypeClass;
   }
+  /**
+   * No description
+   * @tags Tenant Access
+   * @name FindAll
+   * @request GET:/tenant_access
+   * @secure
+   */
+  export namespace FindAll {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = AbstractBase;
+  }
+  /**
+   * No description
+   * @tags Tenant Access
+   * @name FindOne
+   * @request GET:/tenant_access/{id}
+   * @secure
+   */
+  export namespace FindOne {
+    export type RequestParams = { id: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
 }
 
 export namespace Auth {
@@ -1314,6 +1391,19 @@ export namespace Auth {
     export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = ResetPasswordDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = SignInResponseDto;
+  }
+  /**
+   * No description
+   * @tags Authentication
+   * @name SignUp
+   * @request POST:/auth/signup
+   */
+  export namespace SignUp {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = SignupUserDto;
     export type RequestHeaders = {};
     export type ResponseBody = SignInResponseDto;
   }
@@ -1627,32 +1717,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users
-     * @name Update
-     * @request PATCH:/users/{id}
-     * @secure
-     */
-    update: (id: string, data: UpdateUserDto, params: RequestParams = {}) =>
-      this.request<UserPublicResponseDto, HttpExceptionDto>({
-        path: `/users/${id}`,
-        method: 'PATCH',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Users
      * @name ChangePassword
-     * @request PATCH:/users/{id}/change-password
+     * @request PATCH:/users/change-password
      * @secure
      */
-    changePassword: (id: string, data: ChangePasswordDto, params: RequestParams = {}) =>
+    changePassword: (data: ChangePasswordDto, params: RequestParams = {}) =>
       this.request<void, HttpExceptionDto>({
-        path: `/users/${id}/change-password`,
+        path: `/users/change-password`,
         method: 'PATCH',
         body: data,
         secure: true,
@@ -1665,12 +1736,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Users
      * @name SetWalletDefault
-     * @request PATCH:/users/{id}/main-wallet
+     * @request PATCH:/users/main-wallet
      * @secure
      */
-    setWalletDefault: (id: string, data: MainWalletDto, params: RequestParams = {}) =>
+    setWalletDefault: (data: MainWalletDto, params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/users/${id}/main-wallet`,
+        path: `/users/main-wallet`,
         method: 'PATCH',
         body: data,
         secure: true,
@@ -1683,14 +1754,33 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Users
      * @name UpdateToken
-     * @request PATCH:/users/{id}/token
+     * @request PATCH:/users/token
      * @secure
      */
     updateToken: (id: string, params: RequestParams = {}) =>
       this.request<UserTokenResponseDto, HttpExceptionDto>({
-        path: `/users/${id}/token`,
+        path: `/users/token`,
         method: 'PATCH',
         secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name Update
+     * @request PATCH:/users/edit/{id}
+     * @secure
+     */
+    update: (id: string, data: UpdateUserDto, params: RequestParams = {}) =>
+      this.request<UserPublicResponseDto, HttpExceptionDto>({
+        path: `/users/edit/${id}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         format: 'json',
         ...params,
       }),
@@ -1964,6 +2054,43 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         format: 'json',
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Access
+     * @name FindAll
+     * @request GET:/tenant_access
+     * @secure
+     */
+    findAll: (
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<AbstractBase, HttpExceptionDto>({
+        path: `/tenant_access`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Access
+     * @name FindOne
+     * @request GET:/tenant_access/{id}
+     * @secure
+     */
+    findOne: (id: string, params: RequestParams = {}) =>
+      this.request<any, HttpExceptionDto>({
+        path: `/tenant_access/${id}`,
+        method: 'GET',
+        secure: true,
+        ...params,
+      }),
   };
   auth = {
     /**
@@ -2023,6 +2150,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     resetPassword: (data: ResetPasswordDto, params: RequestParams = {}) =>
       this.request<SignInResponseDto, BadRequestExceptionDto>({
         path: `/auth/reset-password`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name SignUp
+     * @request POST:/auth/signup
+     */
+    signUp: (data: SignupUserDto, params: RequestParams = {}) =>
+      this.request<SignInResponseDto, UnauthorizedExceptionDto>({
+        path: `/auth/signup`,
         method: 'POST',
         body: data,
         type: ContentType.Json,
