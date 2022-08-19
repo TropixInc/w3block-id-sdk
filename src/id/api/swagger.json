@@ -271,74 +271,12 @@
             "bearer": []
           }
         ]
-      },
-      "patch": {
-        "operationId": "update",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateUserDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserPublicResponseDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, user, integration",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
       }
     },
-    "/users/{id}/change-password": {
+    "/users/change-password": {
       "patch": {
         "operationId": "changePassword",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -374,19 +312,10 @@
         ]
       }
     },
-    "/users/{id}/main-wallet": {
+    "/users/main-wallet": {
       "patch": {
         "operationId": "setWalletDefault",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -412,7 +341,7 @@
         ]
       }
     },
-    "/users/{id}/token": {
+    "/users/token": {
       "patch": {
         "operationId": "updateToken",
         "parameters": [
@@ -438,6 +367,61 @@
           },
           "403": {
             "description": "Need user with one of these roles: superAdmin, admin, integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/edit/{id}": {
+      "patch": {
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublicResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1129,6 +1113,118 @@
             "bearer": []
           }
         ]
+      },
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbstractBase"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Access"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant_access/{id}": {
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "Need user with one of these roles: superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Access"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/auth/verify-sign-up": {
@@ -1242,6 +1338,47 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BadRequestExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "operationId": "signUp",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
                 }
               }
             }
@@ -1541,15 +1678,18 @@
             "$ref": "#/components/schemas/CreateAddressDto"
           },
           "sendEmail": {
-            "type": "boolean",
+            "type": "object",
             "example": true
+          },
+          "callbackUrl": {
+            "type": "string"
           }
         },
         "required": [
           "password",
           "confirmation",
+          "tenantId",
           "role",
-          "name",
           "email",
           "i18nLocale"
         ]
@@ -1669,9 +1809,13 @@
             "type": "boolean",
             "example": true
           },
-          "role": {
-            "type": "string",
-            "example": true
+          "roles": {
+            "example": "user",
+            "default": "user",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
           },
           "i18nLocale": {
             "example": "pt-br",
@@ -1718,7 +1862,7 @@
           "id",
           "email",
           "verified",
-          "role",
+          "roles",
           "i18nLocale"
         ]
       },
@@ -1787,6 +1931,9 @@
             "type": "string",
             "example": "P@ssw0rd",
             "description": "Password should include lowercase, uppercase and digits"
+          },
+          "callbackUrl": {
+            "type": "string"
           }
         },
         "required": [
@@ -1842,38 +1989,6 @@
           }
         }
       },
-      "UpdateUserDto": {
-        "type": "object",
-        "properties": {
-          "password": {
-            "type": "string",
-            "example": "P@ssw0rd",
-            "description": "Password should include lowercase, uppercase and digits"
-          },
-          "role": {
-            "example": "user",
-            "$ref": "#/components/schemas/UserRoleEnum"
-          },
-          "name": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string",
-            "example": "user@example.com"
-          },
-          "i18nLocale": {
-            "example": "pt-br",
-            "$ref": "#/components/schemas/I18nLocaleEnum"
-          },
-          "sendEmail": {
-            "type": "boolean",
-            "example": true
-          },
-          "address": {
-            "$ref": "#/components/schemas/UpdateAddressDto"
-          }
-        }
-      },
       "ChangePasswordDto": {
         "type": "object",
         "properties": {
@@ -1917,6 +2032,41 @@
           "token": {
             "type": "string",
             "example": "b8ee934f8d9c6704b982c14b95ba3266fef9bba7798ed4885a05c70dbb4545435517cdd25f851e7522ad503e04ccb691a18f507b792866c3282d13abc2a09cb2;1654178219308"
+          }
+        }
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "example": "P@ssw0rd",
+            "description": "Password should include lowercase, uppercase and digits"
+          },
+          "role": {
+            "example": "user",
+            "$ref": "#/components/schemas/UserRoleEnum"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "i18nLocale": {
+            "example": "pt-br",
+            "$ref": "#/components/schemas/I18nLocaleEnum"
+          },
+          "sendEmail": {
+            "type": "object",
+            "example": true
+          },
+          "callbackUrl": {
+            "type": "string"
+          },
+          "address": {
+            "$ref": "#/components/schemas/UpdateAddressDto"
           }
         }
       },
@@ -2419,7 +2569,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TenantEntityDto"
+              "$ref": "#/components/schemas/TenantAccessEntityDto"
             }
           },
           "meta": {
@@ -2522,6 +2672,42 @@
           "active"
         ]
       },
+      "TenantEntity": {
+        "type": "object",
+        "properties": {}
+      },
+      "TenantAccessEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "key": {
+            "type": "string"
+          },
+          "secret": {
+            "type": "string"
+          },
+          "tenant": {
+            "$ref": "#/components/schemas/TenantEntity"
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "key",
+          "secret",
+          "tenant",
+          "tenantId",
+          "active"
+        ]
+      },
       "RequestConfirmationEmailDto": {
         "type": "object",
         "properties": {
@@ -2530,20 +2716,27 @@
           },
           "tenantId": {
             "type": "string"
+          },
+          "callbackUrl": {
+            "type": "string"
           }
         },
         "required": [
-          "email"
+          "email",
+          "tenantId",
+          "callbackUrl"
         ]
       },
       "RequestPasswordResetDto": {
         "type": "object",
         "properties": {
           "email": {
-            "type": "string"
+            "type": "string",
+            "example": "email@example.com"
           },
           "tenantId": {
-            "type": "string"
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
           }
         },
         "required": [
@@ -2802,25 +2995,45 @@
           "message"
         ]
       },
-      "LoginUserDto": {
+      "SignupUserDto": {
         "type": "object",
         "properties": {
-          "email": {
-            "type": "string",
-            "example": "user@example.com"
-          },
           "password": {
+            "type": "string",
+            "example": "P@ssw0rd",
+            "description": "Password should include lowercase, uppercase and digits"
+          },
+          "confirmation": {
             "type": "string",
             "example": "P@ssw0rd"
           },
           "tenantId": {
             "type": "string",
-            "example": "00000000-0000-0000-0000-000000000001"
+            "example": "00000000-0000-0000-0000-000000000000"
+          },
+          "email": {
+            "type": "string",
+            "example": "email@example.com"
+          },
+          "name": {
+            "type": "string",
+            "example": "Jon Doe"
+          },
+          "i18nLocale": {
+            "example": "pt-br",
+            "default": "pt-br",
+            "$ref": "#/components/schemas/I18nLocaleEnum"
+          },
+          "callbackUrl": {
+            "type": "string"
           }
         },
         "required": [
+          "password",
+          "confirmation",
+          "tenantId",
           "email",
-          "password"
+          "callbackUrl"
         ]
       },
       "UnauthorizedExceptionDto": {
@@ -2856,6 +3069,27 @@
           "error",
           "statusCode",
           "message"
+        ]
+      },
+      "LoginUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "P@ssw0rd"
+          },
+          "tenantId": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          }
+        },
+        "required": [
+          "email",
+          "password"
         ]
       },
       "RefreshTokenDto": {
