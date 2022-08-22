@@ -1,11 +1,7 @@
-export enum UserRoleEnum {
-  SuperAdmin = 'superAdmin',
-  Admin = 'admin',
-  User = 'user',
-}
+export { TenantRoleEnum, UserRoleEnum } from './id/api/api';
 
-export enum TenantRoleEnum {
-  Application = 'application',
-  Admin = 'administrator',
-  Integration = 'integration',
+export enum CredentialType {
+  User = 'user',
+  Tenant = 'tenant',
+  Token = 'token',
 }

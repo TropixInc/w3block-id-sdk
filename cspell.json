@@ -9,9 +9,12 @@
         "datefns",
         "ethersproject",
         "Eventix",
+        "jwks",
+        "Jwks",
         "Numberish",
         "openapi",
         "Pixway",
+        "signin",
         "Tropix",
         "tropixinc"
     ],

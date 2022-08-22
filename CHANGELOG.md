@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/TropixInc/w3block-sdk/compare/v0.1.1...v0.1.2) (2022-08-19)
+
+
+### Features
+
+* **api:** generate new version base on swagger ([90e44ee](https://github.com/TropixInc/w3block-sdk/commit/90e44eee4e03e2494d2b5d6f99582627432d71bf))
+
+### [0.1.1](https://github.com/TropixInc/w3block-sdk/compare/v0.1.0...v0.1.1) (2022-08-19)
+
+
+### Features
+
+* **api:** generate new version ([9532c78](https://github.com/TropixInc/w3block-sdk/commit/9532c78f4d0ef72b9219d286f39afcf9b7f41012))
+
+## [0.1.0](https://github.com/TropixInc/w3block-sdk/compare/v0.0.16...v0.1.0) (2022-08-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* **auth:** options and connection was changed
+
+* **auth:** change authentication ([1a02a10](https://github.com/TropixInc/w3block-sdk/commit/1a02a10c87be714e48c7be1482352758e6d013db))
+
+### [0.0.16](https://github.com/TropixInc/w3block-sdk/compare/v0.0.15...v0.0.16) (2022-08-16)
+
+
+### Features
+
+* new api version ([96345b4](https://github.com/TropixInc/w3block-sdk/commit/96345b49d4679b1cfe2ae8a345e2885656333a0c))
+
+### [0.0.15](https://github.com/TropixInc/w3block-sdk/compare/v0.0.14...v0.0.15) (2022-08-15)
+
 ### [0.0.14](https://github.com/TropixInc/w3block-sdk/compare/v0.0.13...v0.0.14) (2022-08-11)
 
 

@@ -2,47 +2,47 @@ import { TenantRoleEnum, UserRoleEnum } from './enums';
 import { JwtRole } from './interfaces';
 
 export class AuthHelper {
-  static hasAnyRole(roles: JwtRole[], requiredRoles: JwtRole[]): boolean {
-    return requiredRoles.some((role: JwtRole) => roles.includes(role));
+  static hasAnyRole<J = JwtRole>(roles: J[], requiredRoles: J[]): boolean {
+    return requiredRoles.some((role: J) => roles.includes(role));
   }
 
-  static hasAllRoles(roles: JwtRole[], requiredRoles: JwtRole[]): boolean {
-    return requiredRoles.every((role: JwtRole) => roles.includes(role));
+  static hasAllRoles<J = JwtRole>(roles: J[], requiredRoles: J[]): boolean {
+    return requiredRoles.every((role: J) => roles.includes(role));
   }
 
-  static hasRole(roles: JwtRole[], requiredRole: JwtRole): boolean {
+  static hasRole<J = JwtRole>(roles: J[], requiredRole: J): boolean {
     return roles.includes(requiredRole);
   }
 
-  static hasUserRole(role: JwtRole): boolean {
+  static hasUserRole<J = JwtRole>(role: J): boolean {
     return AuthHelper.hasAnyUserRole([role]);
   }
 
-  static hasAnyUserRole(roles: JwtRole[]): boolean {
+  static hasAnyUserRole<J = JwtRole>(roles: J[]): boolean {
     return AuthHelper.hasAnyRole(roles, AuthHelper.getUserRoles());
   }
 
-  static hasAllUserRoles(roles: JwtRole[]): boolean {
+  static hasAllUserRoles<J = JwtRole>(roles: J[]): boolean {
     return AuthHelper.hasAllRoles(roles, AuthHelper.getUserRoles());
   }
 
-  static hasTenantRole(role: JwtRole): boolean {
+  static hasTenantRole<J = JwtRole>(role: J): boolean {
     return AuthHelper.hasAnyTenantRole([role]);
   }
 
-  static hasAnyTenantRole(roles: JwtRole[]): boolean {
+  static hasAnyTenantRole<J = JwtRole>(roles: J[]): boolean {
     return AuthHelper.hasAnyRole(roles, AuthHelper.getTenantRoles());
   }
 
-  static hasAllTenantRoles(roles: JwtRole[]): boolean {
+  static hasAllTenantRoles<J = JwtRole>(roles: J[]): boolean {
     return AuthHelper.hasAllRoles(roles, AuthHelper.getTenantRoles());
   }
 
-  static getUserRoles(): UserRoleEnum[] {
-    return Object.values(UserRoleEnum);
+  static getUserRoles<U = UserRoleEnum>(): U[] {
+    return Object.values(UserRoleEnum) as unknown as U[];
   }
 
-  static getTenantRoles(): TenantRoleEnum[] {
-    return Object.values(TenantRoleEnum);
+  static getTenantRoles<T = TenantRoleEnum>(): T[] {
+    return Object.values(TenantRoleEnum) as unknown as T[];
   }
 }
