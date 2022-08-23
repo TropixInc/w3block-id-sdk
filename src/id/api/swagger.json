@@ -73,7 +73,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, admin, application, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -128,7 +128,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, admin, application, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1250,8 +1250,25 @@
           }
         ],
         "responses": {
-          "301": {
-            "description": "Redirect the user to the sign in page."
+          "200": {
+            "description": "Response for verify sign up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifySignupResponseDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -1276,6 +1293,16 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -1300,6 +1327,16 @@
         "responses": {
           "201": {
             "description": ""
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -1338,6 +1375,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BadRequestExceptionDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
                 }
               }
             }
@@ -1420,6 +1467,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorizedExceptionDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
                 }
               }
             }
@@ -1510,6 +1567,16 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -1591,6 +1658,24 @@
       }
     },
     "schemas": {
+      "UserPasswordDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "example": "P@ssw0rd",
+            "description": "Password should include lowercase, uppercase and digits"
+          },
+          "confirmation": {
+            "type": "string",
+            "example": "P@ssw0rd"
+          }
+        },
+        "required": [
+          "password",
+          "confirmation"
+        ]
+      },
       "UserRoleEnum": {
         "type": "string",
         "enum": [
@@ -1885,8 +1970,8 @@
             "example": 500
           },
           "message": {
-            "type": "string",
-            "example": "INTERNAL_SERVER_ERROR"
+            "type": "object",
+            "example": "Something went wrong"
           },
           "data": {
             "type": "object",
@@ -1919,10 +2004,6 @@
             "example": "pt-br",
             "$ref": "#/components/schemas/I18nLocaleEnum"
           },
-          "sendEmail": {
-            "type": "boolean",
-            "example": true
-          },
           "generateRandomPassword": {
             "type": "boolean",
             "example": false
@@ -1931,6 +2012,10 @@
             "type": "string",
             "example": "P@ssw0rd",
             "description": "Password should include lowercase, uppercase and digits"
+          },
+          "sendEmail": {
+            "type": "boolean",
+            "example": true
           },
           "callbackUrl": {
             "type": "string"
@@ -2708,68 +2793,6 @@
           "active"
         ]
       },
-      "RequestConfirmationEmailDto": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "callbackUrl": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "email",
-          "tenantId",
-          "callbackUrl"
-        ]
-      },
-      "RequestPasswordResetDto": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "example": "email@example.com"
-          },
-          "tenantId": {
-            "type": "string",
-            "example": "00000000-0000-0000-0000-000000000001"
-          }
-        },
-        "required": [
-          "email"
-        ]
-      },
-      "ResetPasswordDto": {
-        "type": "object",
-        "properties": {
-          "password": {
-            "type": "string",
-            "example": "P@ssw0rd",
-            "description": "Password should include lowercase, uppercase and digits"
-          },
-          "confirmation": {
-            "type": "string",
-            "example": "P@ssw0rd"
-          },
-          "email": {
-            "type": "string",
-            "example": "user@example.com"
-          },
-          "token": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "password",
-          "confirmation",
-          "email",
-          "token"
-        ]
-      },
       "JwtPayloadDto": {
         "type": "object",
         "properties": {
@@ -2932,6 +2955,116 @@
           "type"
         ]
       },
+      "VerifySignupResponseDto": {
+        "type": "object",
+        "properties": {
+          "verified": {
+            "type": "boolean",
+            "example": true,
+            "default": true
+          }
+        },
+        "required": [
+          "verified"
+        ]
+      },
+      "TooManyRequestsExceptionDto": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "example": "2022-07-25T17:24:07.042Z"
+          },
+          "path": {
+            "type": "string",
+            "example": "/api/foo/bar"
+          },
+          "error": {
+            "type": "string"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 429
+          },
+          "message": {
+            "type": "object",
+            "example": "Too many requests"
+          },
+          "data": {
+            "type": "object",
+            "example": null
+          }
+        },
+        "required": [
+          "timestamp",
+          "path",
+          "error",
+          "statusCode",
+          "message"
+        ]
+      },
+      "RequestConfirmationEmailDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "callbackUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "tenantId",
+          "callbackUrl"
+        ]
+      },
+      "RequestPasswordResetDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "email@example.com"
+          },
+          "tenantId": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "ResetPasswordDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "example": "P@ssw0rd",
+            "description": "Password should include lowercase, uppercase and digits"
+          },
+          "confirmation": {
+            "type": "string",
+            "example": "P@ssw0rd"
+          },
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "password",
+          "confirmation",
+          "email",
+          "token"
+        ]
+      },
       "SignInResponseDto": {
         "type": "object",
         "properties": {
@@ -2979,8 +3112,8 @@
             "example": 400
           },
           "message": {
-            "type": "string",
-            "example": "Bad request"
+            "type": "object",
+            "example": "Bad Request"
           },
           "data": {
             "type": "object",
@@ -3055,7 +3188,7 @@
             "example": 401
           },
           "message": {
-            "type": "string",
+            "type": "object",
             "example": "Unauthorized"
           },
           "data": {
@@ -3123,7 +3256,7 @@
             "example": 403
           },
           "message": {
-            "type": "string",
+            "type": "object",
             "example": "Forbidden"
           },
           "data": {
