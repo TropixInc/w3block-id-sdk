@@ -1325,7 +1325,7 @@
           }
         },
         "responses": {
-          "201": {
+          "204": {
             "description": ""
           },
           "429": {
@@ -1635,13 +1635,13 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "contact": {}
   },
   "tags": [],
   "servers": [
     {
-      "url": "http://localhost:6007",
+      "url": "https://pixwayid.stg.pixway.io",
       "description": "Pixway ID Server",
       "variables": {}
     }
@@ -2190,8 +2190,8 @@
             "example": "0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9"
           },
           "chainId": {
-            "default": 1337,
-            "example": 1337,
+            "default": 4,
+            "example": 4,
             "$ref": "#/components/schemas/ChainId"
           }
         },
@@ -2208,8 +2208,8 @@
             "example": "0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9"
           },
           "chainId": {
-            "default": 1337,
-            "example": 1337,
+            "default": 4,
+            "example": 4,
             "$ref": "#/components/schemas/ChainId"
           },
           "message": {
@@ -3032,10 +3032,14 @@
           "tenantId": {
             "type": "string",
             "example": "00000000-0000-0000-0000-000000000001"
+          },
+          "callbackUrl": {
+            "type": "string"
           }
         },
         "required": [
-          "email"
+          "email",
+          "callbackUrl"
         ]
       },
       "ResetPasswordDto": {
