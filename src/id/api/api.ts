@@ -301,7 +301,7 @@ export interface RequestMetamaskDto {
   /** @example 0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9 */
   address: string;
 
-  /** @example 1337 */
+  /** @example 4 */
   chainId: ChainId;
 }
 
@@ -309,7 +309,7 @@ export interface RequestMetamaskResponseDto {
   /** @example 0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9 */
   address: string;
 
-  /** @example 1337 */
+  /** @example 4 */
   chainId: ChainId;
 
   /** @example  */
@@ -833,6 +833,7 @@ export interface RequestPasswordResetDto {
 
   /** @example 00000000-0000-0000-0000-000000000001 */
   tenantId?: string;
+  callbackUrl: string;
 }
 
 export interface ResetPasswordDto {
@@ -1553,7 +1554,7 @@ export class HttpClient<SecurityDataType = unknown> {
   private format?: ResponseType;
 
   constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || 'http://localhost:6007' });
+    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || 'https://pixwayid.stg.pixway.io' });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
@@ -1632,8 +1633,8 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.1.4
- * @baseUrl http://localhost:6007
+ * @version 0.1.5
+ * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
