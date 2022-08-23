@@ -8,6 +8,17 @@
  * ---------------------------------------------------------------
  */
 
+export interface UserPasswordDto {
+  /**
+   * Password should include lowercase, uppercase and digits
+   * @example P@ssw0rd
+   */
+  password: string;
+
+  /** @example P@ssw0rd */
+  confirmation: string;
+}
+
 export enum UserRoleEnum {
   SuperAdmin = 'superAdmin',
   Admin = 'admin',
@@ -172,8 +183,8 @@ export interface HttpExceptionDto {
   /** @example 500 */
   statusCode: number;
 
-  /** @example INTERNAL_SERVER_ERROR */
-  message: string;
+  /** @example Something went wrong */
+  message: object;
 
   /** @example null */
   data?: object;
@@ -190,9 +201,6 @@ export interface InviteUserDto {
   /** @example pt-br */
   i18nLocale: I18NLocaleEnum;
 
-  /** @example true */
-  sendEmail?: boolean;
-
   /** @example false */
   generateRandomPassword?: boolean;
 
@@ -201,6 +209,9 @@ export interface InviteUserDto {
    * @example P@ssw0rd
    */
   password?: string;
+
+  /** @example true */
+  sendEmail?: boolean;
   callbackUrl?: string;
 }
 
@@ -701,35 +712,6 @@ export interface TenantAccessEntityDto {
   active: boolean;
 }
 
-export interface RequestConfirmationEmailDto {
-  email: string;
-  tenantId: string;
-  callbackUrl: string;
-}
-
-export interface RequestPasswordResetDto {
-  /** @example email@example.com */
-  email: string;
-
-  /** @example 00000000-0000-0000-0000-000000000001 */
-  tenantId?: string;
-}
-
-export interface ResetPasswordDto {
-  /**
-   * Password should include lowercase, uppercase and digits
-   * @example P@ssw0rd
-   */
-  password: string;
-
-  /** @example P@ssw0rd */
-  confirmation: string;
-
-  /** @example user@example.com */
-  email: string;
-  token: string;
-}
-
 export interface JwtPayloadDto {
   /** @example 00000000-0000-0000-0000-000000000001 */
   sub: string;
@@ -816,6 +798,58 @@ export interface TenantJwtPayloadDto {
   type: JwtType;
 }
 
+export interface VerifySignupResponseDto {
+  /** @example true */
+  verified: boolean;
+}
+
+export interface TooManyRequestsExceptionDto {
+  /** @example 2022-07-25T17:24:07.042Z */
+  timestamp: string;
+
+  /** @example /api/foo/bar */
+  path: string;
+  error: string;
+
+  /** @example 429 */
+  statusCode: number;
+
+  /** @example Too many requests */
+  message: object;
+
+  /** @example null */
+  data?: object;
+}
+
+export interface RequestConfirmationEmailDto {
+  email: string;
+  tenantId: string;
+  callbackUrl: string;
+}
+
+export interface RequestPasswordResetDto {
+  /** @example email@example.com */
+  email: string;
+
+  /** @example 00000000-0000-0000-0000-000000000001 */
+  tenantId?: string;
+}
+
+export interface ResetPasswordDto {
+  /**
+   * Password should include lowercase, uppercase and digits
+   * @example P@ssw0rd
+   */
+  password: string;
+
+  /** @example P@ssw0rd */
+  confirmation: string;
+
+  /** @example user@example.com */
+  email: string;
+  token: string;
+}
+
 export interface SignInResponseDto {
   /** @example eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJlbWFpbCI6InBpeHdheUB3M2Jsb2NrLmlvIiwibmFtZSI6IlBpeHdheSIsInJvbGUiOiJhZG1pbiIsImNvbXBhbnlJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRlbmFudElkIjoiNWJkOTZhYWYtMTg4OC00OTNlLWI4NGUtN2M1NGE0NzMxODY4IiwidmVyaWZpZWQiOnRydWUsImlhdCI6MTY1ODUwODE3OSwiZXhwIjoxNjkwMDQ0MTc5fQ.L_0Py_M_1Ija_QnFKl7uNZr9fpkcVpZSv-tnNf07YQOcIEuR-TU0S9DMkLkHtmYrHKJe_vzzf14FS7J43NYVILn3NrXb-pC5-YO8V3JnMX4yBsgM2t0xdqEW6fqILk8_oxXsDFAhNkaNeBa2ljNilDncSepps7q69PP-TP7JVkjKQg2Za_E6ZwU */
   token: string;
@@ -836,8 +870,8 @@ export interface BadRequestExceptionDto {
   /** @example 400 */
   statusCode: number;
 
-  /** @example Bad request */
-  message: string;
+  /** @example Bad Request */
+  message: object;
 
   /** @example null */
   data?: object;
@@ -879,7 +913,7 @@ export interface UnauthorizedExceptionDto {
   statusCode: number;
 
   /** @example Unauthorized */
-  message: string;
+  message: object;
 
   /** @example null */
   data?: object;
@@ -913,7 +947,7 @@ export interface ForbiddenExceptionDto {
   statusCode: number;
 
   /** @example Forbidden */
-  message: string;
+  message: object;
 
   /** @example null */
   data?: object;
@@ -1353,7 +1387,7 @@ export namespace Auth {
     export type RequestQuery = { email: string; token: string };
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = any;
+    export type ResponseBody = VerifySignupResponseDto;
   }
   /**
    * No description
@@ -2101,10 +2135,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/auth/verify-sign-up
      */
     verifySignUp: (query: { email: string; token: string }, params: RequestParams = {}) =>
-      this.request<any, void>({
+      this.request<VerifySignupResponseDto, TooManyRequestsExceptionDto>({
         path: `/auth/verify-sign-up`,
         method: 'GET',
         query: query,
+        format: 'json',
         ...params,
       }),
 
@@ -2116,7 +2151,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/auth/request-confirmation-email
      */
     requestConfirmationEmail: (data: RequestConfirmationEmailDto, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<void, TooManyRequestsExceptionDto>({
         path: `/auth/request-confirmation-email`,
         method: 'POST',
         body: data,
@@ -2132,7 +2167,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/auth/request-password-reset
      */
     requestPasswordReset: (data: RequestPasswordResetDto, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<void, TooManyRequestsExceptionDto>({
         path: `/auth/request-password-reset`,
         method: 'POST',
         body: data,
@@ -2148,7 +2183,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/auth/reset-password
      */
     resetPassword: (data: ResetPasswordDto, params: RequestParams = {}) =>
-      this.request<SignInResponseDto, BadRequestExceptionDto>({
+      this.request<SignInResponseDto, BadRequestExceptionDto | TooManyRequestsExceptionDto>({
         path: `/auth/reset-password`,
         method: 'POST',
         body: data,
@@ -2182,7 +2217,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/auth/signin
      */
     signIn: (data: LoginUserDto, params: RequestParams = {}) =>
-      this.request<SignInResponseDto, UnauthorizedExceptionDto>({
+      this.request<SignInResponseDto, UnauthorizedExceptionDto | TooManyRequestsExceptionDto>({
         path: `/auth/signin`,
         method: 'POST',
         body: data,
@@ -2218,7 +2253,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/auth/signin/tenant
      */
     signInTenant: (data: LoginTenantDto, params: RequestParams = {}) =>
-      this.request<SignInResponseDto, UnauthorizedExceptionDto>({
+      this.request<SignInResponseDto, UnauthorizedExceptionDto | TooManyRequestsExceptionDto>({
         path: `/auth/signin/tenant`,
         method: 'POST',
         body: data,
