@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/TropixInc/w3block-sdk/compare/v0.1.3...v0.1.4) (2022-08-23)
+
+
+### Features
+
+* **auth:** add callback url in request reset password ([322b0b3](https://github.com/TropixInc/w3block-sdk/commit/322b0b359a69268bfb7276a1613622d5ca11a9c0))
+
 ### [0.1.3](https://github.com/TropixInc/w3block-sdk/compare/v0.1.2...v0.1.3) (2022-08-23)
 
 
