@@ -1069,7 +1069,7 @@
         ]
       }
     },
-    "/tenant_access": {
+    "/tenant-access": {
       "post": {
         "operationId": "create",
         "parameters": [],
@@ -1192,7 +1192,7 @@
         ]
       }
     },
-    "/tenant_access/{id}": {
+    "/tenant-access/{id}": {
       "get": {
         "operationId": "findOne",
         "parameters": [
@@ -1219,6 +1219,85 @@
         },
         "tags": [
           "Tenant Access"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant-hosts": {
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbstractBase"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Hosts"
         ],
         "security": [
           {
@@ -2190,8 +2269,8 @@
             "example": "0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9"
           },
           "chainId": {
-            "default": 4,
-            "example": 4,
+            "default": 137,
+            "example": 137,
             "$ref": "#/components/schemas/ChainId"
           }
         },
@@ -2208,8 +2287,8 @@
             "example": "0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9"
           },
           "chainId": {
-            "default": 4,
-            "example": 4,
+            "default": 137,
+            "example": 137,
             "$ref": "#/components/schemas/ChainId"
           },
           "message": {
@@ -2654,7 +2733,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TenantAccessEntityDto"
+              "$ref": "#/components/schemas/TenantHostEntityDto"
             }
           },
           "meta": {
@@ -2788,6 +2867,34 @@
           "id",
           "key",
           "secret",
+          "tenant",
+          "tenantId",
+          "active"
+        ]
+      },
+      "TenantHostEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "tenant": {
+            "$ref": "#/components/schemas/TenantEntity"
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "domain",
           "tenant",
           "tenantId",
           "active"
@@ -3010,7 +3117,8 @@
             "type": "string"
           },
           "tenantId": {
-            "type": "string"
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
           },
           "callbackUrl": {
             "type": "string"
@@ -3018,7 +3126,6 @@
         },
         "required": [
           "email",
-          "tenantId",
           "callbackUrl"
         ]
       },
