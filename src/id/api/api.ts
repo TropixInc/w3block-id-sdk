@@ -301,7 +301,7 @@ export interface RequestMetamaskDto {
   /** @example 0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9 */
   address: string;
 
-  /** @example 4 */
+  /** @example 137 */
   chainId: ChainId;
 }
 
@@ -309,7 +309,7 @@ export interface RequestMetamaskResponseDto {
   /** @example 0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9 */
   address: string;
 
-  /** @example 4 */
+  /** @example 137 */
   chainId: ChainId;
 
   /** @example  */
@@ -656,7 +656,7 @@ export interface PaginationLinksDto {
 }
 
 export interface AbstractBase {
-  items: TenantAccessEntityDto[];
+  items: TenantHostEntityDto[];
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
 }
@@ -707,6 +707,15 @@ export interface TenantAccessEntityDto {
   id: string;
   key: string;
   secret: string;
+  tenant: TenantEntity;
+  tenantId: string;
+  active: boolean;
+}
+
+export interface TenantHostEntityDto {
+  /** @format uuid */
+  id: string;
+  domain: string;
   tenant: TenantEntity;
   tenantId: string;
   active: boolean;
@@ -823,7 +832,9 @@ export interface TooManyRequestsExceptionDto {
 
 export interface RequestConfirmationEmailDto {
   email: string;
-  tenantId: string;
+
+  /** @example 00000000-0000-0000-0000-000000000001 */
+  tenantId?: string;
   callbackUrl: string;
 }
 
@@ -1330,7 +1341,7 @@ export namespace TenantAccess {
    * No description
    * @tags Tenant Access
    * @name Create
-   * @request POST:/tenant_access
+   * @request POST:/tenant-access
    * @secure
    */
   export namespace Create {
@@ -1344,7 +1355,7 @@ export namespace TenantAccess {
    * No description
    * @tags Tenant Access
    * @name FindAll
-   * @request GET:/tenant_access
+   * @request GET:/tenant-access
    * @secure
    */
   export namespace FindAll {
@@ -1364,7 +1375,7 @@ export namespace TenantAccess {
    * No description
    * @tags Tenant Access
    * @name FindOne
-   * @request GET:/tenant_access/{id}
+   * @request GET:/tenant-access/{id}
    * @secure
    */
   export namespace FindOne {
@@ -1373,6 +1384,29 @@ export namespace TenantAccess {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = any;
+  }
+}
+
+export namespace TenantHosts {
+  /**
+   * No description
+   * @tags Tenant Hosts
+   * @name FindAll
+   * @request GET:/tenant-hosts
+   * @secure
+   */
+  export namespace FindAll {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = AbstractBase;
   }
 }
 
@@ -2076,12 +2110,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Tenant Access
      * @name Create
-     * @request POST:/tenant_access
+     * @request POST:/tenant-access
      * @secure
      */
     create: (data: CreateTenantAccessDto, params: RequestParams = {}) =>
       this.request<OmitTypeClass, HttpExceptionDto>({
-        path: `/tenant_access`,
+        path: `/tenant-access`,
         method: 'POST',
         body: data,
         secure: true,
@@ -2095,7 +2129,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Tenant Access
      * @name FindAll
-     * @request GET:/tenant_access
+     * @request GET:/tenant-access
      * @secure
      */
     findAll: (
@@ -2103,7 +2137,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<AbstractBase, HttpExceptionDto>({
-        path: `/tenant_access`,
+        path: `/tenant-access`,
         method: 'GET',
         query: query,
         secure: true,
@@ -2116,14 +2150,36 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Tenant Access
      * @name FindOne
-     * @request GET:/tenant_access/{id}
+     * @request GET:/tenant-access/{id}
      * @secure
      */
     findOne: (id: string, params: RequestParams = {}) =>
       this.request<any, HttpExceptionDto>({
-        path: `/tenant_access/${id}`,
+        path: `/tenant-access/${id}`,
         method: 'GET',
         secure: true,
+        ...params,
+      }),
+  };
+  tenantHosts = {
+    /**
+     * No description
+     *
+     * @tags Tenant Hosts
+     * @name FindAll
+     * @request GET:/tenant-hosts
+     * @secure
+     */
+    findAll: (
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<AbstractBase, HttpExceptionDto>({
+        path: `/tenant-hosts`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
         ...params,
       }),
   };
