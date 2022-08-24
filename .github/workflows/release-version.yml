@@ -1,0 +1,48 @@
+name: Release Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Target branch of push tags'
+        required: false
+        default: 'main'
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ^16.13.2
+          npm_version: ^8.1.2
+
+      - name: Initialize git config
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email noreply@github.com
+
+      - name: Install dependencies
+        run: npm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_GITHUB_TOKEN }}
+
+      - name: Create Release
+        if: "${{ github.event.inputs.target_branch == 'main' }}"
+        run: npm run release
+
+      - name: Create Pre Release
+        if: "${{ github.event.inputs.target_branch != 'main' }}"
+        run: npm run release -- --prerelease
+
+      - name: Get package version
+        uses: bbonkr/get-version-action@v1.0.4
+        id: get_version
+        with:
+          project: "./package.json"
+
+      - name: Pushing version ${{ steps.get_version.outputs.version }} to branch ${{ github.event.inputs.target_branch }} with tags
+        run: git push --follow-tags origin ${{ github.event.inputs.target_branch }}

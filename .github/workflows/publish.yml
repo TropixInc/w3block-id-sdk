@@ -23,10 +23,12 @@ jobs:
           prerelease: false
 
   publish:
+    if: ${{ success() }}
+    needs: release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .npmrc file to publish to npm
+      - name: Setup Node
         uses: actions/setup-node@v1
         with:
           node-version: ^16.13.2
@@ -40,15 +42,3 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           scope: '@w3block'
-      # - name: Setup .npmrc file to publish to GitHub Packages
-      #   uses: actions/setup-node@v1
-      #   with:
-      #     node-version: ^16.13.2
-      #     npm_version: ^8.1.2
-      #     registry-url: 'https://npm.pkg.github.com'
-      #     scope: '@tropixinc'
-      # - run: npm run addscope
-      # - name: Publish to GitHub Packages
-      #   run: npm publish
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
