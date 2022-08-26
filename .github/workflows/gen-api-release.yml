@@ -79,6 +79,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      
+      - name: Git pull
+        run: git pull --tags
 
       - name: Set tag var
         id: vars
