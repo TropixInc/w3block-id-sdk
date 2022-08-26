@@ -215,6 +215,11 @@ export interface InviteUserDto {
   callbackUrl?: string;
 }
 
+export enum OrderByEnum {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
+
 export interface UpdateAddressDto {
   street?: string;
   number?: string;
@@ -619,11 +624,6 @@ export interface TenantEntityDto {
   deletedAt?: string;
 }
 
-export enum OrderByEnum {
-  ASC = 'ASC',
-  DESC = 'DESC',
-}
-
 export interface PaginationMetaDto {
   /** @example 1 */
   itemCount: number;
@@ -694,10 +694,10 @@ export interface CreateTenantAccessDto {
 export interface OmitTypeClass {
   /** @format uuid */
   id: string;
-  key: string;
-  secret: string;
+
+  /** @example example.com */
+  hostname: string;
   tenantId: string;
-  active: boolean;
 }
 
 export type TenantEntity = object;
@@ -712,13 +712,24 @@ export interface TenantAccessEntityDto {
   active: boolean;
 }
 
+export interface CreateTenantHostDto {
+  tenantId: string;
+
+  /** @format uuid */
+  id?: string;
+
+  /** @example example.com */
+  hostname: string;
+}
+
 export interface TenantHostEntityDto {
   /** @format uuid */
   id: string;
-  domain: string;
+
+  /** @example example.com */
+  hostname: string;
   tenant: TenantEntity;
   tenantId: string;
-  active: boolean;
 }
 
 export interface JwtPayloadDto {
@@ -1000,6 +1011,28 @@ export namespace Users {
     export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = CreateUserDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserPublicResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name GetUsersByTenantId
+   * @request GET:/users
+   * @secure
+   */
+  export namespace GetUsersByTenantId {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+      role?: UserRoleEnum;
+      tenantId?: string;
+    };
+    export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = UserPublicResponseDto;
   }
@@ -1391,6 +1424,20 @@ export namespace TenantHosts {
   /**
    * No description
    * @tags Tenant Hosts
+   * @name Create
+   * @request POST:/tenant-hosts
+   * @secure
+   */
+  export namespace Create {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = CreateTenantHostDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = OmitTypeClass;
+  }
+  /**
+   * No description
+   * @tags Tenant Hosts
    * @name FindAll
    * @request GET:/tenant-hosts
    * @secure
@@ -1407,6 +1454,20 @@ export namespace TenantHosts {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = AbstractBase;
+  }
+  /**
+   * No description
+   * @tags Tenant Hosts
+   * @name FindOne
+   * @request GET:/tenant-hosts/{id}
+   * @secure
+   */
+  export namespace FindOne {
+    export type RequestParams = { id: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
   }
 }
 
@@ -1667,7 +1728,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.1.5
+ * @version 0.1.6
  * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */
@@ -1688,6 +1749,35 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name GetUsersByTenantId
+     * @request GET:/users
+     * @secure
+     */
+    getUsersByTenantId: (
+      query?: {
+        page?: number;
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+        role?: UserRoleEnum;
+        tenantId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UserPublicResponseDto, HttpExceptionDto>({
+        path: `/users`,
+        method: 'GET',
+        query: query,
+        secure: true,
         format: 'json',
         ...params,
       }),
@@ -2166,6 +2256,25 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Tenant Hosts
+     * @name Create
+     * @request POST:/tenant-hosts
+     * @secure
+     */
+    create: (data: CreateTenantHostDto, params: RequestParams = {}) =>
+      this.request<OmitTypeClass, HttpExceptionDto>({
+        path: `/tenant-hosts`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Hosts
      * @name FindAll
      * @request GET:/tenant-hosts
      * @secure
@@ -2180,6 +2289,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         query: query,
         secure: true,
         format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Hosts
+     * @name FindOne
+     * @request GET:/tenant-hosts/{id}
+     * @secure
+     */
+    findOne: (id: string, params: RequestParams = {}) =>
+      this.request<any, HttpExceptionDto>({
+        path: `/tenant-hosts/${id}`,
+        method: 'GET',
+        secure: true,
         ...params,
       }),
   };

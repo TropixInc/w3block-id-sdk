@@ -45,6 +45,100 @@
             "bearer": []
           }
         ]
+      },
+      "get": {
+        "operationId": "getUsersByTenantId",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "example": "user",
+            "schema": {
+              "$ref": "#/components/schemas/UserRoleEnum"
+            }
+          },
+          {
+            "name": "tenantId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublicResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/users/invite": {
@@ -1228,6 +1322,50 @@
       }
     },
     "/tenant-hosts": {
+      "post": {
+        "operationId": "create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenantHostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OmitTypeClass"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: admin, superAdmin, application, application",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
       "get": {
         "operationId": "findAll",
         "parameters": [
@@ -1286,7 +1424,42 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin",
+            "description": "Need user with one of these roles: admin, superAdmin, application, application",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant-hosts/{id}": {
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "Need user with one of these roles: admin, superAdmin, application, application",
             "content": {
               "application/json": {
                 "schema": {
@@ -1714,7 +1887,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "contact": {}
   },
   "tags": [],
@@ -2104,6 +2277,13 @@
           "tenantId",
           "email",
           "i18nLocale"
+        ]
+      },
+      "OrderByEnum": {
+        "type": "string",
+        "enum": [
+          "ASC",
+          "DESC"
         ]
       },
       "UpdateAddressDto": {
@@ -2669,13 +2849,6 @@
           "info"
         ]
       },
-      "OrderByEnum": {
-        "type": "string",
-        "enum": [
-          "ASC",
-          "DESC"
-        ]
-      },
       "PaginationMetaDto": {
         "type": "object",
         "properties": {
@@ -2815,25 +2988,18 @@
             "type": "string",
             "format": "uuid"
           },
-          "key": {
-            "type": "string"
-          },
-          "secret": {
-            "type": "string"
+          "hostname": {
+            "type": "string",
+            "example": "example.com"
           },
           "tenantId": {
             "type": "string"
-          },
-          "active": {
-            "type": "boolean"
           }
         },
         "required": [
           "id",
-          "key",
-          "secret",
-          "tenantId",
-          "active"
+          "hostname",
+          "tenantId"
         ]
       },
       "TenantEntity": {
@@ -2872,6 +3038,26 @@
           "active"
         ]
       },
+      "CreateTenantHostDto": {
+        "type": "object",
+        "properties": {
+          "tenantId": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hostname": {
+            "type": "string",
+            "example": "example.com"
+          }
+        },
+        "required": [
+          "tenantId",
+          "hostname"
+        ]
+      },
       "TenantHostEntityDto": {
         "type": "object",
         "properties": {
@@ -2879,25 +3065,22 @@
             "type": "string",
             "format": "uuid"
           },
-          "domain": {
-            "type": "string"
+          "hostname": {
+            "type": "string",
+            "example": "example.com"
           },
           "tenant": {
             "$ref": "#/components/schemas/TenantEntity"
           },
           "tenantId": {
             "type": "string"
-          },
-          "active": {
-            "type": "boolean"
           }
         },
         "required": [
           "id",
-          "domain",
+          "hostname",
           "tenant",
-          "tenantId",
-          "active"
+          "tenantId"
         ]
       },
       "JwtPayloadDto": {
