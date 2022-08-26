@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const axios = require('axios');
 
-const { getConfig } = require('./config');
+const { getConfig, handleCatch } = require('./config');
 
 async function run() {
   const config = getConfig();
@@ -22,4 +22,4 @@ async function run() {
   console.log(`Generated swagger file at ${fullPath}`);
 }
 
-run().catch((e) => console.error(e));
+run().catch(handleCatch);

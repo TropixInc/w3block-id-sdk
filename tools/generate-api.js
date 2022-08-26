@@ -1,4 +1,4 @@
-const { getConfig } = require('./config');
+const { getConfig, handleCatch } = require('./config');
 const { generateApi } = require('swagger-typescript-api');
 const fs = require('fs');
 const path = require('path');
@@ -59,4 +59,4 @@ async function run() {
   });
 };
 
-run().catch((e) => console.error(e));
+run().catch(handleCatch);

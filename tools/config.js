@@ -19,6 +19,30 @@ const getConfig = (context = 'id') => {
   }
 };
 
+const handleCatch = (e) => {
+  console.group('handleCatch');
+  console.error('Message:', e.message);
+  console.error('Stack:', e.stack);
+
+  if (e.isAxiosError && e.response) {
+    console.error('Response:', e.response.data);
+  }
+
+  console.groupEnd();
+  process.exit(1);
+};
+
+process.on('unhandledRejection', (reason, p) => {
+  console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
+  process.exit(1);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception thrown', err);
+  process.exit(1);
+});
+
 module.exports = {
   getConfig,
+  handleCatch,
 };
