@@ -1,10 +1,11 @@
-name: Release Version
+name: Gen API and Create Release
 
 on:
   workflow_dispatch:
+# TODO handle staging and production envs
     inputs:
       target_branch:
-        description: 'Target branch of push tags'
+        description: 'Target environment'
         required: false
         default: 'main'
 
@@ -14,6 +15,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -30,9 +32,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_GITHUB_TOKEN }}
 
-      - name: Create Release
-        if: "${{ github.event.inputs.target_branch == 'main' }}"
-        run: npm run release
+      - name: Pull API swagger.json
+        run: npm run api:pull
+
+      - name: Generate API from swagger
+        run: npm run api:gen
 
       - name: Create Pre Release
         if: "${{ github.event.inputs.target_branch != 'main' }}"
@@ -46,3 +50,8 @@ jobs:
 
       - name: Pushing version ${{ steps.get_version.outputs.version }} on ${GITHUB_REF##*/} with tags
         run: git push --follow-tags origin ${GITHUB_REF##*/}
+
+      - uses: actions-ecosystem/action-push-tag@v1
+        with:
+          tag: ${{ steps.get_version.outputs.version }}
+          message: '(chore): PR #${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }} version ${{ steps.get_version.outputs.version }}'
