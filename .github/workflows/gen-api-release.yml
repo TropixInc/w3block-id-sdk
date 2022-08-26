@@ -48,6 +48,10 @@ jobs:
           default_author: github_actions
           message: 'feat(api): swagger new version generated'
           add: "src/id/api"
+      
+      - name: Create Release
+        if: "${{ github.event.inputs.target_branch == 'main' }}"
+        run: npm run release
 
       - name: Create Pre Release
         if: "${{ github.event.inputs.target_branch != 'main' }}"
@@ -59,7 +63,7 @@ jobs:
         with:
           project: "./package.json"
 
-      - name: Pushing version ${{ steps.get_version.outputs.version }} on ${GITHUB_REF##*/} with tags
+      - name: Pushing version ${{ steps.get_version.outputs.version }} on ${{ github.event.inputs.target_branch }} with tags
         run: git push --tags
         
       - name: GIT Log
