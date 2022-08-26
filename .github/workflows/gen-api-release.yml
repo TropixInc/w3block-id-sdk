@@ -10,7 +10,7 @@ on:
         default: 'main'
 
 jobs:
-  bump-version:
+  gen-api:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -41,14 +41,14 @@ jobs:
         run: npm run api:gen
         env:
           SWAGGER_JSON_PATH: https://pixwayid.stg.pixway.io/sdk-json
-      
+
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions
           message: 'feat(api): swagger new version generated'
           add: "src/id/api"
-      
+
       - name: Create Release
         if: "${{ github.event.inputs.target_branch == 'main' }}"
         run: npm run release
@@ -65,10 +65,10 @@ jobs:
 
       - name: Pushing version ${{ steps.get_version.outputs.version }} on ${{ github.event.inputs.target_branch }} with tags
         run: git push && git push --tags
-        
+
       - name: GIT Log
         run: git log -n 2
-        
+
       - name: GIT Status
         run: git status
 
@@ -76,4 +76,54 @@ jobs:
 #         with:
 #           tag: ${{ steps.get_version.outputs.version }}
 #           message: '(chore): PR #${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }} version ${{ steps.get_version.outputs.version }}'
+  release:
+    if: ${{ success() }}
+    needs: gen-api
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+#       - name: Create Release
+#         id: create_release
+#         uses: actions/create-release@v1
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         with:
+#           tag_name: ${{ github.ref }}
+#           release_name: ${{ github.ref }}
+#           draft: false
+#           prerelease: false
 
+  publish:
+    if: ${{ success() }}
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.13.2
+          cache: 'npm'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Install modules
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          scope: '@w3block'
