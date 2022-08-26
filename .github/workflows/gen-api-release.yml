@@ -34,9 +34,13 @@ jobs:
 
       - name: Pull API swagger.json
         run: npm run api:pull
+        env:
+          SWAGGER_JSON_PATH: https://pixwayid.stg.pixway.io/sdk-json
 
       - name: Generate API from swagger
         run: npm run api:gen
+        env:
+          SWAGGER_JSON_PATH: https://pixwayid.stg.pixway.io/sdk-json
 
       - name: Create Pre Release
         if: "${{ github.event.inputs.target_branch != 'main' }}"
