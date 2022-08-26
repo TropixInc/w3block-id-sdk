@@ -43,7 +43,7 @@ jobs:
           SWAGGER_JSON_PATH: https://pixwayid.stg.pixway.io/sdk-json
       
       - name: Commit changes
-        uses: EndBug/add-and-commit@v7
+        uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions
           message: 'feat(api): swagger new version generated'
@@ -60,12 +60,16 @@ jobs:
           project: "./package.json"
 
       - name: Pushing version ${{ steps.get_version.outputs.version }} on ${GITHUB_REF##*/} with tags
-        run: git push --follow-tags
+        run: git push --tags
         
-      - name: Log
-        run: git log --oneline
+      - name: GIT Log
+        run: git log -n 2
+        
+      - name: GIT Status
+        run: git status
 
-      - uses: actions-ecosystem/action-push-tag@v1
-        with:
-          tag: ${{ steps.get_version.outputs.version }}
-          message: '(chore): PR #${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }} version ${{ steps.get_version.outputs.version }}'
+#       - uses: actions-ecosystem/action-push-tag@v1
+#         with:
+#           tag: ${{ steps.get_version.outputs.version }}
+#           message: '(chore): PR #${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }} version ${{ steps.get_version.outputs.version }}'
+
