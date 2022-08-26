@@ -80,7 +80,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       
-      - name: Git pull
+      - name: Git pull with tags
         run: git pull --tags
 
       - name: Set tag var
@@ -105,6 +105,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        
+      - name: Git pull with tags
+        run: git pull --tags  
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
