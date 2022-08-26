@@ -41,6 +41,13 @@ jobs:
         run: npm run api:gen
         env:
           SWAGGER_JSON_PATH: https://pixwayid.stg.pixway.io/sdk-json
+      
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v7
+        with:
+          default_author: github_actions
+          message: 'feat(api): swagger new version generated'
+          add: "src/id/api"
 
       - name: Create Pre Release
         if: "${{ github.event.inputs.target_branch != 'main' }}"
@@ -53,7 +60,10 @@ jobs:
           project: "./package.json"
 
       - name: Pushing version ${{ steps.get_version.outputs.version }} on ${GITHUB_REF##*/} with tags
-        run: git push --follow-tags origin ${GITHUB_REF##*/}
+        run: git push --follow-tags
+        
+      - name: Log
+        run: git log --oneline
 
       - uses: actions-ecosystem/action-push-tag@v1
         with:
