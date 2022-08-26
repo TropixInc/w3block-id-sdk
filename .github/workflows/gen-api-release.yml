@@ -64,7 +64,7 @@ jobs:
           project: "./package.json"
 
       - name: Pushing version ${{ steps.get_version.outputs.version }} on ${{ github.event.inputs.target_branch }} with tags
-        run: git push --tags
+        run: git push && git push --tags
         
       - name: GIT Log
         run: git log -n 2
