@@ -107,6 +107,17 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         ],
         "responses": {
@@ -115,7 +126,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserPublicResponseDto"
+                  "$ref": "#/components/schemas/AbstractBase"
                 }
               }
             }
@@ -2286,6 +2297,78 @@
           "DESC"
         ]
       },
+      "PaginationMetaDto": {
+        "type": "object",
+        "properties": {
+          "itemCount": {
+            "type": "number",
+            "example": 1
+          },
+          "totalItems": {
+            "type": "number",
+            "example": 1
+          },
+          "itemsPerPage": {
+            "type": "number",
+            "example": 1
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 1
+          },
+          "currentPage": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "required": [
+          "itemCount",
+          "itemsPerPage",
+          "currentPage"
+        ]
+      },
+      "PaginationLinksDto": {
+        "type": "object",
+        "properties": {
+          "first": {
+            "type": "string",
+            "example": "http://example.com?page=1"
+          },
+          "prev": {
+            "type": "string",
+            "example": "http://example.com?page=1"
+          },
+          "next": {
+            "type": "string",
+            "example": "http://example.com?page=2"
+          },
+          "last": {
+            "type": "string",
+            "example": "http://example.com?page=3"
+          }
+        }
+      },
+      "AbstractBase": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantHostEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
       "UpdateAddressDto": {
         "type": "object",
         "properties": {
@@ -2847,78 +2930,6 @@
           "roles",
           "wallets",
           "info"
-        ]
-      },
-      "PaginationMetaDto": {
-        "type": "object",
-        "properties": {
-          "itemCount": {
-            "type": "number",
-            "example": 1
-          },
-          "totalItems": {
-            "type": "number",
-            "example": 1
-          },
-          "itemsPerPage": {
-            "type": "number",
-            "example": 1
-          },
-          "totalPages": {
-            "type": "number",
-            "example": 1
-          },
-          "currentPage": {
-            "type": "number",
-            "example": 1
-          }
-        },
-        "required": [
-          "itemCount",
-          "itemsPerPage",
-          "currentPage"
-        ]
-      },
-      "PaginationLinksDto": {
-        "type": "object",
-        "properties": {
-          "first": {
-            "type": "string",
-            "example": "http://example.com?page=1"
-          },
-          "prev": {
-            "type": "string",
-            "example": "http://example.com?page=1"
-          },
-          "next": {
-            "type": "string",
-            "example": "http://example.com?page=2"
-          },
-          "last": {
-            "type": "string",
-            "example": "http://example.com?page=3"
-          }
-        }
-      },
-      "AbstractBase": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TenantHostEntityDto"
-            }
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMetaDto"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PaginationLinksDto"
-          }
-        },
-        "required": [
-          "items",
-          "meta"
         ]
       },
       "TenantClientResponseDto": {

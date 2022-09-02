@@ -220,6 +220,43 @@ export enum OrderByEnum {
   DESC = 'DESC',
 }
 
+export interface PaginationMetaDto {
+  /** @example 1 */
+  itemCount: number;
+
+  /** @example 1 */
+  totalItems?: number;
+
+  /** @example 1 */
+  itemsPerPage: number;
+
+  /** @example 1 */
+  totalPages?: number;
+
+  /** @example 1 */
+  currentPage: number;
+}
+
+export interface PaginationLinksDto {
+  /** @example http://example.com?page=1 */
+  first?: string;
+
+  /** @example http://example.com?page=1 */
+  prev?: string;
+
+  /** @example http://example.com?page=2 */
+  next?: string;
+
+  /** @example http://example.com?page=3 */
+  last?: string;
+}
+
+export interface AbstractBase {
+  items: TenantHostEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
 export interface UpdateAddressDto {
   street?: string;
   number?: string;
@@ -624,43 +661,6 @@ export interface TenantEntityDto {
   deletedAt?: string;
 }
 
-export interface PaginationMetaDto {
-  /** @example 1 */
-  itemCount: number;
-
-  /** @example 1 */
-  totalItems?: number;
-
-  /** @example 1 */
-  itemsPerPage: number;
-
-  /** @example 1 */
-  totalPages?: number;
-
-  /** @example 1 */
-  currentPage: number;
-}
-
-export interface PaginationLinksDto {
-  /** @example http://example.com?page=1 */
-  first?: string;
-
-  /** @example http://example.com?page=1 */
-  prev?: string;
-
-  /** @example http://example.com?page=2 */
-  next?: string;
-
-  /** @example http://example.com?page=3 */
-  last?: string;
-}
-
-export interface AbstractBase {
-  items: TenantHostEntityDto[];
-  meta: PaginationMetaDto;
-  links?: PaginationLinksDto;
-}
-
 export interface TenantClientResponseDto {
   /** @example 193d34cd9f6ca1f2661357e346822a3643bd5c3d0590a670ee896af6ca9a8141 */
   apiKey: string;
@@ -1031,10 +1031,11 @@ export namespace Users {
       orderBy?: OrderByEnum;
       role?: UserRoleEnum;
       tenantId?: string;
+      userId?: string[];
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = UserPublicResponseDto;
+    export type ResponseBody = AbstractBase;
   }
   /**
    * No description
@@ -1770,10 +1771,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         orderBy?: OrderByEnum;
         role?: UserRoleEnum;
         tenantId?: string;
+        userId?: string[];
       },
       params: RequestParams = {},
     ) =>
-      this.request<UserPublicResponseDto, HttpExceptionDto>({
+      this.request<AbstractBase, HttpExceptionDto>({
         path: `/users`,
         method: 'GET',
         query: query,
