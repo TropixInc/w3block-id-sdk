@@ -45,111 +45,6 @@
             "bearer": []
           }
         ]
-      },
-      "get": {
-        "operationId": "getUsersByTenantId",
-        "parameters": [
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          },
-          {
-            "name": "role",
-            "required": false,
-            "in": "query",
-            "example": "user",
-            "schema": {
-              "$ref": "#/components/schemas/UserRoleEnum"
-            }
-          },
-          {
-            "name": "tenantId",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AbstractBase"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
       }
     },
     "/users/invite": {
@@ -287,10 +182,181 @@
             "bearer": []
           }
         ]
-      },
+      }
+    },
+    "/users/{tenantId}/{id}": {
+      "get": {
+        "operationId": "getProfileUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublicResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, admin, integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}": {
+      "get": {
+        "operationId": "getUsersByTenantId",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "example": "user",
+            "schema": {
+              "$ref": "#/components/schemas/UserRoleEnum"
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPaginateResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/profile": {
       "patch": {
         "operationId": "updateProfileByUserLogged",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -314,51 +380,6 @@
           },
           "403": {
             "description": "Need user with one of these roles: superAdmin, admin, user",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{id}": {
-      "get": {
-        "operationId": "getProfileUserById",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserPublicResponseDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -446,12 +467,20 @@
         ]
       }
     },
-    "/users/{id}/token": {
+    "/users/{tenantId}/{id}/token": {
       "patch": {
         "operationId": "updateToken",
         "parameters": [
           {
             "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
             "required": true,
             "in": "path",
             "schema": {
@@ -491,12 +520,20 @@
         ]
       }
     },
-    "/users/{id}/edit": {
+    "/users/{tenantId}/{id}/edit": {
       "patch": {
         "operationId": "update",
         "parameters": [
           {
             "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
             "required": true,
             "in": "path",
             "schema": {
@@ -947,7 +984,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AbstractBase"
+                  "$ref": "#/components/schemas/TenantPaginateResponseDto"
                 }
               }
             }
@@ -1194,7 +1231,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OmitTypeClass"
+                  "$ref": "#/components/schemas/TenantAccessResponseDto"
                 }
               }
             }
@@ -1271,7 +1308,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AbstractBase"
+                  "$ref": "#/components/schemas/TenantAccessPaginateResponseDto"
                 }
               }
             }
@@ -1352,7 +1389,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OmitTypeClass"
+                  "$ref": "#/components/schemas/TenantHostResponseDto"
                 }
               }
             }
@@ -1429,7 +1466,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AbstractBase"
+                  "$ref": "#/components/schemas/TenantHostPaginateResponseDto"
                 }
               }
             }
@@ -1770,7 +1807,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SignInResponseDto"
+                  "$ref": "#/components/schemas/RefreshTokenResponseDto"
                 }
               }
             }
@@ -2348,25 +2385,25 @@
           }
         }
       },
-      "AbstractBase": {
+      "UserPaginateResponseDto": {
         "type": "object",
         "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TenantHostEntityDto"
-            }
-          },
           "meta": {
             "$ref": "#/components/schemas/PaginationMetaDto"
           },
           "links": {
             "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserPublicResponseDto"
+            }
           }
         },
         "required": [
-          "items",
-          "meta"
+          "meta",
+          "items"
         ]
       },
       "UpdateAddressDto": {
@@ -2932,6 +2969,27 @@
           "info"
         ]
       },
+      "TenantPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantEntityDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
       "TenantClientResponseDto": {
         "type": "object",
         "properties": {
@@ -2992,25 +3050,32 @@
           "tenantId"
         ]
       },
-      "OmitTypeClass": {
+      "TenantAccessResponseDto": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
             "format": "uuid"
           },
-          "hostname": {
-            "type": "string",
-            "example": "example.com"
+          "key": {
+            "type": "string"
+          },
+          "secret": {
+            "type": "string"
           },
           "tenantId": {
             "type": "string"
+          },
+          "active": {
+            "type": "boolean"
           }
         },
         "required": [
           "id",
-          "hostname",
-          "tenantId"
+          "key",
+          "secret",
+          "tenantId",
+          "active"
         ]
       },
       "TenantEntity": {
@@ -3049,6 +3114,27 @@
           "active"
         ]
       },
+      "TenantAccessPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantAccessEntityDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
       "CreateTenantHostDto": {
         "type": "object",
         "properties": {
@@ -3067,6 +3153,27 @@
         "required": [
           "tenantId",
           "hostname"
+        ]
+      },
+      "TenantHostResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hostname": {
+            "type": "string",
+            "example": "example.com"
+          },
+          "tenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "hostname",
+          "tenantId"
         ]
       },
       "TenantHostEntityDto": {
@@ -3092,6 +3199,27 @@
           "hostname",
           "tenant",
           "tenantId"
+        ]
+      },
+      "TenantHostPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantHostEntityDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
         ]
       },
       "JwtPayloadDto": {
@@ -3539,6 +3667,23 @@
           }
         },
         "required": [
+          "refreshToken"
+        ]
+      },
+      "RefreshTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJlbWFpbCI6InBpeHdheUB3M2Jsb2NrLmlvIiwibmFtZSI6IlBpeHdheSIsInJvbGUiOiJhZG1pbiIsImNvbXBhbnlJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRlbmFudElkIjoiNWJkOTZhYWYtMTg4OC00OTNlLWI4NGUtN2M1NGE0NzMxODY4IiwidmVyaWZpZWQiOnRydWUsImlhdCI6MTY1ODUwODE3OSwiZXhwIjoxNjkwMDQ0MTc5fQ.L_0Py_M_1Ija_QnFKl7uNZr9fpkcVpZSv-tnNf07YQOcIEuR-TU0S9DMkLkHtmYrHKJe_vzzf14FS7J43NYVILn3NrXb-pC5-YO8V3JnMX4yBsgM2t0xdqEW6fqILk8_oxXsDFAhNkaNeBa2ljNilDncSepps7q69PP-TP7JVkjKQg2Za_E6ZwU"
+          },
+          "refreshToken": {
+            "type": "string",
+            "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJ0ZW5hbnRJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRva2VuSGFzaCI6ImJiMmFjMzE4M2EzZDZlMDljYTI2ZDkzNDEzNjQyNzU4MGY3Yjc5NWVlYWU3YTFlYzUzNDU2MjU5NThjMDZhYWQiLCJpYXQiOjE2NTg1MDgxNzksImV4cCI6MTY5MDA0NDE3OX0.au6dcpbcSmF134J335G4CymEUlwK39TT-4jXQwEUm0zRokFBiHpkXZzy23fTufyo_XzW_Tr_IUfO9b_y5e0thjIfvng4dS7akdeQAykcN7nRhwNBtqCVZxFHyZE39yzz38JLMwC00EtaKowM6lPykJYC5qZC0bBj4g4Yb1GG9IU5dQodibdXj00"
+          }
+        },
+        "required": [
+          "token",
           "refreshToken"
         ]
       },

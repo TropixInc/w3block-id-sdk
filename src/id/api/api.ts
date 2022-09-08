@@ -251,10 +251,10 @@ export interface PaginationLinksDto {
   last?: string;
 }
 
-export interface AbstractBase {
-  items: TenantHostEntityDto[];
+export interface UserPaginateResponseDto {
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
+  items: UserPublicResponseDto[];
 }
 
 export interface UpdateAddressDto {
@@ -661,6 +661,12 @@ export interface TenantEntityDto {
   deletedAt?: string;
 }
 
+export interface TenantPaginateResponseDto {
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+  items: TenantEntityDto[];
+}
+
 export interface TenantClientResponseDto {
   /** @example 193d34cd9f6ca1f2661357e346822a3643bd5c3d0590a670ee896af6ca9a8141 */
   apiKey: string;
@@ -691,13 +697,13 @@ export interface CreateTenantAccessDto {
   id?: string;
 }
 
-export interface OmitTypeClass {
+export interface TenantAccessResponseDto {
   /** @format uuid */
   id: string;
-
-  /** @example example.com */
-  hostname: string;
+  key: string;
+  secret: string;
   tenantId: string;
+  active: boolean;
 }
 
 export type TenantEntity = object;
@@ -712,6 +718,12 @@ export interface TenantAccessEntityDto {
   active: boolean;
 }
 
+export interface TenantAccessPaginateResponseDto {
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+  items: TenantAccessEntityDto[];
+}
+
 export interface CreateTenantHostDto {
   tenantId: string;
 
@@ -722,6 +734,15 @@ export interface CreateTenantHostDto {
   hostname: string;
 }
 
+export interface TenantHostResponseDto {
+  /** @format uuid */
+  id: string;
+
+  /** @example example.com */
+  hostname: string;
+  tenantId: string;
+}
+
 export interface TenantHostEntityDto {
   /** @format uuid */
   id: string;
@@ -730,6 +751,12 @@ export interface TenantHostEntityDto {
   hostname: string;
   tenant: TenantEntity;
   tenantId: string;
+}
+
+export interface TenantHostPaginateResponseDto {
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+  items: TenantHostEntityDto[];
 }
 
 export interface JwtPayloadDto {
@@ -958,6 +985,14 @@ export interface RefreshTokenDto {
   refreshToken: string;
 }
 
+export interface RefreshTokenResponseDto {
+  /** @example eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJlbWFpbCI6InBpeHdheUB3M2Jsb2NrLmlvIiwibmFtZSI6IlBpeHdheSIsInJvbGUiOiJhZG1pbiIsImNvbXBhbnlJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRlbmFudElkIjoiNWJkOTZhYWYtMTg4OC00OTNlLWI4NGUtN2M1NGE0NzMxODY4IiwidmVyaWZpZWQiOnRydWUsImlhdCI6MTY1ODUwODE3OSwiZXhwIjoxNjkwMDQ0MTc5fQ.L_0Py_M_1Ija_QnFKl7uNZr9fpkcVpZSv-tnNf07YQOcIEuR-TU0S9DMkLkHtmYrHKJe_vzzf14FS7J43NYVILn3NrXb-pC5-YO8V3JnMX4yBsgM2t0xdqEW6fqILk8_oxXsDFAhNkaNeBa2ljNilDncSepps7q69PP-TP7JVkjKQg2Za_E6ZwU */
+  token: string;
+
+  /** @example eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJ0ZW5hbnRJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRva2VuSGFzaCI6ImJiMmFjMzE4M2EzZDZlMDljYTI2ZDkzNDEzNjQyNzU4MGY3Yjc5NWVlYWU3YTFlYzUzNDU2MjU5NThjMDZhYWQiLCJpYXQiOjE2NTg1MDgxNzksImV4cCI6MTY5MDA0NDE3OX0.au6dcpbcSmF134J335G4CymEUlwK39TT-4jXQwEUm0zRokFBiHpkXZzy23fTufyo_XzW_Tr_IUfO9b_y5e0thjIfvng4dS7akdeQAykcN7nRhwNBtqCVZxFHyZE39yzz38JLMwC00EtaKowM6lPykJYC5qZC0bBj4g4Yb1GG9IU5dQodibdXj00 */
+  refreshToken: string;
+}
+
 export interface ForbiddenExceptionDto {
   /** @example 2022-07-25T17:24:07.042Z */
   timestamp: string;
@@ -1017,29 +1052,6 @@ export namespace Users {
   /**
    * No description
    * @tags Users
-   * @name GetUsersByTenantId
-   * @request GET:/users
-   * @secure
-   */
-  export namespace GetUsersByTenantId {
-    export type RequestParams = {};
-    export type RequestQuery = {
-      page?: number;
-      limit?: number;
-      search?: string;
-      sortBy?: string;
-      orderBy?: OrderByEnum;
-      role?: UserRoleEnum;
-      tenantId?: string;
-      userId?: string[];
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = AbstractBase;
-  }
-  /**
-   * No description
-   * @tags Users
    * @name Invite
    * @request POST:/users/invite
    * @secure
@@ -1082,28 +1094,50 @@ export namespace Users {
   /**
    * No description
    * @tags Users
-   * @name UpdateProfileByUserLogged
-   * @request PATCH:/users/profile
+   * @name GetProfileUserById
+   * @request GET:/users/{tenantId}/{id}
    * @secure
    */
-  export namespace UpdateProfileByUserLogged {
-    export type RequestParams = {};
+  export namespace GetProfileUserById {
+    export type RequestParams = { id: string; tenantId: string };
     export type RequestQuery = {};
-    export type RequestBody = UpdateProfileUserDto;
+    export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = UserPublicResponseDto;
   }
   /**
    * No description
    * @tags Users
-   * @name GetProfileUserById
-   * @request GET:/users/{id}
+   * @name GetUsersByTenantId
+   * @request GET:/users/{tenantId}
    * @secure
    */
-  export namespace GetProfileUserById {
-    export type RequestParams = { id: string };
-    export type RequestQuery = {};
+  export namespace GetUsersByTenantId {
+    export type RequestParams = { tenantId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+      role?: UserRoleEnum;
+      userId?: string[];
+    };
     export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserPaginateResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name UpdateProfileByUserLogged
+   * @request PATCH:/users/{tenantId}/profile
+   * @secure
+   */
+  export namespace UpdateProfileByUserLogged {
+    export type RequestParams = { tenantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateProfileUserDto;
     export type RequestHeaders = {};
     export type ResponseBody = UserPublicResponseDto;
   }
@@ -1139,11 +1173,11 @@ export namespace Users {
    * No description
    * @tags Users
    * @name UpdateToken
-   * @request PATCH:/users/{id}/token
+   * @request PATCH:/users/{tenantId}/{id}/token
    * @secure
    */
   export namespace UpdateToken {
-    export type RequestParams = { id: string };
+    export type RequestParams = { id: string; tenantId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1153,11 +1187,11 @@ export namespace Users {
    * No description
    * @tags Users
    * @name Update
-   * @request PATCH:/users/{id}/edit
+   * @request PATCH:/users/{tenantId}/{id}/edit
    * @secure
    */
   export namespace Update {
-    export type RequestParams = { id: string };
+    export type RequestParams = { id: string; tenantId: string };
     export type RequestQuery = {};
     export type RequestBody = UpdateUserDto;
     export type RequestHeaders = {};
@@ -1296,7 +1330,7 @@ export namespace Tenant {
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = AbstractBase;
+    export type ResponseBody = TenantPaginateResponseDto;
   }
   /**
    * No description
@@ -1383,7 +1417,7 @@ export namespace TenantAccess {
     export type RequestQuery = {};
     export type RequestBody = CreateTenantAccessDto;
     export type RequestHeaders = {};
-    export type ResponseBody = OmitTypeClass;
+    export type ResponseBody = TenantAccessResponseDto;
   }
   /**
    * No description
@@ -1403,7 +1437,7 @@ export namespace TenantAccess {
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = AbstractBase;
+    export type ResponseBody = TenantAccessPaginateResponseDto;
   }
   /**
    * No description
@@ -1434,7 +1468,7 @@ export namespace TenantHosts {
     export type RequestQuery = {};
     export type RequestBody = CreateTenantHostDto;
     export type RequestHeaders = {};
-    export type ResponseBody = OmitTypeClass;
+    export type ResponseBody = TenantHostResponseDto;
   }
   /**
    * No description
@@ -1454,7 +1488,7 @@ export namespace TenantHosts {
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = AbstractBase;
+    export type ResponseBody = TenantHostPaginateResponseDto;
   }
   /**
    * No description
@@ -1563,7 +1597,7 @@ export namespace Auth {
     export type RequestQuery = {};
     export type RequestBody = RefreshTokenDto;
     export type RequestHeaders = {};
-    export type ResponseBody = SignInResponseDto;
+    export type ResponseBody = RefreshTokenResponseDto;
   }
   /**
    * No description
@@ -1758,36 +1792,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users
-     * @name GetUsersByTenantId
-     * @request GET:/users
-     * @secure
-     */
-    getUsersByTenantId: (
-      query?: {
-        page?: number;
-        limit?: number;
-        search?: string;
-        sortBy?: string;
-        orderBy?: OrderByEnum;
-        role?: UserRoleEnum;
-        tenantId?: string;
-        userId?: string[];
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<AbstractBase, HttpExceptionDto>({
-        path: `/users`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Users
      * @name Invite
      * @request POST:/users/invite
      * @secure
@@ -1842,17 +1846,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users
-     * @name UpdateProfileByUserLogged
-     * @request PATCH:/users/profile
+     * @name GetProfileUserById
+     * @request GET:/users/{tenantId}/{id}
      * @secure
      */
-    updateProfileByUserLogged: (data: UpdateProfileUserDto, params: RequestParams = {}) =>
+    getProfileUserById: (id: string, tenantId: string, params: RequestParams = {}) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
-        path: `/users/profile`,
-        method: 'PATCH',
-        body: data,
+        path: `/users/${tenantId}/${id}`,
+        method: 'GET',
         secure: true,
-        type: ContentType.Json,
         format: 'json',
         ...params,
       }),
@@ -1861,15 +1863,47 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users
-     * @name GetProfileUserById
-     * @request GET:/users/{id}
+     * @name GetUsersByTenantId
+     * @request GET:/users/{tenantId}
      * @secure
      */
-    getProfileUserById: (id: string, params: RequestParams = {}) =>
-      this.request<UserPublicResponseDto, HttpExceptionDto>({
-        path: `/users/${id}`,
+    getUsersByTenantId: (
+      tenantId: string,
+      query?: {
+        page?: number;
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+        role?: UserRoleEnum;
+        userId?: string[];
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UserPaginateResponseDto, HttpExceptionDto>({
+        path: `/users/${tenantId}`,
         method: 'GET',
+        query: query,
         secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UpdateProfileByUserLogged
+     * @request PATCH:/users/{tenantId}/profile
+     * @secure
+     */
+    updateProfileByUserLogged: (tenantId: string, data: UpdateProfileUserDto, params: RequestParams = {}) =>
+      this.request<UserPublicResponseDto, HttpExceptionDto>({
+        path: `/users/${tenantId}/profile`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         format: 'json',
         ...params,
       }),
@@ -1915,12 +1949,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Users
      * @name UpdateToken
-     * @request PATCH:/users/{id}/token
+     * @request PATCH:/users/{tenantId}/{id}/token
      * @secure
      */
-    updateToken: (id: string, params: RequestParams = {}) =>
+    updateToken: (id: string, tenantId: string, params: RequestParams = {}) =>
       this.request<UserTokenResponseDto, HttpExceptionDto>({
-        path: `/users/${id}/token`,
+        path: `/users/${tenantId}/${id}/token`,
         method: 'PATCH',
         secure: true,
         format: 'json',
@@ -1932,12 +1966,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Users
      * @name Update
-     * @request PATCH:/users/{id}/edit
+     * @request PATCH:/users/{tenantId}/{id}/edit
      * @secure
      */
-    update: (id: string, data: UpdateUserDto, params: RequestParams = {}) =>
+    update: (id: string, tenantId: string, data: UpdateUserDto, params: RequestParams = {}) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
-        path: `/users/${id}/edit`,
+        path: `/users/${tenantId}/${id}/edit`,
         method: 'PATCH',
         body: data,
         secure: true,
@@ -2102,7 +2136,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
       params: RequestParams = {},
     ) =>
-      this.request<AbstractBase, HttpExceptionDto>({
+      this.request<TenantPaginateResponseDto, HttpExceptionDto>({
         path: `/tenant`,
         method: 'GET',
         query: query,
@@ -2206,7 +2240,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     create: (data: CreateTenantAccessDto, params: RequestParams = {}) =>
-      this.request<OmitTypeClass, HttpExceptionDto>({
+      this.request<TenantAccessResponseDto, HttpExceptionDto>({
         path: `/tenant-access`,
         method: 'POST',
         body: data,
@@ -2228,7 +2262,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
       params: RequestParams = {},
     ) =>
-      this.request<AbstractBase, HttpExceptionDto>({
+      this.request<TenantAccessPaginateResponseDto, HttpExceptionDto>({
         path: `/tenant-access`,
         method: 'GET',
         query: query,
@@ -2263,7 +2297,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     create: (data: CreateTenantHostDto, params: RequestParams = {}) =>
-      this.request<OmitTypeClass, HttpExceptionDto>({
+      this.request<TenantHostResponseDto, HttpExceptionDto>({
         path: `/tenant-hosts`,
         method: 'POST',
         body: data,
@@ -2285,7 +2319,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
       params: RequestParams = {},
     ) =>
-      this.request<AbstractBase, HttpExceptionDto>({
+      this.request<TenantHostPaginateResponseDto, HttpExceptionDto>({
         path: `/tenant-hosts`,
         method: 'GET',
         query: query,
@@ -2419,7 +2453,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     refreshToken: (data: RefreshTokenDto, params: RequestParams = {}) =>
-      this.request<SignInResponseDto, ForbiddenExceptionDto>({
+      this.request<RefreshTokenResponseDto, ForbiddenExceptionDto>({
         path: `/auth/refresh-token`,
         method: 'POST',
         body: data,
