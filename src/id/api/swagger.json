@@ -1211,10 +1211,19 @@
         ]
       }
     },
-    "/tenant-access": {
+    "/tenant-access/{tenantId}": {
       "post": {
         "operationId": "create",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -1237,7 +1246,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin",
+            "description": "Need user with one of these roles: superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1259,6 +1268,14 @@
       "get": {
         "operationId": "findAll",
         "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "page",
             "required": false,
@@ -1314,7 +1331,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin",
+            "description": "Need user with one of these roles: superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1334,7 +1351,7 @@
         ]
       }
     },
-    "/tenant-access/{id}": {
+    "/tenant-access/{tenantId}/{id}": {
       "get": {
         "operationId": "findOne",
         "parameters": [
@@ -1345,11 +1362,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: superAdmin",
+            "description": "Need user with one of these roles: superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1369,10 +1394,19 @@
         ]
       }
     },
-    "/tenant-hosts": {
+    "/tenant-hosts/{tenantId}": {
       "post": {
         "operationId": "create",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -1395,7 +1429,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: admin, superAdmin, application, application",
+            "description": "Need user with one of these roles: admin, superAdmin, integration, application",
             "content": {
               "application/json": {
                 "schema": {
@@ -1417,6 +1451,14 @@
       "get": {
         "operationId": "findAll",
         "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "page",
             "required": false,
@@ -1472,7 +1514,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: admin, superAdmin, application, application",
+            "description": "Need user with one of these roles: admin, superAdmin, integration, application",
             "content": {
               "application/json": {
                 "schema": {
@@ -1492,10 +1534,18 @@
         ]
       }
     },
-    "/tenant-hosts/{id}": {
+    "/tenant-hosts/{tenantId}/{id}": {
       "get": {
         "operationId": "findOne",
         "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "id",
             "required": true,
@@ -1507,7 +1557,7 @@
         ],
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: admin, superAdmin, application, application",
+            "description": "Need user with one of these roles: admin, superAdmin, integration, application",
             "content": {
               "application/json": {
                 "schema": {
@@ -3038,17 +3088,11 @@
       "CreateTenantAccessDto": {
         "type": "object",
         "properties": {
-          "tenantId": {
-            "type": "string"
-          },
           "id": {
             "type": "string",
             "format": "uuid"
           }
-        },
-        "required": [
-          "tenantId"
-        ]
+        }
       },
       "TenantAccessResponseDto": {
         "type": "object",
@@ -3138,9 +3182,6 @@
       "CreateTenantHostDto": {
         "type": "object",
         "properties": {
-          "tenantId": {
-            "type": "string"
-          },
           "id": {
             "type": "string",
             "format": "uuid"
@@ -3151,7 +3192,6 @@
           }
         },
         "required": [
-          "tenantId",
           "hostname"
         ]
       },
