@@ -57,6 +57,7 @@ export interface CreateUserDto {
 
   /** @example user */
   role: UserRoleEnum;
+  phone?: string;
   name?: string;
 
   /** @example user@example.com */
@@ -141,11 +142,14 @@ export interface UserPublicResponseDto {
   /** @example email@example.com */
   email: string;
 
+  /** @example +55(11)99999-9999 */
+  phone?: string;
+
   /** @example true */
   verified: boolean;
 
-  /** @example user */
-  roles: any[][];
+  /** @example ["user"] */
+  roles: ('superAdmin' | 'admin' | 'user')[];
 
   /** @example pt-br */
   i18nLocale: I18NLocaleEnum;
@@ -212,7 +216,11 @@ export interface InviteUserDto {
 
   /** @example true */
   sendEmail?: boolean;
-  callbackUrl?: string;
+  phone?: string;
+
+  /** @example user */
+  role?: UserRoleEnum;
+  royaltyEligible: object;
 }
 
 export enum OrderByEnum {
@@ -310,6 +318,7 @@ export interface UpdateUserDto {
 
   /** @example user */
   role?: UserRoleEnum;
+  phone?: string;
   name?: string;
 
   /** @example user@example.com */
@@ -317,10 +326,6 @@ export interface UpdateUserDto {
 
   /** @example pt-br */
   i18nLocale?: I18NLocaleEnum;
-
-  /** @example true */
-  sendEmail?: object;
-  callbackUrl?: string;
   address?: UpdateAddressDto;
 }
 
@@ -1332,11 +1337,11 @@ export namespace Tenant {
    * No description
    * @tags Tenant
    * @name FindOne
-   * @request GET:/tenant/{id}
+   * @request GET:/tenant/{tenantId}
    * @secure
    */
   export namespace FindOne {
-    export type RequestParams = { id: string };
+    export type RequestParams = { tenantId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1346,11 +1351,11 @@ export namespace Tenant {
    * No description
    * @tags Tenant
    * @name Update
-   * @request PUT:/tenant/{id}
+   * @request PUT:/tenant/{tenantId}
    * @secure
    */
   export namespace Update {
-    export type RequestParams = { id: string };
+    export type RequestParams = { tenantId: string };
     export type RequestQuery = {};
     export type RequestBody = UpdateTenantDto;
     export type RequestHeaders = {};
@@ -1360,11 +1365,11 @@ export namespace Tenant {
    * No description
    * @tags Tenant
    * @name Remove
-   * @request DELETE:/tenant/{id}
+   * @request DELETE:/tenant/{tenantId}
    * @secure
    */
   export namespace Remove {
-    export type RequestParams = { id: string };
+    export type RequestParams = { tenantId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1374,11 +1379,11 @@ export namespace Tenant {
    * No description
    * @tags Tenant
    * @name GetTenantClientOrFail
-   * @request GET:/tenant/client/{id}
+   * @request GET:/tenant/client/{tenantId}
    * @secure
    */
   export namespace GetTenantClientOrFail {
-    export type RequestParams = { id: string };
+    export type RequestParams = { tenantId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1388,11 +1393,11 @@ export namespace Tenant {
    * No description
    * @tags Tenant
    * @name UpdateProfile
-   * @request PUT:/tenant/profile/{id}
+   * @request PUT:/tenant/profile/{tenantId}
    * @secure
    */
   export namespace UpdateProfile {
-    export type RequestParams = { id: string };
+    export type RequestParams = { tenantId: string };
     export type RequestQuery = {};
     export type RequestBody = UpdateTenantProfileDto;
     export type RequestHeaders = {};
@@ -1759,7 +1764,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.1.6
+ * @version 0.1.8
  * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */
@@ -2146,12 +2151,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Tenant
      * @name FindOne
-     * @request GET:/tenant/{id}
+     * @request GET:/tenant/{tenantId}
      * @secure
      */
-    findOne: (id: string, params: RequestParams = {}) =>
+    findOne: (tenantId: string, params: RequestParams = {}) =>
       this.request<any, HttpExceptionDto>({
-        path: `/tenant/${id}`,
+        path: `/tenant/${tenantId}`,
         method: 'GET',
         secure: true,
         ...params,
@@ -2162,12 +2167,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Tenant
      * @name Update
-     * @request PUT:/tenant/{id}
+     * @request PUT:/tenant/{tenantId}
      * @secure
      */
-    update: (id: string, data: UpdateTenantDto, params: RequestParams = {}) =>
+    update: (tenantId: string, data: UpdateTenantDto, params: RequestParams = {}) =>
       this.request<any, HttpExceptionDto>({
-        path: `/tenant/${id}`,
+        path: `/tenant/${tenantId}`,
         method: 'PUT',
         body: data,
         secure: true,
@@ -2180,12 +2185,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Tenant
      * @name Remove
-     * @request DELETE:/tenant/{id}
+     * @request DELETE:/tenant/{tenantId}
      * @secure
      */
-    remove: (id: string, params: RequestParams = {}) =>
+    remove: (tenantId: string, params: RequestParams = {}) =>
       this.request<any, HttpExceptionDto>({
-        path: `/tenant/${id}`,
+        path: `/tenant/${tenantId}`,
         method: 'DELETE',
         secure: true,
         ...params,
@@ -2196,12 +2201,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Tenant
      * @name GetTenantClientOrFail
-     * @request GET:/tenant/client/{id}
+     * @request GET:/tenant/client/{tenantId}
      * @secure
      */
-    getTenantClientOrFail: (id: string, params: RequestParams = {}) =>
+    getTenantClientOrFail: (tenantId: string, params: RequestParams = {}) =>
       this.request<TenantClientResponseDto, HttpExceptionDto>({
-        path: `/tenant/client/${id}`,
+        path: `/tenant/client/${tenantId}`,
         method: 'GET',
         secure: true,
         format: 'json',
@@ -2213,12 +2218,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Tenant
      * @name UpdateProfile
-     * @request PUT:/tenant/profile/{id}
+     * @request PUT:/tenant/profile/{tenantId}
      * @secure
      */
-    updateProfile: (id: string, data: UpdateTenantProfileDto, params: RequestParams = {}) =>
+    updateProfile: (tenantId: string, data: UpdateTenantProfileDto, params: RequestParams = {}) =>
       this.request<any, HttpExceptionDto>({
-        path: `/tenant/profile/${id}`,
+        path: `/tenant/profile/${tenantId}`,
         method: 'PUT',
         body: data,
         secure: true,

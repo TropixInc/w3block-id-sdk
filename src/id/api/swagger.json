@@ -563,7 +563,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1010,12 +1010,12 @@
         ]
       }
     },
-    "/tenant/{id}": {
+    "/tenant/{tenantId}": {
       "get": {
         "operationId": "findOne",
         "parameters": [
           {
-            "name": "id",
+            "name": "tenantId",
             "required": true,
             "in": "path",
             "schema": {
@@ -1048,7 +1048,7 @@
         "operationId": "update",
         "parameters": [
           {
-            "name": "id",
+            "name": "tenantId",
             "required": true,
             "in": "path",
             "schema": {
@@ -1091,7 +1091,7 @@
         "operationId": "remove",
         "parameters": [
           {
-            "name": "id",
+            "name": "tenantId",
             "required": true,
             "in": "path",
             "schema": {
@@ -1121,12 +1121,12 @@
         ]
       }
     },
-    "/tenant/client/{id}": {
+    "/tenant/client/{tenantId}": {
       "get": {
         "operationId": "getTenantClientOrFail",
         "parameters": [
           {
-            "name": "id",
+            "name": "tenantId",
             "required": true,
             "in": "path",
             "schema": {
@@ -1166,12 +1166,12 @@
         ]
       }
     },
-    "/tenant/profile/{id}": {
+    "/tenant/profile/{tenantId}": {
       "put": {
         "operationId": "updateProfile",
         "parameters": [
           {
-            "name": "id",
+            "name": "tenantId",
             "required": true,
             "in": "path",
             "schema": {
@@ -1985,7 +1985,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.1.6",
+    "version": "0.1.8",
     "contact": {}
   },
   "tags": [],
@@ -2097,6 +2097,9 @@
           "role": {
             "example": "user",
             "$ref": "#/components/schemas/UserRoleEnum"
+          },
+          "phone": {
+            "type": "string"
           },
           "name": {
             "type": "string"
@@ -2240,16 +2243,29 @@
             "type": "string",
             "example": "email@example.com"
           },
+          "phone": {
+            "type": "string",
+            "example": "+55(11)99999-9999"
+          },
           "verified": {
             "type": "boolean",
             "example": true
           },
           "roles": {
-            "example": "user",
-            "default": "user",
             "type": "array",
+            "example": [
+              "user"
+            ],
+            "default": [
+              "user"
+            ],
             "items": {
-              "type": "array"
+              "type": "string",
+              "enum": [
+                "superAdmin",
+                "admin",
+                "user"
+              ]
             }
           },
           "i18nLocale": {
@@ -2367,14 +2383,22 @@
             "type": "boolean",
             "example": true
           },
-          "callbackUrl": {
+          "phone": {
             "type": "string"
+          },
+          "role": {
+            "example": "user",
+            "$ref": "#/components/schemas/UserRoleEnum"
+          },
+          "royaltyEligible": {
+            "type": "object"
           }
         },
         "required": [
           "tenantId",
           "email",
-          "i18nLocale"
+          "i18nLocale",
+          "royaltyEligible"
         ]
       },
       "OrderByEnum": {
@@ -2561,6 +2585,9 @@
             "example": "user",
             "$ref": "#/components/schemas/UserRoleEnum"
           },
+          "phone": {
+            "type": "string"
+          },
           "name": {
             "type": "string"
           },
@@ -2571,13 +2598,6 @@
           "i18nLocale": {
             "example": "pt-br",
             "$ref": "#/components/schemas/I18nLocaleEnum"
-          },
-          "sendEmail": {
-            "type": "object",
-            "example": true
-          },
-          "callbackUrl": {
-            "type": "string"
           },
           "address": {
             "$ref": "#/components/schemas/UpdateAddressDto"
