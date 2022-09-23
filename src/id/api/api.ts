@@ -220,7 +220,9 @@ export interface InviteUserDto {
 
   /** @example user */
   role?: UserRoleEnum;
-  royaltyEligible: object;
+
+  /** @example false */
+  royaltyEligible?: boolean;
 }
 
 export enum OrderByEnum {
@@ -730,6 +732,7 @@ export interface TenantAccessPaginateResponseDto {
 export interface CreateTenantHostDto {
   /** @format uuid */
   id?: string;
+  isMain?: boolean;
 
   /** @example example.com */
   hostname: string;
@@ -742,6 +745,7 @@ export interface TenantHostResponseDto {
   /** @example example.com */
   hostname: string;
   tenantId: string;
+  isMain: boolean;
 }
 
 export interface TenantHostEntityDto {
@@ -752,6 +756,7 @@ export interface TenantHostEntityDto {
   hostname: string;
   tenant: TenantEntity;
   tenantId: string;
+  isMain: boolean;
 }
 
 export interface TenantHostPaginateResponseDto {

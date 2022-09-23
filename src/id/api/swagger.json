@@ -2391,14 +2391,14 @@
             "$ref": "#/components/schemas/UserRoleEnum"
           },
           "royaltyEligible": {
-            "type": "object"
+            "type": "boolean",
+            "example": false
           }
         },
         "required": [
           "tenantId",
           "email",
-          "i18nLocale",
-          "royaltyEligible"
+          "i18nLocale"
         ]
       },
       "OrderByEnum": {
@@ -3206,6 +3206,9 @@
             "type": "string",
             "format": "uuid"
           },
+          "isMain": {
+            "type": "boolean"
+          },
           "hostname": {
             "type": "string",
             "example": "example.com"
@@ -3228,12 +3231,16 @@
           },
           "tenantId": {
             "type": "string"
+          },
+          "isMain": {
+            "type": "boolean"
           }
         },
         "required": [
           "id",
           "hostname",
-          "tenantId"
+          "tenantId",
+          "isMain"
         ]
       },
       "TenantHostEntityDto": {
@@ -3252,13 +3259,17 @@
           },
           "tenantId": {
             "type": "string"
+          },
+          "isMain": {
+            "type": "boolean"
           }
         },
         "required": [
           "id",
           "hostname",
           "tenant",
-          "tenantId"
+          "tenantId",
+          "isMain"
         ]
       },
       "TenantHostPaginateResponseDto": {
