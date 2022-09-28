@@ -20,12 +20,15 @@ export class W3blockIdSDK {
   public api: Api<ApiSecurityDataType>;
   protected authToken = '';
   protected authTokenDecoded: JwtPayload | undefined;
+  protected refreshTokenDecoded: JwtPayload | undefined;
   protected refreshToken = '';
   protected options: W3blockIdSDKOptions;
   protected timer: NodeJS.Timer | undefined;
+  protected credential: Credential | undefined;
 
   protected defaultOptions: Partial<W3blockIdSDKOptions> = {
     autoRefresh: false,
+    tokenExpireOffset: 5000,
   };
 
   constructor(options: W3blockIdSDKOptions) {
@@ -60,8 +63,8 @@ export class W3blockIdSDK {
     this.options.autoRefresh = true;
     if (!this.timer) {
       this.timer = setInterval(() => {
-        this.triggerRefreshToken().catch((error) => console.error(error?.response?.data || error));
-      }, 60_000);
+        return this.triggerRefreshToken().catch((error) => console.error(error?.response?.data || error));
+      }, 500);
     }
   }
 
@@ -130,6 +133,7 @@ export class W3blockIdSDK {
     this.authToken = '';
     this.authTokenDecoded = undefined;
     this.refreshToken = '';
+    this.refreshTokenDecoded = undefined;
   }
 
   /**
@@ -146,7 +150,16 @@ export class W3blockIdSDK {
     } else {
       throw new Error('Invalid credentials');
     }
+    this.credential = credential;
     this.hookTimer();
+  }
+
+  /**
+   * If there's a credential, authenticate with it.
+   */
+  public async reAuthenticate(): Promise<void> {
+    if (!this.credential) throw new Error('No credential found');
+    await this.authenticate(this.credential);
   }
 
   /**
@@ -206,24 +219,24 @@ export class W3blockIdSDK {
       return;
     }
 
-    if (this.isTokenExpired(5)) {
+    if (this.isTokenExpired()) {
       await this.refreshTokens();
     }
   }
 
   /**
-   * If the auth token is expired, return true
-   * @param [offset=0] - The number of minutes before the token expires that we want to consider it
-   * expired.
+   * If the auth token is expired, return true otherwise return false
    * @returns A boolean value.
    */
-  public isTokenExpired(offset = 0): boolean {
-    if (!this.authTokenDecoded?.exp) {
+  public isTokenExpired(): boolean {
+    const offset = this.options?.tokenExpireOffset || 0;
+    if (offset < 0) return true;
+    if (!this.authTokenDecoded?.exp || !this.refreshTokenDecoded?.exp) {
       return true;
     }
 
-    const expiresAt = this.authTokenDecoded.exp * 1000;
-    return datefns.isPast(datefns.subMinutes(expiresAt, offset));
+    const nextExpiration = Math.min(this.authTokenDecoded.exp, this.refreshTokenDecoded?.exp) * 1000;
+    return datefns.isPast(datefns.subSeconds(nextExpiration, offset));
   }
 
   /**
@@ -231,7 +244,7 @@ export class W3blockIdSDK {
    * @returns The authToken
    */
   public getAuthToken(): string {
-    return this.authToken;
+    return this.authToken.toString();
   }
 
   /**
@@ -241,6 +254,12 @@ export class W3blockIdSDK {
    */
   protected setRefreshToken(token: string): void {
     if (this.refreshToken === token) return;
+
+    const decoded = jwt_decode<JwtPayload>(token);
+
+    if (!decoded.exp) throw new Error('Invalid decoded token');
+
+    this.refreshTokenDecoded = decoded;
     this.refreshToken = token;
   }
 
@@ -249,7 +268,7 @@ export class W3blockIdSDK {
    * @returns The refresh token.
    */
   public getRefreshToken(): string {
-    return this.refreshToken;
+    return this.refreshToken.toString();
   }
 
   /**
@@ -265,6 +284,9 @@ export class W3blockIdSDK {
       this.clearTokens();
       throw new Error('Invalid response');
     }
+
+    this.setAuthToken(data.token);
+    this.setRefreshToken(data.refreshToken);
   }
 
   /**
@@ -316,8 +338,16 @@ export class W3blockIdSDK {
    * Get decoded token if exists.
    * @returns The decoded token.
    */
-  getDecodedToken(): JwtPayload | undefined {
+  getAuthTokenDecoded(): JwtPayload | undefined {
     return this.authTokenDecoded;
+  }
+
+  /**
+   * Get decoded refresh token if exists.
+   * @returns The decoded refresh token.
+   */
+  getRefreshTokenDecoded(): JwtPayload | undefined {
+    return this.refreshTokenDecoded;
   }
 
   /**

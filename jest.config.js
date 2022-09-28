@@ -17,5 +17,5 @@ module.exports = {
     "<rootDir>/test/setupTests.ts"
   ],
   "verbose": true,
-  // testTimeout: 30000,
+  testTimeout: 10000,
 }
