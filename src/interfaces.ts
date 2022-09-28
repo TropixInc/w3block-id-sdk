@@ -29,6 +29,7 @@ export type Credential = UserCredential | TenantCredential | TokenCredential;
 export interface W3blockIdSDKOptions {
   baseURL?: string;
   autoRefresh?: boolean;
+  tokenExpireOffset?: number;
 }
 
 /**
