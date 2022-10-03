@@ -13,8 +13,15 @@ import { default as jwt_decode, JwtPayload } from 'jwt-decode';
 import * as datefns from 'date-fns';
 import { Api } from '../id/api/api';
 import { CredentialType } from '../enums';
+import mitt, { Emitter } from 'mitt';
 
 export type ApiSecurityDataType = { bearer: string };
+
+type Events = {
+  connecting: void;
+  connected: void;
+  authChanged: { authToken: string; refreshToken: string };
+};
 
 export class W3blockIdSDK {
   public api: Api<ApiSecurityDataType>;
@@ -25,6 +32,7 @@ export class W3blockIdSDK {
   protected options: W3blockIdSDKOptions;
   protected timer: NodeJS.Timer | undefined;
   protected credential: Credential | undefined;
+  public emitter: Emitter<Events>;
 
   protected defaultOptions: Partial<W3blockIdSDKOptions> = {
     autoRefresh: false,
@@ -33,7 +41,7 @@ export class W3blockIdSDK {
 
   constructor(options: W3blockIdSDKOptions) {
     this.options = Object.assign({}, this.defaultOptions, options);
-
+    this.emitter = mitt<Events>();
     this.api = new Api<ApiSecurityDataType>({
       baseURL: options.baseURL || 'https://api.w3block.io',
       securityWorker: (securityData): AxiosRequestConfig => {
@@ -134,6 +142,7 @@ export class W3blockIdSDK {
     this.authTokenDecoded = undefined;
     this.refreshToken = '';
     this.refreshTokenDecoded = undefined;
+    this.emitter.emit('authChanged', { authToken: '', refreshToken: '' });
   }
 
   /**
@@ -141,6 +150,7 @@ export class W3blockIdSDK {
    * credential, authenticate as an tenant. If the credential is neither, throw an error
    */
   public async authenticate(credential: Credential): Promise<void> {
+    this.emitter.emit('connecting');
     if (isUserCredential(credential)) {
       await this.authenticateAsUser(credential);
     } else if (isTokenCredential(credential)) {
@@ -150,7 +160,9 @@ export class W3blockIdSDK {
     } else {
       throw new Error('Invalid credentials');
     }
+
     this.credential = credential;
+    this.emitter.emit('connected');
     this.hookTimer();
   }
 
@@ -249,18 +261,22 @@ export class W3blockIdSDK {
 
   /**
    * If the new token is the same as the old token, do nothing. Otherwise, set the new token
-   * @param {string} token - The token to be set.
+   * @param {string} refreshToken - The token to be set.
    * @returns The refresh token is being returned.
    */
-  protected setRefreshToken(token: string): void {
-    if (this.refreshToken === token) return;
+  protected setRefreshToken(refreshToken: string): void {
+    if (this.refreshToken === refreshToken) return;
 
-    const decoded = jwt_decode<JwtPayload>(token);
+    const refreshTokenDecoded = jwt_decode<JwtPayload>(refreshToken);
 
-    if (!decoded.exp) throw new Error('Invalid decoded token');
+    if (!refreshTokenDecoded.exp) throw new Error('Invalid decoded token');
 
-    this.refreshTokenDecoded = decoded;
-    this.refreshToken = token;
+    // if(this.refreshTokenDecoded && this.refreshTokenDecoded != refreshToken) {
+    //   this.emitter.emit('refreshTokenChanged', this.refreshTokenDecoded, refreshTokenDecoded);
+    // }
+
+    this.refreshTokenDecoded = refreshTokenDecoded;
+    this.refreshToken = refreshToken;
   }
 
   /**
@@ -285,8 +301,7 @@ export class W3blockIdSDK {
       throw new Error('Invalid response');
     }
 
-    this.setAuthToken(data.token);
-    this.setRefreshToken(data.refreshToken);
+    this.setTokens({ token: data.token, refreshToken: data.refreshToken });
   }
 
   /**
@@ -301,8 +316,13 @@ export class W3blockIdSDK {
       throw new Error('Authentication failed. Please check your credentials.');
     }
 
+    this.setTokens({ token: data.token, refreshToken: data.refreshToken });
+  }
+
+  private setTokens(data: { token: string; refreshToken: string }) {
     this.setAuthToken(data.token);
     this.setRefreshToken(data.refreshToken);
+    this.emitter.emit('authChanged', { authToken: data.token, refreshToken: data.refreshToken });
   }
 
   /**
@@ -314,8 +334,7 @@ export class W3blockIdSDK {
       throw new Error('Authentication failed. Auth token is missing.');
     }
 
-    this.setAuthToken(credential.authToken);
-    this.setRefreshToken(credential.refreshToken);
+    this.setTokens({ token: credential.authToken, refreshToken: credential.refreshToken });
   }
 
   /**
@@ -330,8 +349,7 @@ export class W3blockIdSDK {
       throw new Error('Authentication failed. Please check your credentials.');
     }
 
-    this.setAuthToken(data.token);
-    this.setRefreshToken(data.refreshToken);
+    this.setTokens({ token: data.token, refreshToken: data.refreshToken });
   }
 
   /**

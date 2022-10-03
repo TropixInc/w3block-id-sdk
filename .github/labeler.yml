@@ -1,0 +1,15 @@
+# Add 'repo' label to any root file changes
+repo:
+- '*'
+
+test:
+- any: ['test/*', 'jest.config.js']
+
+source:
+- any: ['src/**/*', '!src/docs/*']
+
+important:
+- any: ['package.json', 'package-lock.json','.env.example', '.nvmrc', 'tsconfig.json']
+
+ci:
+- any: ['.github/*']
