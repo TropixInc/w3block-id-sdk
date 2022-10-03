@@ -29,23 +29,17 @@ mock.onGet("/auth/jwks.json").reply(200, getJwksResponse);
 
 describe("SDK", () => {
   const baseURL = process.env.API_BASE_URL || 'http://localhost:6007'
+  let sdk: W3blockIdSDK;
 
+  beforeEach(() => {
+    sdk = new W3blockIdSDK({ baseURL, autoRefresh: false });
+  });
 
   it("should be able to create the sdk instance", async () => {
-    const sdk = new W3blockIdSDK({
-      baseURL,
-      autoRefresh: false
-    });
     expect(sdk).toBeDefined();
   });
 
   it("should be able to request public endpoints", async () => {
-
-    const sdk = new W3blockIdSDK({
-      baseURL,
-      autoRefresh: false
-    });
-
     expect(sdk).toBeDefined();
     const resp = await sdk.api.auth.getJwks();
     expect(resp.status).toBe(200);
@@ -54,100 +48,117 @@ describe("SDK", () => {
 
   describe("authentication", () => {
     it("should be able to authenticate with user credential", async () => {
-      const sdk = new W3blockIdSDK({
-        baseURL,
-        autoRefresh: false
-      });
-      expect(sdk).toBeDefined();
+      expect(sdk.emitter).toBeDefined();
+      const authChangedSpy = jest.spyOn(sdk.emitter, 'emit');
 
       await sdk.authenticate(USER_CREDENTIAL);
+      expect(authChangedSpy).toBeCalledWith("connecting");
+      expect(authChangedSpy).toBeCalledWith("authChanged", {"authToken": "", "refreshToken": ""});
+      expect(authChangedSpy).toBeCalledWith("authChanged", {"authToken": AUTH_TOKEN, "refreshToken": AUTH_REFRESH});
+      expect(authChangedSpy).toBeCalledWith("connected")
       expect(sdk.isAuthenticated()).toBeTruthy();
     });
 
     it("should be able to authenticate with user token", async () => {
-      const sdk = new W3blockIdSDK({
-        baseURL,
-        autoRefresh: false
-      });
-      expect(sdk).toBeDefined();
+      expect(sdk.emitter).toBeDefined();
+      const authChangedSpy = jest.spyOn(sdk.emitter, 'emit');
 
       await sdk.authenticate(TOKEN_CREDENTIAL);
+      expect(authChangedSpy).toBeCalledWith("connecting");
+      expect(authChangedSpy).toBeCalledWith("authChanged", {"authToken": AUTH_TOKEN, "refreshToken": AUTH_REFRESH});
+      expect(authChangedSpy).toBeCalledWith("connected")
       expect(sdk.isAuthenticated()).toBeTruthy();
     });
 
     it("should be able to authenticate with tenant credential", async () => {
-      const sdk = new W3blockIdSDK({
-        baseURL,
-        autoRefresh: false
-      });
-      expect(sdk).toBeDefined();
+      expect(sdk.emitter).toBeDefined();
+      const authChangedSpy = jest.spyOn(sdk.emitter, 'emit');
 
       await sdk.authenticate(TENANT_CREDENTIAL);
+      expect(authChangedSpy).toBeCalledWith("connecting");
+      expect(authChangedSpy).toBeCalledWith("authChanged", {"authToken": "", "refreshToken": ""});
+      expect(authChangedSpy).toBeCalledWith("authChanged", {"authToken": AUTH_TOKEN, "refreshToken": AUTH_REFRESH});
+      expect(authChangedSpy).toBeCalledWith("connected")
       expect(sdk.isAuthenticated()).toBeTruthy();
     });
   })
 
   describe("re-authentication", () => {
     it("should be able to re-authenticate with user credential", async () => {
-      const sdk = new W3blockIdSDK({
-        baseURL,
-        autoRefresh: false
-      });
       expect(sdk).toBeDefined();
+      expect(sdk.emitter).toBeDefined();
+      const authChangedSpy = jest.spyOn(sdk.emitter, 'emit');
 
       await sdk.authenticate(USER_CREDENTIAL);
       expect(sdk.isAuthenticated()).toBeTruthy();
+      expect(authChangedSpy).toHaveBeenCalledWith("connecting");
+      expect(authChangedSpy).toHaveBeenCalledWith("authChanged", {"authToken": AUTH_TOKEN, "refreshToken": AUTH_REFRESH});
       sdk.clearTokens();
       expect(sdk.isAuthenticated()).toBeFalsy();
       expect(sdk.getAuthToken()).toBe('');
       expect(sdk.getRefreshToken()).toBe('');
+      expect(authChangedSpy).toHaveBeenCalledWith("authChanged", {"authToken": "", "refreshToken": ""});
       await sdk.reAuthenticate();
       expect(sdk.isAuthenticated()).toBeTruthy();
+      expect(authChangedSpy).toHaveBeenCalledWith("connecting");
+      expect(authChangedSpy).toHaveBeenCalledWith("authChanged", {"authToken": AUTH_TOKEN, "refreshToken": AUTH_REFRESH});
     });
 
     it("should be able to re-authenticate with user token", async () => {
-      const sdk = new W3blockIdSDK({
-        baseURL,
-        autoRefresh: false
-      });
       expect(sdk).toBeDefined();
+      expect(sdk.emitter).toBeDefined();
+      const authChangedSpy = jest.spyOn(sdk.emitter, 'emit');
 
       await sdk.authenticate(TOKEN_CREDENTIAL);
       expect(sdk.isAuthenticated()).toBeTruthy();
+      expect(authChangedSpy).toHaveBeenCalledWith("connecting");
+      expect(authChangedSpy).toHaveBeenCalledWith("authChanged", {"authToken": AUTH_TOKEN, "refreshToken": AUTH_REFRESH});
       sdk.clearTokens();
       expect(sdk.isAuthenticated()).toBeFalsy();
       expect(sdk.getAuthToken()).toBe('');
       expect(sdk.getRefreshToken()).toBe('');
+      expect(authChangedSpy).toHaveBeenCalledWith("authChanged", {"authToken": "", "refreshToken": ""});
       await sdk.reAuthenticate();
       expect(sdk.isAuthenticated()).toBeTruthy();
+      expect(authChangedSpy).toHaveBeenCalledWith("connecting");
+      expect(authChangedSpy).toHaveBeenCalledWith("authChanged", {"authToken": AUTH_TOKEN, "refreshToken": AUTH_REFRESH});
     });
 
     it("should be able to re-authenticate with tenant credential", async () => {
-      const sdk = new W3blockIdSDK({
-        baseURL,
-        autoRefresh: false
-      });
       expect(sdk).toBeDefined();
+      expect(sdk.emitter).toBeDefined();
+      const authChangedSpy = jest.spyOn(sdk.emitter, 'emit');
 
       await sdk.authenticate(TENANT_CREDENTIAL);
       expect(sdk.isAuthenticated()).toBeTruthy();
+      expect(authChangedSpy).toHaveBeenCalledWith("connecting");
+      expect(authChangedSpy).toHaveBeenCalledWith("authChanged", {"authToken": AUTH_TOKEN, "refreshToken": AUTH_REFRESH});
       sdk.clearTokens();
       expect(sdk.isAuthenticated()).toBeFalsy();
       expect(sdk.getAuthToken()).toBe('');
       expect(sdk.getRefreshToken()).toBe('');
+      expect(authChangedSpy).toHaveBeenCalledWith("authChanged", {"authToken": "", "refreshToken": ""});
       await sdk.reAuthenticate();
       expect(sdk.isAuthenticated()).toBeTruthy();
+      expect(authChangedSpy).toHaveBeenCalledWith("connecting");
+      expect(authChangedSpy).toHaveBeenCalledWith("authChanged", {"authToken": AUTH_TOKEN, "refreshToken": AUTH_REFRESH});
     });
 
     it("should be able to refresh token", async () => {
-      const sdk = new W3blockIdSDK({
+      sdk = new W3blockIdSDK({
         baseURL,
         autoRefresh: true,
         tokenExpireOffset: -1
       });
       expect(sdk).toBeDefined();
+      expect(sdk.emitter).toBeDefined();
+      const authChangedSpy = jest.spyOn(sdk.emitter, 'emit');
+
+
       await sdk.authenticate(USER_CREDENTIAL);
       expect(sdk.isAuthenticated()).toBeTruthy();
+      expect(authChangedSpy).toHaveBeenCalledWith("connecting");
+      expect(authChangedSpy).toHaveBeenCalledWith("authChanged", {"authToken": AUTH_TOKEN, "refreshToken": AUTH_REFRESH});
 
       const authToken = sdk.getAuthToken();
       const refreshToken = sdk.getRefreshToken();
@@ -155,6 +166,11 @@ describe("SDK", () => {
       expect(sdk.getAuthToken()).not.toBe(authToken);
       expect(sdk.getRefreshToken()).not.toBe(refreshToken);
       expect(sdk.isAuthenticated()).toBeTruthy();
+      expect(authChangedSpy).toHaveBeenCalledWith("connecting");
+      expect(authChangedSpy).toHaveBeenCalledWith("authChanged", {"authToken": "", "refreshToken": ""});
+      expect(authChangedSpy).toHaveBeenCalledWith("authChanged", {"authToken": AUTH_TOKEN2, "refreshToken": AUTH_REFRESH2});
+      expect(authChangedSpy).toHaveBeenCalledWith("connected");
+
       sdk.disableAutoRefresh();
     });
   })

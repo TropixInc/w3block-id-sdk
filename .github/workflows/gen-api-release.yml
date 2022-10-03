@@ -35,12 +35,12 @@ jobs:
       - name: Pull API swagger.json
         run: npm run api:pull
         env:
-          SWAGGER_JSON_PATH: https://pixwayid.stg.pixway.io/sdk-json
+          SWAGGER_JSON_PATH: ${{ secrets.SWAGGER_JSON_PATH }}
 
       - name: Generate API from swagger
         run: npm run api:gen
         env:
-          SWAGGER_JSON_PATH: https://pixwayid.stg.pixway.io/sdk-json
+          SWAGGER_JSON_PATH: ${{ secrets.SWAGGER_JSON_PATH }}
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
@@ -79,7 +79,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
       - name: Git pull with tags
         run: git pull --tags
 
@@ -105,9 +105,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
+
       - name: Git pull with tags
-        run: git pull --tags  
+        run: git pull --tags
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
