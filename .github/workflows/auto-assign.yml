@@ -1,0 +1,13 @@
+name: 'Auto Assign'
+on: pull_request_target
+
+# Action should have write permission to make updates to PR
+permissions:
+  pull-requests: write
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+    needs: pr-compliance
+    steps:
+      - uses: kentaro-m/auto-assign-action@v1.2.3
