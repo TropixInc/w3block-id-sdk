@@ -20,8 +20,8 @@ jobs:
           # all inputs are optional
           watch-files: |
             package.json
-            package-lock.json
             .env.example
+            Dockerfile
             .nvmrc
             tsconfig.json
   triage:
@@ -35,15 +35,9 @@ jobs:
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
-  add-reviews:
-    runs-on: ubuntu-latest
-    needs: pr-compliance
-    steps:
-      - uses: kentaro-m/auto-assign-action@v1.2.3
-
   notify:
     runs-on: ubuntu-latest
-    needs: add-reviews
+    needs: pr-compliance
     steps:
       - name: Interpolate PR Message
         id: pr_message
@@ -54,8 +48,8 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_CH_BACKEND }}
           DISCORD_USERNAME: 'W3bLocker'
           DISCORD_AVATAR: 'https://i.imgur.com/BPnQGGY.jpeg'
-          DISCORD_EMBEDS: ${{ steps.pr_message.outputs.pr_message }}
-
+          DISCORD_EMBEDS: ${{ steps.pr_message.outputs.pr_message }}  
+         
         uses: Ilshidur/action-discord@master
         with:
           args: ''
