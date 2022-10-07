@@ -1211,6 +1211,35 @@
         ]
       }
     },
+    "/public/tenant/by-hostname": {
+      "get": {
+        "operationId": "getCompanyByHost",
+        "parameters": [
+          {
+            "name": "hostname",
+            "required": true,
+            "in": "query",
+            "example": "example.com",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tenant Public"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/tenant-access/{tenantId}": {
       "post": {
         "operationId": "create",
@@ -1980,12 +2009,552 @@
           "Authentication"
         ]
       }
+    },
+    "/whitelists/{tenantId}/check-user": {
+      "get": {
+        "operationId": "checkUserInMultipleWhitelists",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "whitelistsIds",
+            "required": true,
+            "in": "query",
+            "example": [
+              "00000000-0000-0000-0000-000000000000"
+            ],
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckUserInMultipleWhitelistsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/whitelists/{tenantId}": {
+      "get": {
+        "operationId": "findWhitelists",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhitelistPaginateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createWhitelist",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateWhitelistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhitelistResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/whitelists/{tenantId}/{id}": {
+      "get": {
+        "operationId": "getWhitelist",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhitelistResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateWhitelist",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateWhitelistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhitelistResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteWhitelist",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/whitelists/{tenantId}/{id}/check-user": {
+      "get": {
+        "operationId": "checkUserInWhitelist",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckWhitelistUserResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/whitelists/{tenantId}/{id}/entries": {
+      "get": {
+        "operationId": "findWhitelistEntries",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhitelistEntryPaginateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createWhitelistEntry",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWhitelistEntryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhitelistEntryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/whitelists/{tenantId}/{id}/entries/{entryId}": {
+      "delete": {
+        "operationId": "deleteWhitelistEntry",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entryId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
     }
   },
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.2.0",
+    "version": "0.2.4",
     "contact": {}
   },
   "tags": [],
@@ -2961,12 +3530,17 @@
           "countryCode": {
             "example": "BRA",
             "$ref": "#/components/schemas/CountryCodeEnum"
+          },
+          "hostname": {
+            "type": "string",
+            "example": "example.com"
           }
         },
         "required": [
           "name",
           "document",
-          "countryCode"
+          "countryCode",
+          "hostname"
         ]
       },
       "TenantRoleEnum": {
@@ -3102,6 +3676,10 @@
           "countryCode": {
             "example": "BRA",
             "$ref": "#/components/schemas/CountryCodeEnum"
+          },
+          "hostname": {
+            "type": "string",
+            "example": "example.com"
           }
         }
       },
@@ -3518,8 +4096,7 @@
           }
         },
         "required": [
-          "email",
-          "callbackUrl"
+          "email"
         ]
       },
       "RequestPasswordResetDto": {
@@ -3538,8 +4115,7 @@
           }
         },
         "required": [
-          "email",
-          "callbackUrl"
+          "email"
         ]
       },
       "ResetPasswordDto": {
@@ -3851,6 +4427,209 @@
         },
         "required": [
           "keys"
+        ]
+      },
+      "CheckWhitelistUserResponseDto": {
+        "type": "object",
+        "properties": {
+          "whitelistId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hasAccess": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "whitelistId",
+          "userId",
+          "hasAccess"
+        ]
+      },
+      "CheckUserInMultipleWhitelistsResponseDto": {
+        "type": "object",
+        "properties": {
+          "hasAccess": {
+            "type": "boolean",
+            "example": false
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckWhitelistUserResponseDto"
+            }
+          }
+        },
+        "required": [
+          "hasAccess",
+          "details"
+        ]
+      },
+      "WhitelistResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "W3Block Whitelist"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "name"
+        ]
+      },
+      "WhitelistPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WhitelistResponseDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
+      "CreateOrUpdateWhitelistDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "W3Block Whitelist"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "WhitelistEntryType": {
+        "type": "string",
+        "enum": [
+          "user_id",
+          "email",
+          "wallet_address",
+          "collection_holder"
+        ]
+      },
+      "WhitelistEntryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "whitelistId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "whitelist": {
+            "$ref": "#/components/schemas/WhitelistResponseDto"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "type": {
+            "example": "collection_holder",
+            "$ref": "#/components/schemas/WhitelistEntryType"
+          },
+          "value": {
+            "type": "string",
+            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
+          },
+          "additionalData": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "whitelistId",
+          "type",
+          "value"
+        ]
+      },
+      "WhitelistEntryPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WhitelistEntryResponseDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
+      "CreateWhitelistEntryDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "example": "collection_holder",
+            "default": "collection_holder",
+            "$ref": "#/components/schemas/WhitelistEntryType"
+          },
+          "value": {
+            "type": "string",
+            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
+          },
+          "additionalData": {
+            "type": "object",
+            "example": {
+              "chainId": 80001
+            }
+          }
+        },
+        "required": [
+          "type",
+          "value"
         ]
       }
     }
