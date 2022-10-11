@@ -1211,7 +1211,7 @@
         ]
       }
     },
-    "/public/tenant/by-hostname": {
+    "/public-tenant/by-hostname": {
       "get": {
         "operationId": "getCompanyByHost",
         "parameters": [
@@ -1585,6 +1585,51 @@
           }
         ],
         "responses": {
+          "403": {
+            "description": "Need user with one of these roles: admin, superAdmin, integration, application",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant-hosts/{tenantId}/main-host": {
+      "get": {
+        "operationId": "getMainHostByTenantId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "403": {
             "description": "Need user with one of these roles: admin, superAdmin, integration, application",
             "content": {
@@ -2554,7 +2599,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.2.4",
+    "version": "0.3.0",
     "contact": {}
   },
   "tags": [],

@@ -1510,12 +1510,12 @@ export namespace Tenant {
   }
 }
 
-export namespace Public {
+export namespace PublicTenant {
   /**
    * No description
    * @tags Tenant Public
    * @name GetCompanyByHost
-   * @request GET:/public/tenant/by-hostname
+   * @request GET:/public-tenant/by-hostname
    * @secure
    */
   export namespace GetCompanyByHost {
@@ -1626,6 +1626,20 @@ export namespace TenantHosts {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Tenant Hosts
+   * @name GetMainHostByTenantId
+   * @request GET:/tenant-hosts/{tenantId}/main-host
+   * @secure
+   */
+  export namespace GetMainHostByTenantId {
+    export type RequestParams = { tenantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = string;
   }
 }
 
@@ -2041,7 +2055,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.2.4
+ * @version 0.3.0
  * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */
@@ -2508,18 +2522,18 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
-  public = {
+  publicTenant = {
     /**
      * No description
      *
      * @tags Tenant Public
      * @name GetCompanyByHost
-     * @request GET:/public/tenant/by-hostname
+     * @request GET:/public-tenant/by-hostname
      * @secure
      */
     getCompanyByHost: (query: { hostname: string }, params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/public/tenant/by-hostname`,
+        path: `/public-tenant/by-hostname`,
         method: 'GET',
         query: query,
         secure: true,
@@ -2639,6 +2653,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/tenant-hosts/${tenantId}/${id}`,
         method: 'GET',
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Hosts
+     * @name GetMainHostByTenantId
+     * @request GET:/tenant-hosts/{tenantId}/main-host
+     * @secure
+     */
+    getMainHostByTenantId: (tenantId: string, params: RequestParams = {}) =>
+      this.request<string, HttpExceptionDto>({
+        path: `/tenant-hosts/${tenantId}/main-host`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
         ...params,
       }),
   };
