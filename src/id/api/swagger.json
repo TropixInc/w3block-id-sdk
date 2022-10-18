@@ -887,6 +887,65 @@
         ]
       }
     },
+    "/blockchain/balance/{address}/{chainId}": {
+      "get": {
+        "operationId": "getBalance",
+        "summary": "",
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "example": "0x82dbB0A14F79f50c8f8e0D50FC9F1ef30Aeb6C79",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chainId",
+            "required": true,
+            "in": "path",
+            "example": 137,
+            "schema": {
+              "$ref": "#/components/schemas/ChainId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Blockchain"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/blockchain/request-session-wallet-connect": {
+      "post": {
+        "operationId": "requestSessionWalletConnect",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Blockchain"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/tenant": {
       "post": {
         "operationId": "create",
@@ -2465,8 +2524,9 @@
             "name": "sortBy",
             "required": false,
             "in": "query",
+            "example": "createdAt",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/WhitelistEntriesSortBy"
             }
           },
           {
@@ -2475,6 +2535,33 @@
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "user_id",
+                  "email",
+                  "wallet_address",
+                  "collection_holder"
+                ]
+              }
+            }
+          },
+          {
+            "name": "showWallets",
+            "required": false,
+            "in": "query",
+            "example": false,
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -4582,6 +4669,13 @@
           "name"
         ]
       },
+      "WhitelistEntriesSortBy": {
+        "type": "string",
+        "enum": [
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "WhitelistEntryType": {
         "type": "string",
         "enum": [
@@ -4623,6 +4717,12 @@
           },
           "additionalData": {
             "type": "object"
+          },
+          "wallets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WalletResponseDto"
+            }
           }
         },
         "required": [

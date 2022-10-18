@@ -1094,6 +1094,11 @@ export interface CreateOrUpdateWhitelistDto {
   name: string;
 }
 
+export enum WhitelistEntriesSortBy {
+  CreatedAt = 'createdAt',
+  UpdatedAt = 'updatedAt',
+}
+
 export enum WhitelistEntryType {
   UserId = 'user_id',
   Email = 'email',
@@ -1121,6 +1126,7 @@ export interface WhitelistEntryResponseDto {
   /** @example 0xd3304183ec1fa687e380b67419875f97f1db05f5 */
   value: string;
   additionalData?: object;
+  wallets?: WalletResponseDto[];
 }
 
 export interface WhitelistEntryPaginateResponseDto {
@@ -1400,6 +1406,38 @@ export namespace Users {
     export type RequestBody = ClaimMetamaskDto;
     export type RequestHeaders = {};
     export type ResponseBody = WalletResponseDto;
+  }
+}
+
+export namespace Blockchain {
+  /**
+   * No description
+   * @tags Blockchain
+   * @name GetBalance
+   * @request GET:/blockchain/balance/{address}/{chainId}
+   * @deprecated
+   * @secure
+   */
+  export namespace GetBalance {
+    export type RequestParams = { address: string; chainId: ChainId };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Blockchain
+   * @name RequestSessionWalletConnect
+   * @request POST:/blockchain/request-session-wallet-connect
+   * @secure
+   */
+  export namespace RequestSessionWalletConnect {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
   }
 }
 
@@ -1896,8 +1934,10 @@ export namespace Whitelists {
       page?: number;
       limit?: number;
       search?: string;
-      sortBy?: string;
+      sortBy?: WhitelistEntriesSortBy;
       orderBy?: OrderByEnum;
+      type?: ('user_id' | 'email' | 'wallet_address' | 'collection_holder')[];
+      showWallets?: boolean;
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -2393,6 +2433,40 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         secure: true,
         type: ContentType.Json,
         format: 'json',
+        ...params,
+      }),
+  };
+  blockchain = {
+    /**
+     * No description
+     *
+     * @tags Blockchain
+     * @name GetBalance
+     * @request GET:/blockchain/balance/{address}/{chainId}
+     * @deprecated
+     * @secure
+     */
+    getBalance: (address: string, chainId: ChainId, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/blockchain/balance/${address}/${chainId}`,
+        method: 'GET',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Blockchain
+     * @name RequestSessionWalletConnect
+     * @request POST:/blockchain/request-session-wallet-connect
+     * @secure
+     */
+    requestSessionWalletConnect: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/blockchain/request-session-wallet-connect`,
+        method: 'POST',
+        secure: true,
         ...params,
       }),
   };
@@ -2985,7 +3059,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     findWhitelistEntries: (
       tenantId: string,
       id: string,
-      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      query?: {
+        page?: number;
+        limit?: number;
+        search?: string;
+        sortBy?: WhitelistEntriesSortBy;
+        orderBy?: OrderByEnum;
+        type?: ('user_id' | 'email' | 'wallet_address' | 'collection_holder')[];
+        showWallets?: boolean;
+      },
       params: RequestParams = {},
     ) =>
       this.request<WhitelistEntryPaginateResponseDto, any>({
