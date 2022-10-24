@@ -27,7 +27,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -73,7 +73,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin, application, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -128,7 +128,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin, application, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -164,7 +164,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin, user",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
             "content": {
               "application/json": {
                 "schema": {
@@ -217,7 +217,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -324,7 +324,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -379,7 +379,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin, user",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
             "content": {
               "application/json": {
                 "schema": {
@@ -418,7 +418,7 @@
             "description": ""
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin, user",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
             "content": {
               "application/json": {
                 "schema": {
@@ -500,7 +500,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -563,7 +563,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -680,7 +680,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: administrator, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, administrator,integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -887,6 +887,78 @@
         ]
       }
     },
+    "/blockchain/webhook/event/{tenantId}": {
+      "post": {
+        "operationId": "receiveEventWebhook",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-pixchain-signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventNotifyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized - Invalid Pixchain signature"
+          }
+        },
+        "tags": [
+          "Blockchain"
+        ]
+      }
+    },
+    "/blockchain/webhook/transaction/{tenantId}": {
+      "post": {
+        "operationId": "receiveTransactionWebhook",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-pixchain-signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized - Invalid Pixchain signature"
+          }
+        },
+        "tags": [
+          "Blockchain"
+        ]
+      }
+    },
     "/blockchain/balance/{address}/{chainId}": {
       "get": {
         "operationId": "getBalance",
@@ -972,7 +1044,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, administrator",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator",
             "content": {
               "application/json": {
                 "schema": {
@@ -1049,7 +1121,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1084,7 +1156,7 @@
         ],
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1127,7 +1199,7 @@
         },
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1160,7 +1232,7 @@
         ],
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1205,7 +1277,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1250,7 +1322,7 @@
         },
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1299,6 +1371,730 @@
         ]
       }
     },
+    "/whitelists/{tenantId}/check-user": {
+      "get": {
+        "operationId": "checkUserInMultipleWhitelists",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "whitelistsIds",
+            "required": true,
+            "in": "query",
+            "example": [
+              "00000000-0000-0000-0000-000000000000"
+            ],
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckUserInMultipleWhitelistsResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/whitelists/{tenantId}": {
+      "get": {
+        "operationId": "findWhitelists",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhitelistPaginateResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createWhitelist",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateWhitelistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhitelistResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/whitelists/{tenantId}/{id}": {
+      "get": {
+        "operationId": "getWhitelist",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhitelistResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateWhitelist",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateWhitelistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhitelistResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteWhitelist",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/whitelists/{tenantId}/{id}/promote-on-chain": {
+      "patch": {
+        "operationId": "promoteWhitelistOnChain",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromoteWhitelistOnChainDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/whitelists/{tenantId}/{id}/check-user": {
+      "get": {
+        "operationId": "checkUserInWhitelist",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckWhitelistUserResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/whitelists/{tenantId}/{id}/entries": {
+      "get": {
+        "operationId": "findWhitelistEntries",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "example": "createdAt",
+            "schema": {
+              "$ref": "#/components/schemas/WhitelistEntriesSortBy"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "user_id",
+                  "email",
+                  "wallet_address",
+                  "collection_holder"
+                ]
+              }
+            }
+          },
+          {
+            "name": "showWallets",
+            "required": false,
+            "in": "query",
+            "example": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhitelistEntryPaginateResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createWhitelistEntry",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWhitelistEntryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhitelistEntryResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/whitelists/{tenantId}/{id}/entries/{entryId}": {
+      "delete": {
+        "operationId": "deleteWhitelistEntry",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entryId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Whitelists"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/tenant-access/{tenantId}": {
       "post": {
         "operationId": "create",
@@ -1334,7 +2130,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1419,7 +2215,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1461,8 +2257,11 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": ""
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1517,7 +2316,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: admin, superAdmin, integration, application",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -1602,7 +2401,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: admin, superAdmin, integration, application",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -1644,8 +2443,11 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": ""
+          },
           "403": {
-            "description": "Need user with one of these roles: admin, superAdmin, integration, application",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -1690,7 +2492,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: admin, superAdmin, integration, application",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -2111,574 +2913,6 @@
         },
         "tags": [
           "Authentication"
-        ]
-      }
-    },
-    "/whitelists/{tenantId}/check-user": {
-      "get": {
-        "operationId": "checkUserInMultipleWhitelists",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "query",
-            "example": "00000000-0000-0000-0000-000000000000",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          },
-          {
-            "name": "whitelistsIds",
-            "required": true,
-            "in": "query",
-            "example": [
-              "00000000-0000-0000-0000-000000000000"
-            ],
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CheckUserInMultipleWhitelistsResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Whitelists"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/whitelists/{tenantId}": {
-      "get": {
-        "operationId": "findWhitelists",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WhitelistPaginateResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Whitelists"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "post": {
-        "operationId": "createWhitelist",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOrUpdateWhitelistDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WhitelistResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Whitelists"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/whitelists/{tenantId}/{id}": {
-      "get": {
-        "operationId": "getWhitelist",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WhitelistResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Whitelists"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "patch": {
-        "operationId": "updateWhitelist",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOrUpdateWhitelistDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WhitelistResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Whitelists"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "delete": {
-        "operationId": "deleteWhitelist",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Whitelists"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/whitelists/{tenantId}/{id}/check-user": {
-      "get": {
-        "operationId": "checkUserInWhitelist",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "query",
-            "example": "00000000-0000-0000-0000-000000000000",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CheckWhitelistUserResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Whitelists"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/whitelists/{tenantId}/{id}/entries": {
-      "get": {
-        "operationId": "findWhitelistEntries",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "example": "createdAt",
-            "schema": {
-              "$ref": "#/components/schemas/WhitelistEntriesSortBy"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          },
-          {
-            "name": "type",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": [],
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "user_id",
-                  "email",
-                  "wallet_address",
-                  "collection_holder"
-                ]
-              }
-            }
-          },
-          {
-            "name": "showWallets",
-            "required": false,
-            "in": "query",
-            "example": false,
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WhitelistEntryPaginateResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Whitelists"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "post": {
-        "operationId": "createWhitelistEntry",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateWhitelistEntryDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WhitelistEntryResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Whitelists"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/whitelists/{tenantId}/{id}/entries/{entryId}": {
-      "delete": {
-        "operationId": "deleteWhitelistEntry",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "entryId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Whitelists"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
         ]
       }
     }
@@ -3395,6 +3629,96 @@
           "signature"
         ]
       },
+      "EventNotifyDto": {
+        "type": "object",
+        "properties": {
+          "blockNumber": {
+            "type": "number",
+            "example": 256
+          },
+          "blockHash": {
+            "type": "string",
+            "example": "0x75a3c22ef6e394a496fb7cdb16c9c5a975d6c4950f931a9df9bff38a2a9371a7"
+          },
+          "transactionHash": {
+            "type": "string",
+            "example": "0x9882f164a13ad7cfaeb682d36415f6bd8d0348f7f738b85c7668665fa00956c4"
+          },
+          "address": {
+            "type": "string",
+            "example": "0x82dbB0A14F79f50c8f8e0D50FC9F1ef30Aeb6C79"
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "data": {
+            "type": "string",
+            "example": "0x"
+          },
+          "logIndex": {
+            "type": "number",
+            "example": 0
+          },
+          "chainId": {
+            "default": 137,
+            "example": 137,
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "timestamp": {
+            "type": "number",
+            "example": 1653579785
+          },
+          "name": {
+            "type": "string",
+            "example": "Transfer"
+          },
+          "signature": {
+            "type": "string",
+            "example": "Transfer(address,address,uint256)"
+          },
+          "topic": {
+            "type": "string",
+            "example": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+          },
+          "transactionIndex": {
+            "type": "number",
+            "example": 0
+          },
+          "args": {
+            "type": "object",
+            "example": {
+              "from": "0x0000000000000000000000000000000000000000",
+              "to": "0xe5dc6eb721b535ece3be1b3220be2ce41ac284fc",
+              "tokenId": {
+                "_hex": "0x03",
+                "_isBigNumber": true
+              }
+            }
+          },
+          "transactionId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "blockNumber",
+          "blockHash",
+          "transactionHash",
+          "address",
+          "topics",
+          "data",
+          "logIndex",
+          "chainId",
+          "timestamp",
+          "name",
+          "signature",
+          "topic",
+          "transactionIndex",
+          "args"
+        ]
+      },
       "CountryCodeEnum": {
         "type": "string",
         "enum": [
@@ -3814,6 +4138,297 @@
             "example": "example.com"
           }
         }
+      },
+      "CheckWhitelistUserResponseDto": {
+        "type": "object",
+        "properties": {
+          "whitelistId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hasAccess": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "whitelistId",
+          "userId",
+          "hasAccess"
+        ]
+      },
+      "CheckUserInMultipleWhitelistsResponseDto": {
+        "type": "object",
+        "properties": {
+          "hasAccess": {
+            "type": "boolean",
+            "example": false
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckWhitelistUserResponseDto"
+            }
+          }
+        },
+        "required": [
+          "hasAccess",
+          "details"
+        ]
+      },
+      "WalletGroupStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "publishing",
+          "published"
+        ]
+      },
+      "WalletGroupResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "contractAddress": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "actionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "chainId": {
+            "default": 137,
+            "example": 137,
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WalletGroupStatus"
+          },
+          "whitelistId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "contractAddress",
+          "chainId",
+          "status"
+        ]
+      },
+      "WhitelistResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "W3Block Whitelist"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "walletGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WalletGroupResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "name"
+        ]
+      },
+      "WhitelistPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WhitelistResponseDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
+      "CreateOrUpdateWhitelistDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "W3Block Whitelist"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "PromoteWhitelistOnChainDto": {
+        "type": "object",
+        "properties": {
+          "chainId": {
+            "default": 137,
+            "example": 137,
+            "$ref": "#/components/schemas/ChainId"
+          }
+        },
+        "required": [
+          "chainId"
+        ]
+      },
+      "WhitelistEntriesSortBy": {
+        "type": "string",
+        "enum": [
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "WhitelistEntryType": {
+        "type": "string",
+        "enum": [
+          "user_id",
+          "email",
+          "wallet_address",
+          "collection_holder"
+        ]
+      },
+      "WhitelistEntryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "whitelistId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "whitelist": {
+            "$ref": "#/components/schemas/WhitelistResponseDto"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "type": {
+            "example": "collection_holder",
+            "$ref": "#/components/schemas/WhitelistEntryType"
+          },
+          "value": {
+            "type": "string",
+            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
+          },
+          "additionalData": {
+            "type": "object"
+          },
+          "wallets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WalletResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "whitelistId",
+          "type",
+          "value"
+        ]
+      },
+      "WhitelistEntryPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WhitelistEntryResponseDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
+      "CreateWhitelistEntryDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "example": "collection_holder",
+            "default": "collection_holder",
+            "$ref": "#/components/schemas/WhitelistEntryType"
+          },
+          "value": {
+            "type": "string",
+            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
+          },
+          "additionalData": {
+            "type": "object",
+            "example": {
+              "chainId": 80001
+            }
+          }
+        },
+        "required": [
+          "type",
+          "value"
+        ]
       },
       "CreateTenantAccessDto": {
         "type": "object",
@@ -4559,222 +5174,6 @@
         },
         "required": [
           "keys"
-        ]
-      },
-      "CheckWhitelistUserResponseDto": {
-        "type": "object",
-        "properties": {
-          "whitelistId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "hasAccess": {
-            "type": "boolean",
-            "example": false
-          }
-        },
-        "required": [
-          "whitelistId",
-          "userId",
-          "hasAccess"
-        ]
-      },
-      "CheckUserInMultipleWhitelistsResponseDto": {
-        "type": "object",
-        "properties": {
-          "hasAccess": {
-            "type": "boolean",
-            "example": false
-          },
-          "details": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CheckWhitelistUserResponseDto"
-            }
-          }
-        },
-        "required": [
-          "hasAccess",
-          "details"
-        ]
-      },
-      "WhitelistResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "tenantId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string",
-            "example": "W3Block Whitelist"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "tenantId",
-          "name"
-        ]
-      },
-      "WhitelistPaginateResponseDto": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMetaDto"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PaginationLinksDto"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WhitelistResponseDto"
-            }
-          }
-        },
-        "required": [
-          "meta",
-          "items"
-        ]
-      },
-      "CreateOrUpdateWhitelistDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "example": "W3Block Whitelist"
-          }
-        },
-        "required": [
-          "name"
-        ]
-      },
-      "WhitelistEntriesSortBy": {
-        "type": "string",
-        "enum": [
-          "createdAt",
-          "updatedAt"
-        ]
-      },
-      "WhitelistEntryType": {
-        "type": "string",
-        "enum": [
-          "user_id",
-          "email",
-          "wallet_address",
-          "collection_holder"
-        ]
-      },
-      "WhitelistEntryResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "whitelistId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "whitelist": {
-            "$ref": "#/components/schemas/WhitelistResponseDto"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "type": {
-            "example": "collection_holder",
-            "$ref": "#/components/schemas/WhitelistEntryType"
-          },
-          "value": {
-            "type": "string",
-            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
-          },
-          "additionalData": {
-            "type": "object"
-          },
-          "wallets": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WalletResponseDto"
-            }
-          }
-        },
-        "required": [
-          "id",
-          "whitelistId",
-          "type",
-          "value"
-        ]
-      },
-      "WhitelistEntryPaginateResponseDto": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMetaDto"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PaginationLinksDto"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WhitelistEntryResponseDto"
-            }
-          }
-        },
-        "required": [
-          "meta",
-          "items"
-        ]
-      },
-      "CreateWhitelistEntryDto": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "example": "collection_holder",
-            "default": "collection_holder",
-            "$ref": "#/components/schemas/WhitelistEntryType"
-          },
-          "value": {
-            "type": "string",
-            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
-          },
-          "additionalData": {
-            "type": "object",
-            "example": {
-              "chainId": 80001
-            }
-          }
-        },
-        "required": [
-          "type",
-          "value"
         ]
       }
     }

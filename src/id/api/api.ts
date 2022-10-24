@@ -376,6 +376,49 @@ export interface ClaimMetamaskDto {
   signature: string;
 }
 
+export interface EventNotifyDto {
+  /** @example 256 */
+  blockNumber: number;
+
+  /** @example 0x75a3c22ef6e394a496fb7cdb16c9c5a975d6c4950f931a9df9bff38a2a9371a7 */
+  blockHash: string;
+
+  /** @example 0x9882f164a13ad7cfaeb682d36415f6bd8d0348f7f738b85c7668665fa00956c4 */
+  transactionHash: string;
+
+  /** @example 0x82dbB0A14F79f50c8f8e0D50FC9F1ef30Aeb6C79 */
+  address: string;
+  topics: string[];
+
+  /** @example 0x */
+  data: string;
+
+  /** @example 0 */
+  logIndex: number;
+
+  /** @example 137 */
+  chainId: ChainId;
+
+  /** @example 1653579785 */
+  timestamp: number;
+
+  /** @example Transfer */
+  name: string;
+
+  /** @example Transfer(address,address,uint256) */
+  signature: string;
+
+  /** @example 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef */
+  topic: string;
+
+  /** @example 0 */
+  transactionIndex: number;
+
+  /** @example {"from":"0x0000000000000000000000000000000000000000","to":"0xe5dc6eb721b535ece3be1b3220be2ce41ac284fc","tokenId":{"_hex":"0x03","_isBigNumber":true}} */
+  args: object;
+  transactionId?: string;
+}
+
 export enum CountryCodeEnum {
   BGD = 'BGD',
   BEL = 'BEL',
@@ -701,6 +744,141 @@ export interface UpdateTenantDto {
 
   /** @example example.com */
   hostname?: string;
+}
+
+export interface CheckWhitelistUserResponseDto {
+  /** @format uuid */
+  whitelistId: string;
+
+  /** @format uuid */
+  userId: string;
+
+  /** @example false */
+  hasAccess: boolean;
+}
+
+export interface CheckUserInMultipleWhitelistsResponseDto {
+  /** @example false */
+  hasAccess: boolean;
+  details: CheckWhitelistUserResponseDto[];
+}
+
+export enum WalletGroupStatus {
+  Draft = 'draft',
+  Publishing = 'publishing',
+  Published = 'published',
+}
+
+export interface WalletGroupResponseDto {
+  id: string;
+  tenantId: string;
+  contractAddress: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format date-time */
+  deletedAt?: string;
+
+  /** @format uuid */
+  actionId?: string;
+
+  /** @example 137 */
+  chainId: ChainId;
+  status: WalletGroupStatus;
+  whitelistId?: string;
+}
+
+export interface WhitelistResponseDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format uuid */
+  tenantId: string;
+
+  /** @example W3Block Whitelist */
+  name: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format date-time */
+  deletedAt?: string;
+  walletGroups?: WalletGroupResponseDto[];
+}
+
+export interface WhitelistPaginateResponseDto {
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+  items: WhitelistResponseDto[];
+}
+
+export interface CreateOrUpdateWhitelistDto {
+  /** @example W3Block Whitelist */
+  name: string;
+}
+
+export interface PromoteWhitelistOnChainDto {
+  /** @example 137 */
+  chainId: ChainId;
+}
+
+export enum WhitelistEntriesSortBy {
+  CreatedAt = 'createdAt',
+  UpdatedAt = 'updatedAt',
+}
+
+export enum WhitelistEntryType {
+  UserId = 'user_id',
+  Email = 'email',
+  WalletAddress = 'wallet_address',
+  CollectionHolder = 'collection_holder',
+}
+
+export interface WhitelistEntryResponseDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format uuid */
+  whitelistId: string;
+  whitelist?: WhitelistResponseDto;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @example collection_holder */
+  type: WhitelistEntryType;
+
+  /** @example 0xd3304183ec1fa687e380b67419875f97f1db05f5 */
+  value: string;
+  additionalData?: object;
+  wallets?: WalletResponseDto[];
+}
+
+export interface WhitelistEntryPaginateResponseDto {
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+  items: WhitelistEntryResponseDto[];
+}
+
+export interface CreateWhitelistEntryDto {
+  /** @example collection_holder */
+  type: WhitelistEntryType;
+
+  /** @example 0xd3304183ec1fa687e380b67419875f97f1db05f5 */
+  value: string;
+
+  /** @example {"chainId":80001} */
+  additionalData?: object;
 }
 
 export interface CreateTenantAccessDto {
@@ -1046,106 +1224,6 @@ export interface JSONWebKeySetDto {
   keys: JSONWebKeyDto[];
 }
 
-export interface CheckWhitelistUserResponseDto {
-  /** @format uuid */
-  whitelistId: string;
-
-  /** @format uuid */
-  userId: string;
-
-  /** @example false */
-  hasAccess: boolean;
-}
-
-export interface CheckUserInMultipleWhitelistsResponseDto {
-  /** @example false */
-  hasAccess: boolean;
-  details: CheckWhitelistUserResponseDto[];
-}
-
-export interface WhitelistResponseDto {
-  /** @format uuid */
-  id: string;
-
-  /** @format uuid */
-  tenantId: string;
-
-  /** @example W3Block Whitelist */
-  name: string;
-
-  /** @format date-time */
-  createdAt?: string;
-
-  /** @format date-time */
-  updatedAt?: string;
-
-  /** @format date-time */
-  deletedAt?: string;
-}
-
-export interface WhitelistPaginateResponseDto {
-  meta: PaginationMetaDto;
-  links?: PaginationLinksDto;
-  items: WhitelistResponseDto[];
-}
-
-export interface CreateOrUpdateWhitelistDto {
-  /** @example W3Block Whitelist */
-  name: string;
-}
-
-export enum WhitelistEntriesSortBy {
-  CreatedAt = 'createdAt',
-  UpdatedAt = 'updatedAt',
-}
-
-export enum WhitelistEntryType {
-  UserId = 'user_id',
-  Email = 'email',
-  WalletAddress = 'wallet_address',
-  CollectionHolder = 'collection_holder',
-}
-
-export interface WhitelistEntryResponseDto {
-  /** @format uuid */
-  id: string;
-
-  /** @format uuid */
-  whitelistId: string;
-  whitelist?: WhitelistResponseDto;
-
-  /** @format date-time */
-  createdAt?: string;
-
-  /** @format date-time */
-  updatedAt?: string;
-
-  /** @example collection_holder */
-  type: WhitelistEntryType;
-
-  /** @example 0xd3304183ec1fa687e380b67419875f97f1db05f5 */
-  value: string;
-  additionalData?: object;
-  wallets?: WalletResponseDto[];
-}
-
-export interface WhitelistEntryPaginateResponseDto {
-  meta: PaginationMetaDto;
-  links?: PaginationLinksDto;
-  items: WhitelistEntryResponseDto[];
-}
-
-export interface CreateWhitelistEntryDto {
-  /** @example collection_holder */
-  type: WhitelistEntryType;
-
-  /** @example 0xd3304183ec1fa687e380b67419875f97f1db05f5 */
-  value: string;
-
-  /** @example {"chainId":80001} */
-  additionalData?: object;
-}
-
 export namespace Users {
   /**
    * No description
@@ -1413,6 +1491,32 @@ export namespace Blockchain {
   /**
    * No description
    * @tags Blockchain
+   * @name ReceiveEventWebhook
+   * @request POST:/blockchain/webhook/event/{tenantId}
+   */
+  export namespace ReceiveEventWebhook {
+    export type RequestParams = { tenantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = EventNotifyDto;
+    export type RequestHeaders = { 'x-pixchain-signature': string };
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Blockchain
+   * @name ReceiveTransactionWebhook
+   * @request POST:/blockchain/webhook/transaction/{tenantId}
+   */
+  export namespace ReceiveTransactionWebhook {
+    export type RequestParams = { tenantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = { 'x-pixchain-signature': string };
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Blockchain
    * @name GetBalance
    * @request GET:/blockchain/balance/{address}/{chainId}
    * @deprecated
@@ -1565,6 +1669,177 @@ export namespace PublicTenant {
   }
 }
 
+export namespace Whitelists {
+  /**
+   * No description
+   * @tags Whitelists
+   * @name CheckUserInMultipleWhitelists
+   * @request GET:/whitelists/{tenantId}/check-user
+   * @secure
+   */
+  export namespace CheckUserInMultipleWhitelists {
+    export type RequestParams = { tenantId: string };
+    export type RequestQuery = { userId: string; whitelistsIds: string[] };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = CheckUserInMultipleWhitelistsResponseDto;
+  }
+  /**
+   * No description
+   * @tags Whitelists
+   * @name FindWhitelists
+   * @request GET:/whitelists/{tenantId}
+   * @secure
+   */
+  export namespace FindWhitelists {
+    export type RequestParams = { tenantId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = WhitelistPaginateResponseDto;
+  }
+  /**
+   * No description
+   * @tags Whitelists
+   * @name CreateWhitelist
+   * @request POST:/whitelists/{tenantId}
+   * @secure
+   */
+  export namespace CreateWhitelist {
+    export type RequestParams = { tenantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreateOrUpdateWhitelistDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = WhitelistResponseDto;
+  }
+  /**
+   * No description
+   * @tags Whitelists
+   * @name GetWhitelist
+   * @request GET:/whitelists/{tenantId}/{id}
+   * @secure
+   */
+  export namespace GetWhitelist {
+    export type RequestParams = { tenantId: string; id: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = WhitelistResponseDto;
+  }
+  /**
+   * No description
+   * @tags Whitelists
+   * @name UpdateWhitelist
+   * @request PATCH:/whitelists/{tenantId}/{id}
+   * @secure
+   */
+  export namespace UpdateWhitelist {
+    export type RequestParams = { tenantId: string; id: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreateOrUpdateWhitelistDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = WhitelistResponseDto;
+  }
+  /**
+   * No description
+   * @tags Whitelists
+   * @name DeleteWhitelist
+   * @request DELETE:/whitelists/{tenantId}/{id}
+   * @secure
+   */
+  export namespace DeleteWhitelist {
+    export type RequestParams = { tenantId: string; id: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Whitelists
+   * @name PromoteWhitelistOnChain
+   * @request PATCH:/whitelists/{tenantId}/{id}/promote-on-chain
+   * @secure
+   */
+  export namespace PromoteWhitelistOnChain {
+    export type RequestParams = { tenantId: string; id: string };
+    export type RequestQuery = {};
+    export type RequestBody = PromoteWhitelistOnChainDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Whitelists
+   * @name CheckUserInWhitelist
+   * @request GET:/whitelists/{tenantId}/{id}/check-user
+   * @secure
+   */
+  export namespace CheckUserInWhitelist {
+    export type RequestParams = { tenantId: string; id: string };
+    export type RequestQuery = { userId: string };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = CheckWhitelistUserResponseDto;
+  }
+  /**
+   * No description
+   * @tags Whitelists
+   * @name FindWhitelistEntries
+   * @request GET:/whitelists/{tenantId}/{id}/entries
+   * @secure
+   */
+  export namespace FindWhitelistEntries {
+    export type RequestParams = { tenantId: string; id: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: WhitelistEntriesSortBy;
+      orderBy?: OrderByEnum;
+      type?: ('user_id' | 'email' | 'wallet_address' | 'collection_holder')[];
+      showWallets?: boolean;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = WhitelistEntryPaginateResponseDto;
+  }
+  /**
+   * No description
+   * @tags Whitelists
+   * @name CreateWhitelistEntry
+   * @request POST:/whitelists/{tenantId}/{id}/entries
+   * @secure
+   */
+  export namespace CreateWhitelistEntry {
+    export type RequestParams = { tenantId: string; id: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreateWhitelistEntryDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = WhitelistEntryResponseDto;
+  }
+  /**
+   * No description
+   * @tags Whitelists
+   * @name DeleteWhitelistEntry
+   * @request DELETE:/whitelists/{tenantId}/{id}/entries/{entryId}
+   * @secure
+   */
+  export namespace DeleteWhitelistEntry {
+    export type RequestParams = { tenantId: string; id: string; entryId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+}
+
 export namespace TenantAccess {
   /**
    * No description
@@ -1612,7 +1887,7 @@ export namespace TenantAccess {
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = any;
+    export type ResponseBody = void;
   }
 }
 
@@ -1663,7 +1938,7 @@ export namespace TenantHosts {
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = any;
+    export type ResponseBody = void;
   }
   /**
    * No description
@@ -1813,163 +2088,6 @@ export namespace Auth {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = JSONWebKeySetDto;
-  }
-}
-
-export namespace Whitelists {
-  /**
-   * No description
-   * @tags Whitelists
-   * @name CheckUserInMultipleWhitelists
-   * @request GET:/whitelists/{tenantId}/check-user
-   * @secure
-   */
-  export namespace CheckUserInMultipleWhitelists {
-    export type RequestParams = { tenantId: string };
-    export type RequestQuery = { userId: string; whitelistsIds: string[] };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = CheckUserInMultipleWhitelistsResponseDto;
-  }
-  /**
-   * No description
-   * @tags Whitelists
-   * @name FindWhitelists
-   * @request GET:/whitelists/{tenantId}
-   * @secure
-   */
-  export namespace FindWhitelists {
-    export type RequestParams = { tenantId: string };
-    export type RequestQuery = {
-      page?: number;
-      limit?: number;
-      search?: string;
-      sortBy?: string;
-      orderBy?: OrderByEnum;
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = WhitelistPaginateResponseDto;
-  }
-  /**
-   * No description
-   * @tags Whitelists
-   * @name CreateWhitelist
-   * @request POST:/whitelists/{tenantId}
-   * @secure
-   */
-  export namespace CreateWhitelist {
-    export type RequestParams = { tenantId: string };
-    export type RequestQuery = {};
-    export type RequestBody = CreateOrUpdateWhitelistDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = WhitelistResponseDto;
-  }
-  /**
-   * No description
-   * @tags Whitelists
-   * @name GetWhitelist
-   * @request GET:/whitelists/{tenantId}/{id}
-   * @secure
-   */
-  export namespace GetWhitelist {
-    export type RequestParams = { tenantId: string; id: string };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = WhitelistResponseDto;
-  }
-  /**
-   * No description
-   * @tags Whitelists
-   * @name UpdateWhitelist
-   * @request PATCH:/whitelists/{tenantId}/{id}
-   * @secure
-   */
-  export namespace UpdateWhitelist {
-    export type RequestParams = { tenantId: string; id: string };
-    export type RequestQuery = {};
-    export type RequestBody = CreateOrUpdateWhitelistDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = WhitelistResponseDto;
-  }
-  /**
-   * No description
-   * @tags Whitelists
-   * @name DeleteWhitelist
-   * @request DELETE:/whitelists/{tenantId}/{id}
-   * @secure
-   */
-  export namespace DeleteWhitelist {
-    export type RequestParams = { tenantId: string; id: string };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags Whitelists
-   * @name CheckUserInWhitelist
-   * @request GET:/whitelists/{tenantId}/{id}/check-user
-   * @secure
-   */
-  export namespace CheckUserInWhitelist {
-    export type RequestParams = { tenantId: string; id: string };
-    export type RequestQuery = { userId: string };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = CheckWhitelistUserResponseDto;
-  }
-  /**
-   * No description
-   * @tags Whitelists
-   * @name FindWhitelistEntries
-   * @request GET:/whitelists/{tenantId}/{id}/entries
-   * @secure
-   */
-  export namespace FindWhitelistEntries {
-    export type RequestParams = { tenantId: string; id: string };
-    export type RequestQuery = {
-      page?: number;
-      limit?: number;
-      search?: string;
-      sortBy?: WhitelistEntriesSortBy;
-      orderBy?: OrderByEnum;
-      type?: ('user_id' | 'email' | 'wallet_address' | 'collection_holder')[];
-      showWallets?: boolean;
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = WhitelistEntryPaginateResponseDto;
-  }
-  /**
-   * No description
-   * @tags Whitelists
-   * @name CreateWhitelistEntry
-   * @request POST:/whitelists/{tenantId}/{id}/entries
-   * @secure
-   */
-  export namespace CreateWhitelistEntry {
-    export type RequestParams = { tenantId: string; id: string };
-    export type RequestQuery = {};
-    export type RequestBody = CreateWhitelistEntryDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = WhitelistEntryResponseDto;
-  }
-  /**
-   * No description
-   * @tags Whitelists
-   * @name DeleteWhitelistEntry
-   * @request DELETE:/whitelists/{tenantId}/{id}/entries/{entryId}
-   * @secure
-   */
-  export namespace DeleteWhitelistEntry {
-    export type RequestParams = { tenantId: string; id: string; entryId: string };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
   }
 }
 
@@ -2441,6 +2559,36 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Blockchain
+     * @name ReceiveEventWebhook
+     * @request POST:/blockchain/webhook/event/{tenantId}
+     */
+    receiveEventWebhook: (tenantId: string, data: EventNotifyDto, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/blockchain/webhook/event/${tenantId}`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Blockchain
+     * @name ReceiveTransactionWebhook
+     * @request POST:/blockchain/webhook/transaction/{tenantId}
+     */
+    receiveTransactionWebhook: (tenantId: string, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/blockchain/webhook/transaction/${tenantId}`,
+        method: 'POST',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Blockchain
      * @name GetBalance
      * @request GET:/blockchain/balance/{address}/{chainId}
      * @deprecated
@@ -2614,6 +2762,229 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
+  whitelists = {
+    /**
+     * No description
+     *
+     * @tags Whitelists
+     * @name CheckUserInMultipleWhitelists
+     * @request GET:/whitelists/{tenantId}/check-user
+     * @secure
+     */
+    checkUserInMultipleWhitelists: (
+      tenantId: string,
+      query: { userId: string; whitelistsIds: string[] },
+      params: RequestParams = {},
+    ) =>
+      this.request<CheckUserInMultipleWhitelistsResponseDto, HttpExceptionDto>({
+        path: `/whitelists/${tenantId}/check-user`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Whitelists
+     * @name FindWhitelists
+     * @request GET:/whitelists/{tenantId}
+     * @secure
+     */
+    findWhitelists: (
+      tenantId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<WhitelistPaginateResponseDto, HttpExceptionDto>({
+        path: `/whitelists/${tenantId}`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Whitelists
+     * @name CreateWhitelist
+     * @request POST:/whitelists/{tenantId}
+     * @secure
+     */
+    createWhitelist: (tenantId: string, data: CreateOrUpdateWhitelistDto, params: RequestParams = {}) =>
+      this.request<WhitelistResponseDto, HttpExceptionDto>({
+        path: `/whitelists/${tenantId}`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Whitelists
+     * @name GetWhitelist
+     * @request GET:/whitelists/{tenantId}/{id}
+     * @secure
+     */
+    getWhitelist: (tenantId: string, id: string, params: RequestParams = {}) =>
+      this.request<WhitelistResponseDto, HttpExceptionDto>({
+        path: `/whitelists/${tenantId}/${id}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Whitelists
+     * @name UpdateWhitelist
+     * @request PATCH:/whitelists/{tenantId}/{id}
+     * @secure
+     */
+    updateWhitelist: (tenantId: string, id: string, data: CreateOrUpdateWhitelistDto, params: RequestParams = {}) =>
+      this.request<WhitelistResponseDto, HttpExceptionDto>({
+        path: `/whitelists/${tenantId}/${id}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Whitelists
+     * @name DeleteWhitelist
+     * @request DELETE:/whitelists/{tenantId}/{id}
+     * @secure
+     */
+    deleteWhitelist: (tenantId: string, id: string, params: RequestParams = {}) =>
+      this.request<void, HttpExceptionDto>({
+        path: `/whitelists/${tenantId}/${id}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Whitelists
+     * @name PromoteWhitelistOnChain
+     * @request PATCH:/whitelists/{tenantId}/{id}/promote-on-chain
+     * @secure
+     */
+    promoteWhitelistOnChain: (
+      tenantId: string,
+      id: string,
+      data: PromoteWhitelistOnChainDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, HttpExceptionDto>({
+        path: `/whitelists/${tenantId}/${id}/promote-on-chain`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Whitelists
+     * @name CheckUserInWhitelist
+     * @request GET:/whitelists/{tenantId}/{id}/check-user
+     * @secure
+     */
+    checkUserInWhitelist: (tenantId: string, id: string, query: { userId: string }, params: RequestParams = {}) =>
+      this.request<CheckWhitelistUserResponseDto, HttpExceptionDto>({
+        path: `/whitelists/${tenantId}/${id}/check-user`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Whitelists
+     * @name FindWhitelistEntries
+     * @request GET:/whitelists/{tenantId}/{id}/entries
+     * @secure
+     */
+    findWhitelistEntries: (
+      tenantId: string,
+      id: string,
+      query?: {
+        page?: number;
+        limit?: number;
+        search?: string;
+        sortBy?: WhitelistEntriesSortBy;
+        orderBy?: OrderByEnum;
+        type?: ('user_id' | 'email' | 'wallet_address' | 'collection_holder')[];
+        showWallets?: boolean;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<WhitelistEntryPaginateResponseDto, HttpExceptionDto>({
+        path: `/whitelists/${tenantId}/${id}/entries`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Whitelists
+     * @name CreateWhitelistEntry
+     * @request POST:/whitelists/{tenantId}/{id}/entries
+     * @secure
+     */
+    createWhitelistEntry: (tenantId: string, id: string, data: CreateWhitelistEntryDto, params: RequestParams = {}) =>
+      this.request<WhitelistEntryResponseDto, HttpExceptionDto>({
+        path: `/whitelists/${tenantId}/${id}/entries`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Whitelists
+     * @name DeleteWhitelistEntry
+     * @request DELETE:/whitelists/{tenantId}/{id}/entries/{entryId}
+     * @secure
+     */
+    deleteWhitelistEntry: (tenantId: string, id: string, entryId: string, params: RequestParams = {}) =>
+      this.request<void, HttpExceptionDto>({
+        path: `/whitelists/${tenantId}/${id}/entries/${entryId}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+  };
   tenantAccess = {
     /**
      * No description
@@ -2665,7 +3036,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     findOne: (id: string, tenantId: string, params: RequestParams = {}) =>
-      this.request<any, HttpExceptionDto>({
+      this.request<void, HttpExceptionDto>({
         path: `/tenant-access/${tenantId}/${id}`,
         method: 'GET',
         secure: true,
@@ -2723,7 +3094,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     findOne: (tenantId: string, id: string, params: RequestParams = {}) =>
-      this.request<any, HttpExceptionDto>({
+      this.request<void, HttpExceptionDto>({
         path: `/tenant-hosts/${tenantId}/${id}`,
         method: 'GET',
         secure: true,
@@ -2911,206 +3282,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/auth/jwks.json`,
         method: 'GET',
         format: 'json',
-        ...params,
-      }),
-  };
-  whitelists = {
-    /**
-     * No description
-     *
-     * @tags Whitelists
-     * @name CheckUserInMultipleWhitelists
-     * @request GET:/whitelists/{tenantId}/check-user
-     * @secure
-     */
-    checkUserInMultipleWhitelists: (
-      tenantId: string,
-      query: { userId: string; whitelistsIds: string[] },
-      params: RequestParams = {},
-    ) =>
-      this.request<CheckUserInMultipleWhitelistsResponseDto, any>({
-        path: `/whitelists/${tenantId}/check-user`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Whitelists
-     * @name FindWhitelists
-     * @request GET:/whitelists/{tenantId}
-     * @secure
-     */
-    findWhitelists: (
-      tenantId: string,
-      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
-      params: RequestParams = {},
-    ) =>
-      this.request<WhitelistPaginateResponseDto, any>({
-        path: `/whitelists/${tenantId}`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Whitelists
-     * @name CreateWhitelist
-     * @request POST:/whitelists/{tenantId}
-     * @secure
-     */
-    createWhitelist: (tenantId: string, data: CreateOrUpdateWhitelistDto, params: RequestParams = {}) =>
-      this.request<WhitelistResponseDto, any>({
-        path: `/whitelists/${tenantId}`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Whitelists
-     * @name GetWhitelist
-     * @request GET:/whitelists/{tenantId}/{id}
-     * @secure
-     */
-    getWhitelist: (tenantId: string, id: string, params: RequestParams = {}) =>
-      this.request<WhitelistResponseDto, any>({
-        path: `/whitelists/${tenantId}/${id}`,
-        method: 'GET',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Whitelists
-     * @name UpdateWhitelist
-     * @request PATCH:/whitelists/{tenantId}/{id}
-     * @secure
-     */
-    updateWhitelist: (tenantId: string, id: string, data: CreateOrUpdateWhitelistDto, params: RequestParams = {}) =>
-      this.request<WhitelistResponseDto, any>({
-        path: `/whitelists/${tenantId}/${id}`,
-        method: 'PATCH',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Whitelists
-     * @name DeleteWhitelist
-     * @request DELETE:/whitelists/{tenantId}/{id}
-     * @secure
-     */
-    deleteWhitelist: (tenantId: string, id: string, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/whitelists/${tenantId}/${id}`,
-        method: 'DELETE',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Whitelists
-     * @name CheckUserInWhitelist
-     * @request GET:/whitelists/{tenantId}/{id}/check-user
-     * @secure
-     */
-    checkUserInWhitelist: (tenantId: string, id: string, query: { userId: string }, params: RequestParams = {}) =>
-      this.request<CheckWhitelistUserResponseDto, any>({
-        path: `/whitelists/${tenantId}/${id}/check-user`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Whitelists
-     * @name FindWhitelistEntries
-     * @request GET:/whitelists/{tenantId}/{id}/entries
-     * @secure
-     */
-    findWhitelistEntries: (
-      tenantId: string,
-      id: string,
-      query?: {
-        page?: number;
-        limit?: number;
-        search?: string;
-        sortBy?: WhitelistEntriesSortBy;
-        orderBy?: OrderByEnum;
-        type?: ('user_id' | 'email' | 'wallet_address' | 'collection_holder')[];
-        showWallets?: boolean;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<WhitelistEntryPaginateResponseDto, any>({
-        path: `/whitelists/${tenantId}/${id}/entries`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Whitelists
-     * @name CreateWhitelistEntry
-     * @request POST:/whitelists/{tenantId}/{id}/entries
-     * @secure
-     */
-    createWhitelistEntry: (tenantId: string, id: string, data: CreateWhitelistEntryDto, params: RequestParams = {}) =>
-      this.request<WhitelistEntryResponseDto, any>({
-        path: `/whitelists/${tenantId}/${id}/entries`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Whitelists
-     * @name DeleteWhitelistEntry
-     * @request DELETE:/whitelists/{tenantId}/{id}/entries/{entryId}
-     * @secure
-     */
-    deleteWhitelistEntry: (tenantId: string, id: string, entryId: string, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/whitelists/${tenantId}/${id}/entries/${entryId}`,
-        method: 'DELETE',
-        secure: true,
         ...params,
       }),
   };
