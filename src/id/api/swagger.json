@@ -1764,14 +1764,21 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PromoteWhitelistOnChainDto"
+                "$ref": "#/components/schemas/WhitelistOnChainDto"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalletGroupResponseDto"
+                }
+              }
+            }
           },
           "403": {
             "description": "Need user with one of these roles: superAdmin, integration, application, admin",
@@ -2421,6 +2428,51 @@
         ]
       }
     },
+    "/tenant-hosts/{tenantId}/main-host": {
+      "get": {
+        "operationId": "getMainHostByTenantId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MainHostResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/tenant-hosts/{tenantId}/{id}": {
       "get": {
         "operationId": "findOne",
@@ -2445,51 +2497,6 @@
         "responses": {
           "200": {
             "description": ""
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Tenant Hosts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/tenant-hosts/{tenantId}/main-host": {
-      "get": {
-        "operationId": "getMainHostByTenantId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
           },
           "403": {
             "description": "Need user with one of these roles: superAdmin, integration, application, admin",
@@ -2920,7 +2927,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.3.0",
+    "version": "0.4.1",
     "contact": {}
   },
   "tags": [],
@@ -4309,7 +4316,7 @@
           "name"
         ]
       },
-      "PromoteWhitelistOnChainDto": {
+      "WhitelistOnChainDto": {
         "type": "object",
         "properties": {
           "chainId": {
@@ -4616,6 +4623,17 @@
         "required": [
           "meta",
           "items"
+        ]
+      },
+      "MainHostResponseDto": {
+        "type": "object",
+        "properties": {
+          "hostname": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "hostname"
         ]
       },
       "JwtPayloadDto": {

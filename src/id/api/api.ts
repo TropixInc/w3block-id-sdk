@@ -824,7 +824,7 @@ export interface CreateOrUpdateWhitelistDto {
   name: string;
 }
 
-export interface PromoteWhitelistOnChainDto {
+export interface WhitelistOnChainDto {
   /** @example 137 */
   chainId: ChainId;
 }
@@ -947,6 +947,10 @@ export interface TenantHostPaginateResponseDto {
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
   items: TenantHostEntityDto[];
+}
+
+export interface MainHostResponseDto {
+  hostname: string;
 }
 
 export interface JwtPayloadDto {
@@ -1770,9 +1774,9 @@ export namespace Whitelists {
   export namespace PromoteWhitelistOnChain {
     export type RequestParams = { tenantId: string; id: string };
     export type RequestQuery = {};
-    export type RequestBody = PromoteWhitelistOnChainDto;
+    export type RequestBody = WhitelistOnChainDto;
     export type RequestHeaders = {};
-    export type ResponseBody = void;
+    export type ResponseBody = WalletGroupResponseDto;
   }
   /**
    * No description
@@ -1929,6 +1933,20 @@ export namespace TenantHosts {
   /**
    * No description
    * @tags Tenant Hosts
+   * @name GetMainHostByTenantId
+   * @request GET:/tenant-hosts/{tenantId}/main-host
+   * @secure
+   */
+  export namespace GetMainHostByTenantId {
+    export type RequestParams = { tenantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = MainHostResponseDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Hosts
    * @name FindOne
    * @request GET:/tenant-hosts/{tenantId}/{id}
    * @secure
@@ -1939,20 +1957,6 @@ export namespace TenantHosts {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags Tenant Hosts
-   * @name GetMainHostByTenantId
-   * @request GET:/tenant-hosts/{tenantId}/main-host
-   * @secure
-   */
-  export namespace GetMainHostByTenantId {
-    export type RequestParams = { tenantId: string };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = string;
   }
 }
 
@@ -2213,7 +2217,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.3.0
+ * @version 0.4.1
  * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */
@@ -2886,18 +2890,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/whitelists/{tenantId}/{id}/promote-on-chain
      * @secure
      */
-    promoteWhitelistOnChain: (
-      tenantId: string,
-      id: string,
-      data: PromoteWhitelistOnChainDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, HttpExceptionDto>({
+    promoteWhitelistOnChain: (tenantId: string, id: string, data: WhitelistOnChainDto, params: RequestParams = {}) =>
+      this.request<WalletGroupResponseDto, HttpExceptionDto>({
         path: `/whitelists/${tenantId}/${id}/promote-on-chain`,
         method: 'PATCH',
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: 'json',
         ...params,
       }),
 
@@ -3089,6 +3089,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Tenant Hosts
+     * @name GetMainHostByTenantId
+     * @request GET:/tenant-hosts/{tenantId}/main-host
+     * @secure
+     */
+    getMainHostByTenantId: (tenantId: string, params: RequestParams = {}) =>
+      this.request<MainHostResponseDto, HttpExceptionDto>({
+        path: `/tenant-hosts/${tenantId}/main-host`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Hosts
      * @name FindOne
      * @request GET:/tenant-hosts/{tenantId}/{id}
      * @secure
@@ -3098,23 +3115,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/tenant-hosts/${tenantId}/${id}`,
         method: 'GET',
         secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Tenant Hosts
-     * @name GetMainHostByTenantId
-     * @request GET:/tenant-hosts/{tenantId}/main-host
-     * @secure
-     */
-    getMainHostByTenantId: (tenantId: string, params: RequestParams = {}) =>
-      this.request<string, HttpExceptionDto>({
-        path: `/tenant-hosts/${tenantId}/main-host`,
-        method: 'GET',
-        secure: true,
-        format: 'json',
         ...params,
       }),
   };
