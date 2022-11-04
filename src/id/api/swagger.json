@@ -488,6 +488,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTokenDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "",
@@ -2927,7 +2937,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.4.1",
+    "version": "0.5.1",
     "contact": {}
   },
   "tags": [],
@@ -3502,6 +3512,23 @@
           "walletId"
         ]
       },
+      "UpdateTokenDto": {
+        "type": "object",
+        "properties": {
+          "verificationType": {
+            "type": "string",
+            "enum": [
+              "numeric",
+              "invisible"
+            ],
+            "default": "invisible"
+          },
+          "verificationExpire": {
+            "type": "string",
+            "example": "15m"
+          }
+        }
+      },
       "UserTokenResponseDto": {
         "type": "object",
         "properties": {
@@ -3512,8 +3539,22 @@
           "token": {
             "type": "string",
             "example": "b8ee934f8d9c6704b982c14b95ba3266fef9bba7798ed4885a05c70dbb4545435517cdd25f851e7522ad503e04ccb691a18f507b792866c3282d13abc2a09cb2;1654178219308"
+          },
+          "code": {
+            "type": "string",
+            "example": "b8ee934f8d9c6704b982c14b95ba3266fef9bba7798ed4885a05c70dbb4545435517cdd25f851e7522ad503e04ccb691a18f507b792866c3282d13abc2a09cb2"
+          },
+          "expire": {
+            "type": "string",
+            "example": "1654178219308"
           }
-        }
+        },
+        "required": [
+          "email",
+          "token",
+          "code",
+          "expire"
+        ]
       },
       "UpdateUserDto": {
         "type": "object",
@@ -4877,6 +4918,14 @@
           },
           "callbackUrl": {
             "type": "string"
+          },
+          "verificationType": {
+            "type": "string",
+            "enum": [
+              "numeric",
+              "invisible"
+            ],
+            "default": "invisible"
           }
         },
         "required": [

@@ -303,12 +303,25 @@ export interface MainWalletDto {
   walletId: string;
 }
 
+export interface UpdateTokenDto {
+  verificationType?: 'numeric' | 'invisible';
+
+  /** @example 15m */
+  verificationExpire?: string;
+}
+
 export interface UserTokenResponseDto {
   /** @example email@example.com */
-  email?: string;
+  email: string;
 
   /** @example b8ee934f8d9c6704b982c14b95ba3266fef9bba7798ed4885a05c70dbb4545435517cdd25f851e7522ad503e04ccb691a18f507b792866c3282d13abc2a09cb2;1654178219308 */
-  token?: string;
+  token: string;
+
+  /** @example b8ee934f8d9c6704b982c14b95ba3266fef9bba7798ed4885a05c70dbb4545435517cdd25f851e7522ad503e04ccb691a18f507b792866c3282d13abc2a09cb2 */
+  code: string;
+
+  /** @example 1654178219308 */
+  expire: string;
 }
 
 export interface UpdateUserDto {
@@ -1077,6 +1090,7 @@ export interface RequestPasswordResetDto {
   /** @example 00000000-0000-0000-0000-000000000001 */
   tenantId?: string;
   callbackUrl?: string;
+  verificationType?: 'numeric' | 'invisible';
 }
 
 export interface ResetPasswordDto {
@@ -1373,7 +1387,7 @@ export namespace Users {
   export namespace UpdateToken {
     export type RequestParams = { id: string; tenantId: string };
     export type RequestQuery = {};
-    export type RequestBody = never;
+    export type RequestBody = UpdateTokenDto;
     export type RequestHeaders = {};
     export type ResponseBody = UserTokenResponseDto;
   }
@@ -2217,7 +2231,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.4.1
+ * @version 0.5.1
  * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */
@@ -2406,11 +2420,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/users/{tenantId}/{id}/token
      * @secure
      */
-    updateToken: (id: string, tenantId: string, params: RequestParams = {}) =>
+    updateToken: (id: string, tenantId: string, data: UpdateTokenDto, params: RequestParams = {}) =>
       this.request<UserTokenResponseDto, HttpExceptionDto>({
         path: `/users/${tenantId}/${id}/token`,
         method: 'PATCH',
+        body: data,
         secure: true,
+        type: ContentType.Json,
         format: 'json',
         ...params,
       }),
