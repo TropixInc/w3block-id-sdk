@@ -2937,7 +2937,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.5.1",
+    "version": "0.6.0",
     "contact": {}
   },
   "tags": [],
@@ -4905,6 +4905,13 @@
           "email"
         ]
       },
+      "VerificationType": {
+        "type": "string",
+        "enum": [
+          "numeric",
+          "invisible"
+        ]
+      },
       "RequestPasswordResetDto": {
         "type": "object",
         "properties": {
@@ -4920,12 +4927,8 @@
             "type": "string"
           },
           "verificationType": {
-            "type": "string",
-            "enum": [
-              "numeric",
-              "invisible"
-            ],
-            "default": "invisible"
+            "default": "invisible",
+            "$ref": "#/components/schemas/VerificationType"
           }
         },
         "required": [

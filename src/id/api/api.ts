@@ -1083,6 +1083,11 @@ export interface RequestConfirmationEmailDto {
   callbackUrl?: string;
 }
 
+export enum VerificationType {
+  Numeric = 'numeric',
+  Invisible = 'invisible',
+}
+
 export interface RequestPasswordResetDto {
   /** @example email@example.com */
   email: string;
@@ -1090,7 +1095,7 @@ export interface RequestPasswordResetDto {
   /** @example 00000000-0000-0000-0000-000000000001 */
   tenantId?: string;
   callbackUrl?: string;
-  verificationType?: 'numeric' | 'invisible';
+  verificationType?: VerificationType;
 }
 
 export interface ResetPasswordDto {
@@ -2231,7 +2236,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.5.1
+ * @version 0.6.0
  * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */
