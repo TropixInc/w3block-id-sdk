@@ -940,6 +940,18 @@ export interface TenantHostPathsDto {
    * @example /auth/complete-profile/
    */
   fillProfileForm?: string;
+
+  /**
+   * The path to user sign in page. Only fill in if different from default
+   * @example /auth/signIn/
+   */
+  userSignIn?: string;
+
+  /**
+   * The path to see certificate of NFT. Only fill in if different from default
+   * @example /token/{{contractAddress}}/{{chainId}}/{{tokenId}}
+   */
+  nftCertificate?: string;
 }
 
 export interface CreateTenantHostDto {
@@ -958,6 +970,18 @@ export interface TenantHostPathsResponse {
    * @example /auth/complete-profile/
    */
   fillProfileForm?: string;
+
+  /**
+   * The path to user sign in page. Only exists when it is different from default
+   * @example /auth/signIn/
+   */
+  userSignIn?: string;
+
+  /**
+   * The path to  see certificate of NF. Only exists when it is different from default
+   * @example /token/{{contractAddress}}/{{chainId}}/{{tokenId}}
+   */
+  nftCertificate?: string;
 }
 
 export interface TenantHostResponseDto {

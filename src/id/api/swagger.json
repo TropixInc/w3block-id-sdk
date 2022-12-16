@@ -4706,6 +4706,16 @@
             "type": "string",
             "example": "/auth/complete-profile/",
             "description": "The path to the user complete profile page. Only fill in if different from default"
+          },
+          "userSignIn": {
+            "type": "string",
+            "example": "/auth/signIn/",
+            "description": "The path to user sign in page. Only fill in if different from default"
+          },
+          "nftCertificate": {
+            "type": "string",
+            "example": "/token/{{contractAddress}}/{{chainId}}/{{tokenId}}",
+            "description": "The path to see certificate of NFT. Only fill in if different from default"
           }
         }
       },
@@ -4738,6 +4748,16 @@
             "type": "string",
             "example": "/auth/complete-profile/",
             "description": "The path for the user to finish filling out their profile form. Only exists when it is different from default"
+          },
+          "userSignIn": {
+            "type": "string",
+            "example": "/auth/signIn/",
+            "description": "The path to user sign in page. Only exists when it is different from default"
+          },
+          "nftCertificate": {
+            "type": "string",
+            "example": "/token/{{contractAddress}}/{{chainId}}/{{tokenId}}",
+            "description": "The path to  see certificate of NF. Only exists when it is different from default"
           }
         }
       },
