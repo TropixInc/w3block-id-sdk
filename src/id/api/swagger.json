@@ -184,6 +184,52 @@
         ]
       }
     },
+    "/users/{tenantId}/report/{email}": {
+      "get": {
+        "operationId": "getUsersReport",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/users/{tenantId}/{id}": {
       "get": {
         "operationId": "getProfileUserById",
@@ -1368,7 +1414,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindByHostnameDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -2141,7 +2194,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TenantAccessResponseDto"
+                  "$ref": "#/components/schemas/TenantAccessEntityDto"
                 }
               }
             }
@@ -2457,7 +2510,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MainHostResponseDto"
+                  "$ref": "#/components/schemas/TenantHostEntityDto"
                 }
               }
             }
@@ -2504,6 +2557,60 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTenantHostDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""
@@ -2937,7 +3044,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.6.0",
+    "version": "0.6.5",
     "contact": {}
   },
   "tags": [],
@@ -3304,6 +3411,13 @@
           "message"
         ]
       },
+      "VerificationType": {
+        "type": "string",
+        "enum": [
+          "numeric",
+          "invisible"
+        ]
+      },
       "InviteUserDto": {
         "type": "object",
         "properties": {
@@ -3345,6 +3459,10 @@
           "royaltyEligible": {
             "type": "boolean",
             "example": false
+          },
+          "verificationType": {
+            "default": "invisible",
+            "$ref": "#/components/schemas/VerificationType"
           }
         },
         "required": [
@@ -3595,6 +3713,10 @@
           },
           "tenantId": {
             "type": "string"
+          },
+          "verificationType": {
+            "default": "invisible",
+            "$ref": "#/components/schemas/VerificationType"
           }
         },
         "required": [
@@ -4055,6 +4177,27 @@
           "integration"
         ]
       },
+      "TenantInfoDto": {
+        "type": "object",
+        "properties": {
+          "emailLogoUrl": {
+            "type": "string"
+          },
+          "headerLogoUrl": {
+            "type": "string"
+          },
+          "headerBackgroundColor": {
+            "type": "string"
+          },
+          "bodyCardBackgroundColor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "headerBackgroundColor",
+          "bodyCardBackgroundColor"
+        ]
+      },
       "TenantEntityDto": {
         "type": "object",
         "properties": {
@@ -4092,7 +4235,7 @@
             "type": "object"
           },
           "info": {
-            "type": "object"
+            "$ref": "#/components/schemas/TenantInfoDto"
           },
           "createdAt": {
             "format": "date-time",
@@ -4180,12 +4323,20 @@
           "countryCode": {
             "example": "BRA",
             "$ref": "#/components/schemas/CountryCodeEnum"
-          },
+          }
+        }
+      },
+      "FindByHostnameDto": {
+        "type": "object",
+        "properties": {
           "hostname": {
             "type": "string",
             "example": "example.com"
           }
-        }
+        },
+        "required": [
+          "hostname"
+        ]
       },
       "CheckWhitelistUserResponseDto": {
         "type": "object",
@@ -4274,6 +4425,12 @@
           },
           "whitelistId": {
             "type": "string"
+          },
+          "lastSyncBlock": {
+            "type": "number"
+          },
+          "sync": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -4281,7 +4438,8 @@
           "tenantId",
           "contractAddress",
           "chainId",
-          "status"
+          "status",
+          "sync"
         ]
       },
       "WhitelistResponseDto": {
@@ -4397,9 +4555,6 @@
             "type": "string",
             "format": "uuid"
           },
-          "whitelist": {
-            "$ref": "#/components/schemas/WhitelistResponseDto"
-          },
           "createdAt": {
             "format": "date-time",
             "type": "string"
@@ -4487,34 +4642,6 @@
           }
         }
       },
-      "TenantAccessResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "key": {
-            "type": "string"
-          },
-          "secret": {
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "active": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "id",
-          "key",
-          "secret",
-          "tenantId",
-          "active"
-        ]
-      },
       "TenantEntity": {
         "type": "object",
         "properties": {}
@@ -4572,6 +4699,16 @@
           "items"
         ]
       },
+      "TenantHostPathsDto": {
+        "type": "object",
+        "properties": {
+          "fillProfileForm": {
+            "type": "string",
+            "example": "/auth/complete-profile/",
+            "description": "The path to the user complete profile page. Only fill in if different from default"
+          }
+        }
+      },
       "CreateTenantHostDto": {
         "type": "object",
         "properties": {
@@ -4585,11 +4722,24 @@
           "hostname": {
             "type": "string",
             "example": "example.com"
+          },
+          "paths": {
+            "$ref": "#/components/schemas/TenantHostPathsDto"
           }
         },
         "required": [
           "hostname"
         ]
+      },
+      "TenantHostPathsResponse": {
+        "type": "object",
+        "properties": {
+          "fillProfileForm": {
+            "type": "string",
+            "example": "/auth/complete-profile/",
+            "description": "The path for the user to finish filling out their profile form. Only exists when it is different from default"
+          }
+        }
       },
       "TenantHostResponseDto": {
         "type": "object",
@@ -4607,13 +4757,21 @@
           },
           "isMain": {
             "type": "boolean"
+          },
+          "paths": {
+            "$ref": "#/components/schemas/TenantHostPathsResponse"
+          },
+          "routes": {
+            "$ref": "#/components/schemas/TenantHostPathsResponse"
           }
         },
         "required": [
           "id",
           "hostname",
           "tenantId",
-          "isMain"
+          "isMain",
+          "paths",
+          "routes"
         ]
       },
       "TenantHostEntityDto": {
@@ -4635,6 +4793,12 @@
           },
           "isMain": {
             "type": "boolean"
+          },
+          "paths": {
+            "$ref": "#/components/schemas/TenantHostPathsResponse"
+          },
+          "routes": {
+            "$ref": "#/components/schemas/TenantHostPathsResponse"
           }
         },
         "required": [
@@ -4642,7 +4806,9 @@
           "hostname",
           "tenant",
           "tenantId",
-          "isMain"
+          "isMain",
+          "paths",
+          "routes"
         ]
       },
       "TenantHostPaginateResponseDto": {
@@ -4666,11 +4832,22 @@
           "items"
         ]
       },
-      "MainHostResponseDto": {
+      "UpdateTenantHostDto": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "isMain": {
+            "type": "boolean"
+          },
           "hostname": {
-            "type": "string"
+            "type": "string",
+            "example": "example.com"
+          },
+          "paths": {
+            "$ref": "#/components/schemas/TenantHostPathsDto"
           }
         },
         "required": [
@@ -4899,17 +5076,14 @@
           },
           "callbackUrl": {
             "type": "string"
+          },
+          "verificationType": {
+            "default": "invisible",
+            "$ref": "#/components/schemas/VerificationType"
           }
         },
         "required": [
           "email"
-        ]
-      },
-      "VerificationType": {
-        "type": "string",
-        "enum": [
-          "numeric",
-          "invisible"
         ]
       },
       "RequestPasswordResetDto": {

@@ -194,6 +194,11 @@ export interface HttpExceptionDto {
   data?: object;
 }
 
+export enum VerificationType {
+  Numeric = 'numeric',
+  Invisible = 'invisible',
+}
+
 export interface InviteUserDto {
   /** @example 00000000-0000-0000-0000-000000000001 */
   tenantId: string;
@@ -223,6 +228,7 @@ export interface InviteUserDto {
 
   /** @example false */
   royaltyEligible?: boolean;
+  verificationType?: VerificationType;
 }
 
 export enum OrderByEnum {
@@ -347,6 +353,7 @@ export interface UpdateUserDto {
 export interface AccountCompleteRetryDto {
   email: string;
   tenantId: string;
+  verificationType?: VerificationType;
 }
 
 export enum ChainId {
@@ -702,6 +709,13 @@ export enum TenantRoleEnum {
   Integration = 'integration',
 }
 
+export interface TenantInfoDto {
+  emailLogoUrl?: string;
+  headerLogoUrl?: string;
+  headerBackgroundColor: string;
+  bodyCardBackgroundColor: string;
+}
+
 export interface TenantEntityDto {
   id: string;
   name: string;
@@ -715,7 +729,7 @@ export interface TenantEntityDto {
   wallets: string[];
   client?: object;
   clientId?: object;
-  info: object;
+  info: TenantInfoDto;
 
   /** @format date-time */
   createdAt?: string;
@@ -754,9 +768,11 @@ export interface UpdateTenantDto {
 
   /** @example BRA */
   countryCode?: CountryCodeEnum;
+}
 
+export interface FindByHostnameDto {
   /** @example example.com */
-  hostname?: string;
+  hostname: string;
 }
 
 export interface CheckWhitelistUserResponseDto {
@@ -803,6 +819,8 @@ export interface WalletGroupResponseDto {
   chainId: ChainId;
   status: WalletGroupStatus;
   whitelistId?: string;
+  lastSyncBlock?: number;
+  sync: boolean;
 }
 
 export interface WhitelistResponseDto {
@@ -860,7 +878,6 @@ export interface WhitelistEntryResponseDto {
 
   /** @format uuid */
   whitelistId: string;
-  whitelist?: WhitelistResponseDto;
 
   /** @format date-time */
   createdAt?: string;
@@ -899,15 +916,6 @@ export interface CreateTenantAccessDto {
   id?: string;
 }
 
-export interface TenantAccessResponseDto {
-  /** @format uuid */
-  id: string;
-  key: string;
-  secret: string;
-  tenantId: string;
-  active: boolean;
-}
-
 export type TenantEntity = object;
 
 export interface TenantAccessEntityDto {
@@ -926,6 +934,14 @@ export interface TenantAccessPaginateResponseDto {
   items: TenantAccessEntityDto[];
 }
 
+export interface TenantHostPathsDto {
+  /**
+   * The path to the user complete profile page. Only fill in if different from default
+   * @example /auth/complete-profile/
+   */
+  fillProfileForm?: string;
+}
+
 export interface CreateTenantHostDto {
   /** @format uuid */
   id?: string;
@@ -933,6 +949,15 @@ export interface CreateTenantHostDto {
 
   /** @example example.com */
   hostname: string;
+  paths?: TenantHostPathsDto;
+}
+
+export interface TenantHostPathsResponse {
+  /**
+   * The path for the user to finish filling out their profile form. Only exists when it is different from default
+   * @example /auth/complete-profile/
+   */
+  fillProfileForm?: string;
 }
 
 export interface TenantHostResponseDto {
@@ -943,6 +968,8 @@ export interface TenantHostResponseDto {
   hostname: string;
   tenantId: string;
   isMain: boolean;
+  paths: TenantHostPathsResponse;
+  routes: TenantHostPathsResponse;
 }
 
 export interface TenantHostEntityDto {
@@ -954,6 +981,8 @@ export interface TenantHostEntityDto {
   tenant: TenantEntity;
   tenantId: string;
   isMain: boolean;
+  paths: TenantHostPathsResponse;
+  routes: TenantHostPathsResponse;
 }
 
 export interface TenantHostPaginateResponseDto {
@@ -962,8 +991,14 @@ export interface TenantHostPaginateResponseDto {
   items: TenantHostEntityDto[];
 }
 
-export interface MainHostResponseDto {
+export interface UpdateTenantHostDto {
+  /** @format uuid */
+  id?: string;
+  isMain?: boolean;
+
+  /** @example example.com */
   hostname: string;
+  paths?: TenantHostPathsDto;
 }
 
 export interface JwtPayloadDto {
@@ -1081,11 +1116,7 @@ export interface RequestConfirmationEmailDto {
   /** @example 00000000-0000-0000-0000-000000000001 */
   tenantId?: string;
   callbackUrl?: string;
-}
-
-export enum VerificationType {
-  Numeric = 'numeric',
-  Invisible = 'invisible',
+  verificationType?: VerificationType;
 }
 
 export interface RequestPasswordResetDto {
@@ -1303,6 +1334,20 @@ export namespace Users {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = UserPublicResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name GetUsersReport
+   * @request GET:/users/{tenantId}/report/{email}
+   * @secure
+   */
+  export namespace GetUsersReport {
+    export type RequestParams = { tenantId: string; email: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
   }
   /**
    * No description
@@ -1688,7 +1733,7 @@ export namespace PublicTenant {
     export type RequestQuery = { hostname: string };
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = void;
+    export type ResponseBody = FindByHostnameDto;
   }
 }
 
@@ -1876,7 +1921,7 @@ export namespace TenantAccess {
     export type RequestQuery = {};
     export type RequestBody = CreateTenantAccessDto;
     export type RequestHeaders = {};
-    export type ResponseBody = TenantAccessResponseDto;
+    export type ResponseBody = TenantAccessEntityDto;
   }
   /**
    * No description
@@ -1961,7 +2006,7 @@ export namespace TenantHosts {
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = MainHostResponseDto;
+    export type ResponseBody = TenantHostEntityDto;
   }
   /**
    * No description
@@ -1974,6 +2019,20 @@ export namespace TenantHosts {
     export type RequestParams = { tenantId: string; id: string };
     export type RequestQuery = {};
     export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Tenant Hosts
+   * @name Update
+   * @request PATCH:/tenant-hosts/{tenantId}/{id}
+   * @secure
+   */
+  export namespace Update {
+    export type RequestParams = { tenantId: string; id: string };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateTenantHostDto;
     export type RequestHeaders = {};
     export type ResponseBody = void;
   }
@@ -2236,7 +2295,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.6.0
+ * @version 0.6.5
  * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */
@@ -2312,6 +2371,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: 'GET',
         secure: true,
         format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name GetUsersReport
+     * @request GET:/users/{tenantId}/report/{email}
+     * @secure
+     */
+    getUsersReport: (tenantId: string, email: string, params: RequestParams = {}) =>
+      this.request<void, HttpExceptionDto>({
+        path: `/users/${tenantId}/report/${email}`,
+        method: 'GET',
+        secure: true,
         ...params,
       }),
 
@@ -2779,11 +2854,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getCompanyByHost: (query: { hostname: string }, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<FindByHostnameDto, any>({
         path: `/public-tenant/by-hostname`,
         method: 'GET',
         query: query,
         secure: true,
+        format: 'json',
         ...params,
       }),
   };
@@ -3016,7 +3092,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     create: (tenantId: string, data: CreateTenantAccessDto, params: RequestParams = {}) =>
-      this.request<TenantAccessResponseDto, HttpExceptionDto>({
+      this.request<TenantAccessEntityDto, HttpExceptionDto>({
         path: `/tenant-access/${tenantId}`,
         method: 'POST',
         body: data,
@@ -3115,7 +3191,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getMainHostByTenantId: (tenantId: string, params: RequestParams = {}) =>
-      this.request<MainHostResponseDto, HttpExceptionDto>({
+      this.request<TenantHostEntityDto, HttpExceptionDto>({
         path: `/tenant-hosts/${tenantId}/main-host`,
         method: 'GET',
         secure: true,
@@ -3136,6 +3212,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/tenant-hosts/${tenantId}/${id}`,
         method: 'GET',
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Hosts
+     * @name Update
+     * @request PATCH:/tenant-hosts/{tenantId}/{id}
+     * @secure
+     */
+    update: (tenantId: string, id: string, data: UpdateTenantHostDto, params: RequestParams = {}) =>
+      this.request<void, HttpExceptionDto>({
+        path: `/tenant-hosts/${tenantId}/${id}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
   };
