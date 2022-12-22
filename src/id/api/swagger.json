@@ -756,6 +756,59 @@
         ]
       }
     },
+    "/users/{tenantId}/wallets/own-wallet-by-address/{address}": {
+      "get": {
+        "operationId": "findOwnWalletByAddress",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalletResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Wallet"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/users/{tenantId}/wallets/{userId}": {
       "get": {
         "operationId": "findAllWalletByUserId",
@@ -962,6 +1015,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "x-pixchain-client-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -1000,6 +1061,53 @@
             "name": "x-pixchain-signature",
             "in": "header",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-pixchain-client-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized - Invalid Pixchain signature"
+          }
+        },
+        "tags": [
+          "Blockchain"
+        ]
+      }
+    },
+    "/blockchain/webhook/external-transaction-signing-request/{tenantId}": {
+      "post": {
+        "operationId": "receiveExternalTransactionSigningRequestWebhook",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-pixchain-signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-pixchain-client-id",
+            "in": "header",
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -1071,6 +1179,410 @@
           {
             "bearer": []
           }
+        ]
+      }
+    },
+    "/auth/verify-sign-up": {
+      "get": {
+        "operationId": "verifySignUp",
+        "parameters": [
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "example": "user@example.com",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for verify sign up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifySignupResponseDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/request-confirmation-email": {
+      "post": {
+        "operationId": "requestConfirmationEmail",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestConfirmationEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/request-password-reset": {
+      "post": {
+        "operationId": "requestPasswordReset",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPasswordResetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "operationId": "resetPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestExceptionDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "operationId": "signUp",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/signin": {
+      "post": {
+        "operationId": "signIn",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "operationId": "refreshToken",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/signin/tenant": {
+      "post": {
+        "operationId": "signInTenant",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginTenantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "logOut",
+        "parameters": [],
+        "responses": {
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/jwks.json": {
+      "get": {
+        "operationId": "getJWKS",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JSONWebKeySetDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
         ]
       }
     },
@@ -1212,7 +1724,7 @@
         ],
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1426,6 +1938,477 @@
         },
         "tags": [
           "Tenant Public"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant-access/{tenantId}": {
+      "post": {
+        "operationId": "create",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenantAccessDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantAccessEntityDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Access"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantAccessPaginateResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Access"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant-access/{tenantId}/{id}": {
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Access"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant-hosts/{tenantId}": {
+      "post": {
+        "operationId": "create",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenantHostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantHostResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantHostPaginateResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant-hosts/{tenantId}/main-host": {
+      "get": {
+        "operationId": "getMainHostByTenantId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantHostEntityDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant-hosts/{tenantId}/{id}": {
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTenantHostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Hosts"
         ],
         "security": [
           {
@@ -2164,887 +3147,12 @@
           }
         ]
       }
-    },
-    "/tenant-access/{tenantId}": {
-      "post": {
-        "operationId": "create",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateTenantAccessDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TenantAccessEntityDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Tenant Access"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "get": {
-        "operationId": "findAll",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TenantAccessPaginateResponseDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Tenant Access"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/tenant-access/{tenantId}/{id}": {
-      "get": {
-        "operationId": "findOne",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Tenant Access"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/tenant-hosts/{tenantId}": {
-      "post": {
-        "operationId": "create",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateTenantHostDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TenantHostResponseDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Tenant Hosts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "get": {
-        "operationId": "findAll",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TenantHostPaginateResponseDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Tenant Hosts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/tenant-hosts/{tenantId}/main-host": {
-      "get": {
-        "operationId": "getMainHostByTenantId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TenantHostEntityDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Tenant Hosts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/tenant-hosts/{tenantId}/{id}": {
-      "get": {
-        "operationId": "findOne",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Tenant Hosts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "patch": {
-        "operationId": "update",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTenantHostDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Tenant Hosts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/auth/verify-sign-up": {
-      "get": {
-        "operationId": "verifySignUp",
-        "parameters": [
-          {
-            "name": "email",
-            "required": true,
-            "in": "query",
-            "example": "user@example.com",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "token",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response for verify sign up",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VerifySignupResponseDto"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Authentication"
-        ]
-      }
-    },
-    "/auth/request-confirmation-email": {
-      "post": {
-        "operationId": "requestConfirmationEmail",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestConfirmationEmailDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "429": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Authentication"
-        ]
-      }
-    },
-    "/auth/request-password-reset": {
-      "post": {
-        "operationId": "requestPasswordReset",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestPasswordResetDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "429": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Authentication"
-        ]
-      }
-    },
-    "/auth/reset-password": {
-      "post": {
-        "operationId": "resetPassword",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResetPasswordDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SignInResponseDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestExceptionDto"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Authentication"
-        ]
-      }
-    },
-    "/auth/signup": {
-      "post": {
-        "operationId": "signUp",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SignupUserDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SignInResponseDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Authentication"
-        ]
-      }
-    },
-    "/auth/signin": {
-      "post": {
-        "operationId": "signIn",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginUserDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SignInResponseDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Authentication"
-        ]
-      }
-    },
-    "/auth/refresh-token": {
-      "post": {
-        "operationId": "refreshToken",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RefreshTokenDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RefreshTokenResponseDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ForbiddenExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Authentication"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/auth/signin/tenant": {
-      "post": {
-        "operationId": "signInTenant",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginTenantDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SignInResponseDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Authentication"
-        ]
-      }
-    },
-    "/auth/logout": {
-      "post": {
-        "operationId": "logOut",
-        "parameters": [],
-        "responses": {
-          "403": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ForbiddenExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Authentication"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/auth/jwks.json": {
-      "get": {
-        "operationId": "getJWKS",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/JSONWebKeySetDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Authentication"
-        ]
-      }
     }
   },
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.6.5",
+    "version": "0.6.6",
     "contact": {}
   },
   "tags": [],
@@ -3889,991 +3997,6 @@
           "args"
         ]
       },
-      "CountryCodeEnum": {
-        "type": "string",
-        "enum": [
-          "BGD",
-          "BEL",
-          "BFA",
-          "BGR",
-          "BIH",
-          "BRB",
-          "WLF",
-          "BLM",
-          "BMU",
-          "BRN",
-          "BOL",
-          "BHR",
-          "BDI",
-          "BEN",
-          "BTN",
-          "JAM",
-          "BVT",
-          "BWA",
-          "WSM",
-          "BES",
-          "BRA",
-          "BHS",
-          "JEY",
-          "BLR",
-          "BLZ",
-          "RUS",
-          "RWA",
-          "SRB",
-          "TLS",
-          "REU",
-          "TKM",
-          "TJK",
-          "ROU",
-          "TKL",
-          "GNB",
-          "GUM",
-          "GTM",
-          "SGS",
-          "GRC",
-          "GNQ",
-          "GLP",
-          "JPN",
-          "GUY",
-          "GGY",
-          "GUF",
-          "GEO",
-          "GRD",
-          "GBR",
-          "GAB",
-          "SLV",
-          "GIN",
-          "GMB",
-          "GRL",
-          "GIB",
-          "GHA",
-          "OMN",
-          "TUN",
-          "JOR",
-          "HRV",
-          "HTI",
-          "HUN",
-          "HKG",
-          "HND",
-          "HMD",
-          "VEN",
-          "PRI",
-          "PSE",
-          "PLW",
-          "PRT",
-          "SJM",
-          "PRY",
-          "IRQ",
-          "PAN",
-          "PYF",
-          "PNG",
-          "PER",
-          "PAK",
-          "PHL",
-          "PCN",
-          "POL",
-          "SPM",
-          "ZMB",
-          "ESH",
-          "EST",
-          "EGY",
-          "ZAF",
-          "ECU",
-          "ITA",
-          "VNM",
-          "SLB",
-          "ETH",
-          "SOM",
-          "ZWE",
-          "SAU",
-          "ESP",
-          "ERI",
-          "MNE",
-          "MDA",
-          "MDG",
-          "MAF",
-          "MAR",
-          "MCO",
-          "UZB",
-          "MMR",
-          "MLI",
-          "MAC",
-          "MNG",
-          "MHL",
-          "MKD",
-          "MUS",
-          "MLT",
-          "MWI",
-          "MDV",
-          "MTQ",
-          "MNP",
-          "MSR",
-          "MRT",
-          "IMN",
-          "UGA",
-          "TZA",
-          "MYS",
-          "MEX",
-          "ISR",
-          "FRA",
-          "IOT",
-          "SHN",
-          "FIN",
-          "FJI",
-          "FLK",
-          "FSM",
-          "FRO",
-          "NIC",
-          "NLD",
-          "NOR",
-          "NAM",
-          "VUT",
-          "NCL",
-          "NER",
-          "NFK",
-          "NGA",
-          "NZL",
-          "NPL",
-          "NRU",
-          "NIU",
-          "COK",
-          "XKX",
-          "CIV",
-          "CHE",
-          "COL",
-          "CHN",
-          "CMR",
-          "CHL",
-          "CCK",
-          "CAN",
-          "COG",
-          "CAF",
-          "COD",
-          "CZE",
-          "CYP",
-          "CXR",
-          "CRI",
-          "CUW",
-          "CPV",
-          "CUB",
-          "SWZ",
-          "SYR",
-          "SXM",
-          "KGZ",
-          "KEN",
-          "SSD",
-          "SUR",
-          "KIR",
-          "KHM",
-          "KNA",
-          "COM",
-          "STP",
-          "SVK",
-          "KOR",
-          "SVN",
-          "PRK",
-          "KWT",
-          "SEN",
-          "SMR",
-          "SLE",
-          "SYC",
-          "KAZ",
-          "CYM",
-          "SGP",
-          "SWE",
-          "SDN",
-          "DOM",
-          "DMA",
-          "DJI",
-          "DNK",
-          "VGB",
-          "DEU",
-          "YEM",
-          "DZA",
-          "USA",
-          "URY",
-          "MYT",
-          "UMI",
-          "LBN",
-          "LCA",
-          "LAO",
-          "TUV",
-          "TWN",
-          "TTO",
-          "TUR",
-          "LKA",
-          "LIE",
-          "LVA",
-          "TON",
-          "LTU",
-          "LUX",
-          "LBR",
-          "LSO",
-          "THA",
-          "ATF",
-          "TGO",
-          "TCD",
-          "TCA",
-          "LBY",
-          "VAT",
-          "VCT",
-          "ARE",
-          "AND",
-          "ATG",
-          "AFG",
-          "AIA",
-          "VIR",
-          "ISL",
-          "IRN",
-          "ARM",
-          "ALB",
-          "AGO",
-          "ATA",
-          "ASM",
-          "ARG",
-          "AUS",
-          "AUT",
-          "ABW",
-          "IND",
-          "ALA",
-          "AZE",
-          "IRL",
-          "IDN",
-          "UKR",
-          "QAT",
-          "MOZ"
-        ]
-      },
-      "CreateTenantDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "document": {
-            "type": "string"
-          },
-          "countryCode": {
-            "example": "BRA",
-            "$ref": "#/components/schemas/CountryCodeEnum"
-          },
-          "hostname": {
-            "type": "string",
-            "example": "example.com"
-          }
-        },
-        "required": [
-          "name",
-          "document",
-          "countryCode",
-          "hostname"
-        ]
-      },
-      "TenantRoleEnum": {
-        "type": "string",
-        "enum": [
-          "application",
-          "administrator",
-          "integration"
-        ]
-      },
-      "TenantInfoDto": {
-        "type": "object",
-        "properties": {
-          "emailLogoUrl": {
-            "type": "string"
-          },
-          "headerLogoUrl": {
-            "type": "string"
-          },
-          "headerBackgroundColor": {
-            "type": "string"
-          },
-          "bodyCardBackgroundColor": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "headerBackgroundColor",
-          "bodyCardBackgroundColor"
-        ]
-      },
-      "TenantEntityDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "document": {
-            "type": "string"
-          },
-          "countryCode": {
-            "default": "BRA",
-            "example": "BRA",
-            "$ref": "#/components/schemas/CountryCodeEnum"
-          },
-          "roles": {
-            "default": "application",
-            "example": [
-              "application"
-            ],
-            "$ref": "#/components/schemas/TenantRoleEnum"
-          },
-          "wallets": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "client": {
-            "type": "object"
-          },
-          "clientId": {
-            "type": "object"
-          },
-          "info": {
-            "$ref": "#/components/schemas/TenantInfoDto"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "document",
-          "countryCode",
-          "roles",
-          "wallets",
-          "info"
-        ]
-      },
-      "TenantPaginateResponseDto": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMetaDto"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PaginationLinksDto"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TenantEntityDto"
-            }
-          }
-        },
-        "required": [
-          "meta",
-          "items"
-        ]
-      },
-      "TenantClientResponseDto": {
-        "type": "object",
-        "properties": {
-          "apiKey": {
-            "type": "string",
-            "example": "193d34cd9f6ca1f2661357e346822a3643bd5c3d0590a670ee896af6ca9a8141"
-          },
-          "clientId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "signatureKey": {
-            "type": "string",
-            "example": "ef9b4f3cc540501fa1d7c4f0fc1216851500ed52aa85f2adb34d978f70688f37"
-          }
-        },
-        "required": [
-          "apiKey",
-          "clientId",
-          "signatureKey"
-        ]
-      },
-      "UpdateTenantProfileDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          }
-        }
-      },
-      "UpdateTenantDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "document": {
-            "type": "string"
-          },
-          "countryCode": {
-            "example": "BRA",
-            "$ref": "#/components/schemas/CountryCodeEnum"
-          }
-        }
-      },
-      "FindByHostnameDto": {
-        "type": "object",
-        "properties": {
-          "hostname": {
-            "type": "string",
-            "example": "example.com"
-          }
-        },
-        "required": [
-          "hostname"
-        ]
-      },
-      "CheckWhitelistUserResponseDto": {
-        "type": "object",
-        "properties": {
-          "whitelistId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "hasAccess": {
-            "type": "boolean",
-            "example": false
-          }
-        },
-        "required": [
-          "whitelistId",
-          "userId",
-          "hasAccess"
-        ]
-      },
-      "CheckUserInMultipleWhitelistsResponseDto": {
-        "type": "object",
-        "properties": {
-          "hasAccess": {
-            "type": "boolean",
-            "example": false
-          },
-          "details": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CheckWhitelistUserResponseDto"
-            }
-          }
-        },
-        "required": [
-          "hasAccess",
-          "details"
-        ]
-      },
-      "WalletGroupStatus": {
-        "type": "string",
-        "enum": [
-          "draft",
-          "publishing",
-          "published"
-        ]
-      },
-      "WalletGroupResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "contractAddress": {
-            "type": "string"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "actionId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "chainId": {
-            "default": 137,
-            "example": 137,
-            "$ref": "#/components/schemas/ChainId"
-          },
-          "status": {
-            "$ref": "#/components/schemas/WalletGroupStatus"
-          },
-          "whitelistId": {
-            "type": "string"
-          },
-          "lastSyncBlock": {
-            "type": "number"
-          },
-          "sync": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "id",
-          "tenantId",
-          "contractAddress",
-          "chainId",
-          "status",
-          "sync"
-        ]
-      },
-      "WhitelistResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "tenantId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string",
-            "example": "W3Block Whitelist"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "walletGroups": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WalletGroupResponseDto"
-            }
-          }
-        },
-        "required": [
-          "id",
-          "tenantId",
-          "name"
-        ]
-      },
-      "WhitelistPaginateResponseDto": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMetaDto"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PaginationLinksDto"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WhitelistResponseDto"
-            }
-          }
-        },
-        "required": [
-          "meta",
-          "items"
-        ]
-      },
-      "CreateOrUpdateWhitelistDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "example": "W3Block Whitelist"
-          }
-        },
-        "required": [
-          "name"
-        ]
-      },
-      "WhitelistOnChainDto": {
-        "type": "object",
-        "properties": {
-          "chainId": {
-            "default": 137,
-            "example": 137,
-            "$ref": "#/components/schemas/ChainId"
-          }
-        },
-        "required": [
-          "chainId"
-        ]
-      },
-      "WhitelistEntriesSortBy": {
-        "type": "string",
-        "enum": [
-          "createdAt",
-          "updatedAt"
-        ]
-      },
-      "WhitelistEntryType": {
-        "type": "string",
-        "enum": [
-          "user_id",
-          "email",
-          "wallet_address",
-          "collection_holder"
-        ]
-      },
-      "WhitelistEntryResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "whitelistId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "type": {
-            "example": "collection_holder",
-            "$ref": "#/components/schemas/WhitelistEntryType"
-          },
-          "value": {
-            "type": "string",
-            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
-          },
-          "additionalData": {
-            "type": "object"
-          },
-          "wallets": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WalletResponseDto"
-            }
-          }
-        },
-        "required": [
-          "id",
-          "whitelistId",
-          "type",
-          "value"
-        ]
-      },
-      "WhitelistEntryPaginateResponseDto": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMetaDto"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PaginationLinksDto"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WhitelistEntryResponseDto"
-            }
-          }
-        },
-        "required": [
-          "meta",
-          "items"
-        ]
-      },
-      "CreateWhitelistEntryDto": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "example": "collection_holder",
-            "default": "collection_holder",
-            "$ref": "#/components/schemas/WhitelistEntryType"
-          },
-          "value": {
-            "type": "string",
-            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
-          },
-          "additionalData": {
-            "type": "object",
-            "example": {
-              "chainId": 80001
-            }
-          }
-        },
-        "required": [
-          "type",
-          "value"
-        ]
-      },
-      "CreateTenantAccessDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
-      },
-      "TenantEntity": {
-        "type": "object",
-        "properties": {}
-      },
-      "TenantAccessEntityDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "key": {
-            "type": "string"
-          },
-          "secret": {
-            "type": "string"
-          },
-          "tenant": {
-            "$ref": "#/components/schemas/TenantEntity"
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "active": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "id",
-          "key",
-          "secret",
-          "tenant",
-          "tenantId",
-          "active"
-        ]
-      },
-      "TenantAccessPaginateResponseDto": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMetaDto"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PaginationLinksDto"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TenantAccessEntityDto"
-            }
-          }
-        },
-        "required": [
-          "meta",
-          "items"
-        ]
-      },
-      "TenantHostPathsDto": {
-        "type": "object",
-        "properties": {
-          "fillProfileForm": {
-            "type": "string",
-            "example": "/auth/complete-profile/",
-            "description": "The path to the user complete profile page. Only fill in if different from default"
-          },
-          "userSignIn": {
-            "type": "string",
-            "example": "/auth/signIn/",
-            "description": "The path to user sign in page. Only fill in if different from default"
-          },
-          "nftCertificate": {
-            "type": "string",
-            "example": "/token/{{contractAddress}}/{{chainId}}/{{tokenId}}",
-            "description": "The path to see certificate of NFT. Only fill in if different from default"
-          }
-        }
-      },
-      "CreateTenantHostDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "isMain": {
-            "type": "boolean"
-          },
-          "hostname": {
-            "type": "string",
-            "example": "example.com"
-          },
-          "paths": {
-            "$ref": "#/components/schemas/TenantHostPathsDto"
-          }
-        },
-        "required": [
-          "hostname"
-        ]
-      },
-      "TenantHostPathsResponse": {
-        "type": "object",
-        "properties": {
-          "fillProfileForm": {
-            "type": "string",
-            "example": "/auth/complete-profile/",
-            "description": "The path for the user to finish filling out their profile form. Only exists when it is different from default"
-          },
-          "userSignIn": {
-            "type": "string",
-            "example": "/auth/signIn/",
-            "description": "The path to user sign in page. Only exists when it is different from default"
-          },
-          "nftCertificate": {
-            "type": "string",
-            "example": "/token/{{contractAddress}}/{{chainId}}/{{tokenId}}",
-            "description": "The path to  see certificate of NF. Only exists when it is different from default"
-          }
-        }
-      },
-      "TenantHostResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "hostname": {
-            "type": "string",
-            "example": "example.com"
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "isMain": {
-            "type": "boolean"
-          },
-          "paths": {
-            "$ref": "#/components/schemas/TenantHostPathsResponse"
-          },
-          "routes": {
-            "$ref": "#/components/schemas/TenantHostPathsResponse"
-          }
-        },
-        "required": [
-          "id",
-          "hostname",
-          "tenantId",
-          "isMain",
-          "paths",
-          "routes"
-        ]
-      },
-      "TenantHostEntityDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "hostname": {
-            "type": "string",
-            "example": "example.com"
-          },
-          "tenant": {
-            "$ref": "#/components/schemas/TenantEntity"
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "isMain": {
-            "type": "boolean"
-          },
-          "paths": {
-            "$ref": "#/components/schemas/TenantHostPathsResponse"
-          },
-          "routes": {
-            "$ref": "#/components/schemas/TenantHostPathsResponse"
-          }
-        },
-        "required": [
-          "id",
-          "hostname",
-          "tenant",
-          "tenantId",
-          "isMain",
-          "paths",
-          "routes"
-        ]
-      },
-      "TenantHostPaginateResponseDto": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMetaDto"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PaginationLinksDto"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TenantHostEntityDto"
-            }
-          }
-        },
-        "required": [
-          "meta",
-          "items"
-        ]
-      },
-      "UpdateTenantHostDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "isMain": {
-            "type": "boolean"
-          },
-          "hostname": {
-            "type": "string",
-            "example": "example.com"
-          },
-          "paths": {
-            "$ref": "#/components/schemas/TenantHostPathsDto"
-          }
-        },
-        "required": [
-          "hostname"
-        ]
-      },
       "JwtPayloadDto": {
         "type": "object",
         "properties": {
@@ -4982,6 +4105,14 @@
           "roles",
           "verified",
           "type"
+        ]
+      },
+      "TenantRoleEnum": {
+        "type": "string",
+        "enum": [
+          "application",
+          "administrator",
+          "integration"
         ]
       },
       "TenantJwtPayloadDto": {
@@ -5438,6 +4569,983 @@
         },
         "required": [
           "keys"
+        ]
+      },
+      "CountryCodeEnum": {
+        "type": "string",
+        "enum": [
+          "BGD",
+          "BEL",
+          "BFA",
+          "BGR",
+          "BIH",
+          "BRB",
+          "WLF",
+          "BLM",
+          "BMU",
+          "BRN",
+          "BOL",
+          "BHR",
+          "BDI",
+          "BEN",
+          "BTN",
+          "JAM",
+          "BVT",
+          "BWA",
+          "WSM",
+          "BES",
+          "BRA",
+          "BHS",
+          "JEY",
+          "BLR",
+          "BLZ",
+          "RUS",
+          "RWA",
+          "SRB",
+          "TLS",
+          "REU",
+          "TKM",
+          "TJK",
+          "ROU",
+          "TKL",
+          "GNB",
+          "GUM",
+          "GTM",
+          "SGS",
+          "GRC",
+          "GNQ",
+          "GLP",
+          "JPN",
+          "GUY",
+          "GGY",
+          "GUF",
+          "GEO",
+          "GRD",
+          "GBR",
+          "GAB",
+          "SLV",
+          "GIN",
+          "GMB",
+          "GRL",
+          "GIB",
+          "GHA",
+          "OMN",
+          "TUN",
+          "JOR",
+          "HRV",
+          "HTI",
+          "HUN",
+          "HKG",
+          "HND",
+          "HMD",
+          "VEN",
+          "PRI",
+          "PSE",
+          "PLW",
+          "PRT",
+          "SJM",
+          "PRY",
+          "IRQ",
+          "PAN",
+          "PYF",
+          "PNG",
+          "PER",
+          "PAK",
+          "PHL",
+          "PCN",
+          "POL",
+          "SPM",
+          "ZMB",
+          "ESH",
+          "EST",
+          "EGY",
+          "ZAF",
+          "ECU",
+          "ITA",
+          "VNM",
+          "SLB",
+          "ETH",
+          "SOM",
+          "ZWE",
+          "SAU",
+          "ESP",
+          "ERI",
+          "MNE",
+          "MDA",
+          "MDG",
+          "MAF",
+          "MAR",
+          "MCO",
+          "UZB",
+          "MMR",
+          "MLI",
+          "MAC",
+          "MNG",
+          "MHL",
+          "MKD",
+          "MUS",
+          "MLT",
+          "MWI",
+          "MDV",
+          "MTQ",
+          "MNP",
+          "MSR",
+          "MRT",
+          "IMN",
+          "UGA",
+          "TZA",
+          "MYS",
+          "MEX",
+          "ISR",
+          "FRA",
+          "IOT",
+          "SHN",
+          "FIN",
+          "FJI",
+          "FLK",
+          "FSM",
+          "FRO",
+          "NIC",
+          "NLD",
+          "NOR",
+          "NAM",
+          "VUT",
+          "NCL",
+          "NER",
+          "NFK",
+          "NGA",
+          "NZL",
+          "NPL",
+          "NRU",
+          "NIU",
+          "COK",
+          "XKX",
+          "CIV",
+          "CHE",
+          "COL",
+          "CHN",
+          "CMR",
+          "CHL",
+          "CCK",
+          "CAN",
+          "COG",
+          "CAF",
+          "COD",
+          "CZE",
+          "CYP",
+          "CXR",
+          "CRI",
+          "CUW",
+          "CPV",
+          "CUB",
+          "SWZ",
+          "SYR",
+          "SXM",
+          "KGZ",
+          "KEN",
+          "SSD",
+          "SUR",
+          "KIR",
+          "KHM",
+          "KNA",
+          "COM",
+          "STP",
+          "SVK",
+          "KOR",
+          "SVN",
+          "PRK",
+          "KWT",
+          "SEN",
+          "SMR",
+          "SLE",
+          "SYC",
+          "KAZ",
+          "CYM",
+          "SGP",
+          "SWE",
+          "SDN",
+          "DOM",
+          "DMA",
+          "DJI",
+          "DNK",
+          "VGB",
+          "DEU",
+          "YEM",
+          "DZA",
+          "USA",
+          "URY",
+          "MYT",
+          "UMI",
+          "LBN",
+          "LCA",
+          "LAO",
+          "TUV",
+          "TWN",
+          "TTO",
+          "TUR",
+          "LKA",
+          "LIE",
+          "LVA",
+          "TON",
+          "LTU",
+          "LUX",
+          "LBR",
+          "LSO",
+          "THA",
+          "ATF",
+          "TGO",
+          "TCD",
+          "TCA",
+          "LBY",
+          "VAT",
+          "VCT",
+          "ARE",
+          "AND",
+          "ATG",
+          "AFG",
+          "AIA",
+          "VIR",
+          "ISL",
+          "IRN",
+          "ARM",
+          "ALB",
+          "AGO",
+          "ATA",
+          "ASM",
+          "ARG",
+          "AUS",
+          "AUT",
+          "ABW",
+          "IND",
+          "ALA",
+          "AZE",
+          "IRL",
+          "IDN",
+          "UKR",
+          "QAT",
+          "MOZ"
+        ]
+      },
+      "CreateTenantDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "document": {
+            "type": "string"
+          },
+          "countryCode": {
+            "example": "BRA",
+            "$ref": "#/components/schemas/CountryCodeEnum"
+          },
+          "hostname": {
+            "type": "string",
+            "example": "example.com"
+          }
+        },
+        "required": [
+          "name",
+          "document",
+          "countryCode",
+          "hostname"
+        ]
+      },
+      "TenantInfoDto": {
+        "type": "object",
+        "properties": {
+          "emailLogoUrl": {
+            "type": "string"
+          },
+          "headerLogoUrl": {
+            "type": "string"
+          },
+          "headerBackgroundColor": {
+            "type": "string"
+          },
+          "bodyCardBackgroundColor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "headerBackgroundColor",
+          "bodyCardBackgroundColor"
+        ]
+      },
+      "TenantEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "document": {
+            "type": "string"
+          },
+          "countryCode": {
+            "default": "BRA",
+            "example": "BRA",
+            "$ref": "#/components/schemas/CountryCodeEnum"
+          },
+          "roles": {
+            "default": "application",
+            "example": [
+              "application"
+            ],
+            "$ref": "#/components/schemas/TenantRoleEnum"
+          },
+          "wallets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "client": {
+            "type": "object"
+          },
+          "clientId": {
+            "type": "object"
+          },
+          "info": {
+            "$ref": "#/components/schemas/TenantInfoDto"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "document",
+          "countryCode",
+          "roles",
+          "wallets",
+          "info"
+        ]
+      },
+      "TenantPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantEntityDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
+      "TenantClientResponseDto": {
+        "type": "object",
+        "properties": {
+          "apiKey": {
+            "type": "string",
+            "example": "193d34cd9f6ca1f2661357e346822a3643bd5c3d0590a670ee896af6ca9a8141"
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "signatureKey": {
+            "type": "string",
+            "example": "ef9b4f3cc540501fa1d7c4f0fc1216851500ed52aa85f2adb34d978f70688f37"
+          }
+        },
+        "required": [
+          "apiKey",
+          "clientId",
+          "signatureKey"
+        ]
+      },
+      "UpdateTenantProfileDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateTenantDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "document": {
+            "type": "string"
+          },
+          "countryCode": {
+            "example": "BRA",
+            "$ref": "#/components/schemas/CountryCodeEnum"
+          }
+        }
+      },
+      "FindByHostnameDto": {
+        "type": "object",
+        "properties": {
+          "hostname": {
+            "type": "string",
+            "example": "example.com"
+          }
+        },
+        "required": [
+          "hostname"
+        ]
+      },
+      "CreateTenantAccessDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "TenantEntity": {
+        "type": "object",
+        "properties": {}
+      },
+      "TenantAccessEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "key": {
+            "type": "string"
+          },
+          "secret": {
+            "type": "string"
+          },
+          "tenant": {
+            "$ref": "#/components/schemas/TenantEntity"
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "key",
+          "secret",
+          "tenant",
+          "tenantId",
+          "active"
+        ]
+      },
+      "TenantAccessPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantAccessEntityDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
+      "TenantHostPathsDto": {
+        "type": "object",
+        "properties": {
+          "fillProfileForm": {
+            "type": "string",
+            "example": "/auth/complete-profile/",
+            "description": "The path to the user complete profile page. Only fill in if different from default"
+          },
+          "userSignIn": {
+            "type": "string",
+            "example": "/auth/signIn/",
+            "description": "The path to user sign in page. Only fill in if different from default"
+          },
+          "nftCertificate": {
+            "type": "string",
+            "example": "/token/{{contractAddress}}/{{chainId}}/{{tokenId}}",
+            "description": "The path to see certificate of NFT. Only fill in if different from default"
+          }
+        }
+      },
+      "CreateTenantHostDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "isMain": {
+            "type": "boolean"
+          },
+          "hostname": {
+            "type": "string",
+            "example": "example.com"
+          },
+          "paths": {
+            "$ref": "#/components/schemas/TenantHostPathsDto"
+          }
+        },
+        "required": [
+          "hostname"
+        ]
+      },
+      "TenantHostPathsResponse": {
+        "type": "object",
+        "properties": {
+          "fillProfileForm": {
+            "type": "string",
+            "example": "/auth/complete-profile/",
+            "description": "The path for the user to finish filling out their profile form. Only exists when it is different from default"
+          },
+          "userSignIn": {
+            "type": "string",
+            "example": "/auth/signIn/",
+            "description": "The path to user sign in page. Only exists when it is different from default"
+          },
+          "nftCertificate": {
+            "type": "string",
+            "example": "/token/{{contractAddress}}/{{chainId}}/{{tokenId}}",
+            "description": "The path to  see certificate of NF. Only exists when it is different from default"
+          }
+        }
+      },
+      "TenantHostResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hostname": {
+            "type": "string",
+            "example": "example.com"
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "isMain": {
+            "type": "boolean"
+          },
+          "paths": {
+            "$ref": "#/components/schemas/TenantHostPathsResponse"
+          },
+          "routes": {
+            "$ref": "#/components/schemas/TenantHostPathsResponse"
+          }
+        },
+        "required": [
+          "id",
+          "hostname",
+          "tenantId",
+          "isMain",
+          "paths",
+          "routes"
+        ]
+      },
+      "TenantHostEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hostname": {
+            "type": "string",
+            "example": "example.com"
+          },
+          "tenant": {
+            "$ref": "#/components/schemas/TenantEntity"
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "isMain": {
+            "type": "boolean"
+          },
+          "paths": {
+            "$ref": "#/components/schemas/TenantHostPathsResponse"
+          },
+          "routes": {
+            "$ref": "#/components/schemas/TenantHostPathsResponse"
+          }
+        },
+        "required": [
+          "id",
+          "hostname",
+          "tenant",
+          "tenantId",
+          "isMain",
+          "paths",
+          "routes"
+        ]
+      },
+      "TenantHostPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantHostEntityDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
+      "UpdateTenantHostDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "isMain": {
+            "type": "boolean"
+          },
+          "hostname": {
+            "type": "string",
+            "example": "example.com"
+          },
+          "paths": {
+            "$ref": "#/components/schemas/TenantHostPathsDto"
+          }
+        },
+        "required": [
+          "hostname"
+        ]
+      },
+      "CheckWhitelistUserResponseDto": {
+        "type": "object",
+        "properties": {
+          "whitelistId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hasAccess": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "whitelistId",
+          "userId",
+          "hasAccess"
+        ]
+      },
+      "CheckUserInMultipleWhitelistsResponseDto": {
+        "type": "object",
+        "properties": {
+          "hasAccess": {
+            "type": "boolean",
+            "example": false
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckWhitelistUserResponseDto"
+            }
+          }
+        },
+        "required": [
+          "hasAccess",
+          "details"
+        ]
+      },
+      "WalletGroupStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "publishing",
+          "published"
+        ]
+      },
+      "WalletGroupResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "contractAddress": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "actionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "chainId": {
+            "default": 137,
+            "example": 137,
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WalletGroupStatus"
+          },
+          "whitelistId": {
+            "type": "string"
+          },
+          "lastSyncBlock": {
+            "type": "number"
+          },
+          "sync": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "contractAddress",
+          "chainId",
+          "status",
+          "sync"
+        ]
+      },
+      "WhitelistResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "W3Block Whitelist"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "walletGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WalletGroupResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "name"
+        ]
+      },
+      "WhitelistPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WhitelistResponseDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
+      "CreateOrUpdateWhitelistDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "W3Block Whitelist"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "WhitelistOnChainDto": {
+        "type": "object",
+        "properties": {
+          "chainId": {
+            "default": 137,
+            "example": 137,
+            "$ref": "#/components/schemas/ChainId"
+          }
+        },
+        "required": [
+          "chainId"
+        ]
+      },
+      "WhitelistEntriesSortBy": {
+        "type": "string",
+        "enum": [
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "WhitelistEntryType": {
+        "type": "string",
+        "enum": [
+          "user_id",
+          "email",
+          "wallet_address",
+          "collection_holder"
+        ]
+      },
+      "WhitelistEntryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "whitelistId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "type": {
+            "example": "collection_holder",
+            "$ref": "#/components/schemas/WhitelistEntryType"
+          },
+          "value": {
+            "type": "string",
+            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
+          },
+          "additionalData": {
+            "type": "object"
+          },
+          "wallets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WalletResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "whitelistId",
+          "type",
+          "value"
+        ]
+      },
+      "WhitelistEntryPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WhitelistEntryResponseDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
+      "CreateWhitelistEntryDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "example": "collection_holder",
+            "default": "collection_holder",
+            "$ref": "#/components/schemas/WhitelistEntryType"
+          },
+          "value": {
+            "type": "string",
+            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
+          },
+          "additionalData": {
+            "type": "object",
+            "example": {
+              "chainId": 80001
+            }
+          }
+        },
+        "required": [
+          "type",
+          "value"
         ]
       }
     }
