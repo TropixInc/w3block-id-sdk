@@ -11,11 +11,10 @@
 export interface UserPasswordDto {
   /**
    * Password should include lowercase, uppercase and digits
-   * @example P@ssw0rd
+   * @example "P@ssw0rd"
    */
   password: string;
-
-  /** @example P@ssw0rd */
+  /** @example "P@ssw0rd" */
   confirmation: string;
 }
 
@@ -45,28 +44,22 @@ export interface CreateAddressDto {
 export interface CreateUserDto {
   /**
    * Password should include lowercase, uppercase and digits
-   * @example P@ssw0rd
+   * @example "P@ssw0rd"
    */
   password: string;
-
-  /** @example P@ssw0rd */
+  /** @example "P@ssw0rd" */
   confirmation: string;
-
-  /** @example 00000000-0000-0000-0000-000000000000 */
+  /** @example "00000000-0000-0000-0000-000000000000" */
   tenantId: string;
-
-  /** @example user */
+  /** @example "user" */
   role: UserRoleEnum;
   phone?: string;
   name?: string;
-
-  /** @example user@example.com */
+  /** @example "user@example.com" */
   email: string;
-
-  /** @example pt-br */
+  /** @example "pt-br" */
   i18nLocale: I18NLocaleEnum;
   address?: CreateAddressDto;
-
   /** @example true */
   sendEmail?: object;
   callbackUrl?: string;
@@ -75,31 +68,22 @@ export interface CreateUserDto {
 export interface AddressResponseDto {
   /** @format uuid */
   id: string;
-
-  /** @example Street */
+  /** @example "Street" */
   street?: string;
-
-  /** @example 123 */
+  /** @example "123" */
   number?: string;
-
   /** @example null */
   district?: string;
-
   /** @example null */
   complement?: string;
-
-  /** @example Sao Paulo */
+  /** @example "Sao Paulo" */
   city?: string;
-
-  /** @example Sao Paulo */
+  /** @example "Sao Paulo" */
   state?: string;
-
-  /** @example Brazil */
+  /** @example "Brazil" */
   country?: string;
-
   /** @example null */
   postalCode?: string;
-
   /** @example null */
   coordinates?: string;
 }
@@ -118,78 +102,61 @@ export enum WalletStatus {
 export interface WalletResponseDto {
   /** @format uuid */
   id: string;
-
   /** @format uuid */
   tenantId: string;
-
-  /** @example 0x0000000000000000000000000000000000000000 */
+  /** @example "0x0000000000000000000000000000000000000000" */
   address: string;
-
   /** @format uuid */
   ownerId: string;
-
-  /** @example vault */
+  /** @example "vault" */
   type: WalletTypes;
-
-  /** @example ready */
+  /** @example "ready" */
   status: WalletStatus;
 }
 
 export interface UserPublicResponseDto {
   /** @format uuid */
   id: string;
-
-  /** @example email@example.com */
+  /** @example "email@example.com" */
   email: string;
-
-  /** @example +55(11)99999-9999 */
+  /** @example "+55(11)99999-9999" */
   phone?: string;
-
   /** @example true */
   verified: boolean;
-
-  /** @example ["user"] */
+  /**
+   * @default ["user"]
+   * @example ["user"]
+   */
   roles: ('superAdmin' | 'admin' | 'user')[];
-
-  /** @example pt-br */
+  /** @example "pt-br" */
   i18nLocale: I18NLocaleEnum;
-
-  /** @example John Doe */
+  /** @example "John Doe" */
   name?: string;
-
   /** @format uuid */
   tenantId?: string;
-
   /** @format uuid */
   mainWalletId?: string;
-
   /** @format uuid */
   addressId?: string;
   address?: AddressResponseDto;
   mainWallet?: WalletResponseDto;
   wallets?: WalletResponseDto[];
-
   /** @format date-time */
   createdAt?: string;
-
   /** @format date-time */
   updatedAt?: string;
 }
 
 export interface HttpExceptionDto {
-  /** @example 2022-07-25T17:24:07.042Z */
+  /** @example "2022-07-25T17:24:07.042Z" */
   timestamp: string;
-
-  /** @example /api/foo/bar */
+  /** @example "/api/foo/bar" */
   path: string;
   error: string;
-
   /** @example 500 */
   statusCode: number;
-
-  /** @example Something went wrong */
+  /** @example "Something went wrong" */
   message: object;
-
   /** @example null */
   data?: object;
 }
@@ -200,34 +167,28 @@ export enum VerificationType {
 }
 
 export interface InviteUserDto {
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   tenantId: string;
   name?: string;
-
-  /** @example email@example.com */
+  /** @example "email@example.com" */
   email: string;
-
-  /** @example pt-br */
+  /** @example "pt-br" */
   i18nLocale: I18NLocaleEnum;
-
   /** @example false */
   generateRandomPassword?: boolean;
-
   /**
    * Password should include lowercase, uppercase and digits
-   * @example P@ssw0rd
+   * @example "P@ssw0rd"
    */
   password?: string;
-
   /** @example true */
   sendEmail?: boolean;
   phone?: string;
-
-  /** @example user */
+  /** @example "user" */
   role?: UserRoleEnum;
-
   /** @example false */
   royaltyEligible?: boolean;
+  /** @default "invisible" */
   verificationType?: VerificationType;
 }
 
@@ -239,31 +200,24 @@ export enum OrderByEnum {
 export interface PaginationMetaDto {
   /** @example 1 */
   itemCount: number;
-
   /** @example 1 */
   totalItems?: number;
-
   /** @example 1 */
   itemsPerPage: number;
-
   /** @example 1 */
   totalPages?: number;
-
   /** @example 1 */
   currentPage: number;
 }
 
 export interface PaginationLinksDto {
-  /** @example http://example.com?page=1 */
+  /** @example "http://example.com?page=1" */
   first?: string;
-
-  /** @example http://example.com?page=1 */
+  /** @example "http://example.com?page=1" */
   prev?: string;
-
-  /** @example http://example.com?page=2 */
+  /** @example "http://example.com?page=2" */
   next?: string;
-
-  /** @example http://example.com?page=3 */
+  /** @example "http://example.com?page=3" */
   last?: string;
 }
 
@@ -287,8 +241,7 @@ export interface UpdateAddressDto {
 
 export interface UpdateProfileUserDto {
   name?: string;
-
-  /** @example pt-br */
+  /** @example "pt-br" */
   i18nLocale?: I18NLocaleEnum;
   address?: UpdateAddressDto;
 }
@@ -296,11 +249,10 @@ export interface UpdateProfileUserDto {
 export interface ChangePasswordDto {
   /**
    * Password should include lowercase, uppercase and digits
-   * @example P@ssw0rd
+   * @example "P@ssw0rd"
    */
   password: string;
-
-  /** @example P@ssw0rd */
+  /** @example "P@ssw0rd" */
   confirmation: string;
   oldPassword: string;
 }
@@ -310,42 +262,36 @@ export interface MainWalletDto {
 }
 
 export interface UpdateTokenDto {
+  /** @default "invisible" */
   verificationType?: 'numeric' | 'invisible';
-
-  /** @example 15m */
+  /** @example "15m" */
   verificationExpire?: string;
 }
 
 export interface UserTokenResponseDto {
-  /** @example email@example.com */
+  /** @example "email@example.com" */
   email: string;
-
-  /** @example b8ee934f8d9c6704b982c14b95ba3266fef9bba7798ed4885a05c70dbb4545435517cdd25f851e7522ad503e04ccb691a18f507b792866c3282d13abc2a09cb2;1654178219308 */
+  /** @example "b8ee934f8d9c6704b982c14b95ba3266fef9bba7798ed4885a05c70dbb4545435517cdd25f851e7522ad503e04ccb691a18f507b792866c3282d13abc2a09cb2;1654178219308" */
   token: string;
-
-  /** @example b8ee934f8d9c6704b982c14b95ba3266fef9bba7798ed4885a05c70dbb4545435517cdd25f851e7522ad503e04ccb691a18f507b792866c3282d13abc2a09cb2 */
+  /** @example "b8ee934f8d9c6704b982c14b95ba3266fef9bba7798ed4885a05c70dbb4545435517cdd25f851e7522ad503e04ccb691a18f507b792866c3282d13abc2a09cb2" */
   code: string;
-
-  /** @example 1654178219308 */
+  /** @example "1654178219308" */
   expire: string;
 }
 
 export interface UpdateUserDto {
   /**
    * Password should include lowercase, uppercase and digits
-   * @example P@ssw0rd
+   * @example "P@ssw0rd"
    */
   password?: string;
-
-  /** @example user */
+  /** @example "user" */
   role?: UserRoleEnum;
   phone?: string;
   name?: string;
-
-  /** @example user@example.com */
+  /** @example "user@example.com" */
   email?: string;
-
-  /** @example pt-br */
+  /** @example "pt-br" */
   i18nLocale?: I18NLocaleEnum;
   address?: UpdateAddressDto;
 }
@@ -353,6 +299,7 @@ export interface UpdateUserDto {
 export interface AccountCompleteRetryDto {
   email: string;
   tenantId: string;
+  /** @default "invisible" */
   verificationType?: VerificationType;
 }
 
@@ -367,95 +314,102 @@ export enum ChainId {
 }
 
 export interface RequestMetamaskDto {
-  /** @example 0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9 */
+  /** @example "0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9" */
   address: string;
-
-  /** @example 137 */
+  /**
+   * @default 137
+   * @example 137
+   */
   chainId: ChainId;
 }
 
 export interface RequestMetamaskResponseDto {
-  /** @example 0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9 */
+  /** @example "0x9FeCC07273d5F5Cb22FF10c5Bb7Dc49e82e01ce9" */
   address: string;
-
-  /** @example 137 */
+  /**
+   * @default 137
+   * @example 137
+   */
   chainId: ChainId;
-
-  /** @example  */
+  /** @example "" */
   message: string;
-
   /** @example 1666581369815 */
   nonce: number;
-
   /** @format uuid */
   userId: string;
 }
 
 export interface ClaimMetamaskDto {
-  /** @example 6ef8fe3b-d901-4f01-9aeb-20fecc545521 */
+  /** @example "6ef8fe3b-d901-4f01-9aeb-20fecc545521" */
   signature: string;
 }
 
 export interface EventNotifyDto {
   /** @example 256 */
   blockNumber: number;
-
-  /** @example 0x75a3c22ef6e394a496fb7cdb16c9c5a975d6c4950f931a9df9bff38a2a9371a7 */
+  /** @example "0x75a3c22ef6e394a496fb7cdb16c9c5a975d6c4950f931a9df9bff38a2a9371a7" */
   blockHash: string;
-
-  /** @example 0x9882f164a13ad7cfaeb682d36415f6bd8d0348f7f738b85c7668665fa00956c4 */
+  /** @example "0x9882f164a13ad7cfaeb682d36415f6bd8d0348f7f738b85c7668665fa00956c4" */
   transactionHash: string;
-
-  /** @example 0x82dbB0A14F79f50c8f8e0D50FC9F1ef30Aeb6C79 */
+  /** @example "0x82dbB0A14F79f50c8f8e0D50FC9F1ef30Aeb6C79" */
   address: string;
   topics: string[];
-
-  /** @example 0x */
+  /** @example "0x" */
   data: string;
-
   /** @example 0 */
   logIndex: number;
-
-  /** @example 137 */
+  /**
+   * @default 137
+   * @example 137
+   */
   chainId: ChainId;
-
   /** @example 1653579785 */
   timestamp: number;
-
-  /** @example Transfer */
+  /** @example "Transfer" */
   name: string;
-
-  /** @example Transfer(address,address,uint256) */
+  /** @example "Transfer(address,address,uint256)" */
   signature: string;
-
-  /** @example 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef */
+  /** @example "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef" */
   topic: string;
-
   /** @example 0 */
   transactionIndex: number;
-
   /** @example {"from":"0x0000000000000000000000000000000000000000","to":"0xe5dc6eb721b535ece3be1b3220be2ce41ac284fc","tokenId":{"_hex":"0x03","_isBigNumber":true}} */
   args: object;
   transactionId?: string;
 }
 
+export interface RequestWalletConnectSessionDto {
+  /**
+   * @default 137
+   * @example 137
+   */
+  chainId: ChainId;
+  address: string;
+  uri: string;
+}
+
+export interface ResponseWalletConnectSessionDto {
+  /**
+   * @default 137
+   * @example 137
+   */
+  chainId: ChainId;
+  address: string;
+  handshakeTopic: string;
+}
+
 export interface JwtPayloadDto {
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   sub: string;
-
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   iss: string;
-
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   aud?: string[];
-
   /** @example 1516239022 */
   exp?: number;
-
   /** @example 1516239022 */
   iat?: number;
-
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   tenantId: string;
 }
 
@@ -465,37 +419,33 @@ export enum JwtType {
 }
 
 export interface UserJwtPayloadDto {
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   sub: string;
-
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   iss: string;
-
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   aud?: string[];
-
   /** @example 1516239022 */
   exp?: number;
-
   /** @example 1516239022 */
   iat?: number;
-
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   tenantId: string;
-
-  /** @example user@example.com */
+  /** @example "user@example.com" */
   email: string;
-
-  /** @example Jon Doe */
+  /** @example "Jon Doe" */
   name?: string;
-
-  /** @example user */
+  /**
+   * @default "user"
+   * @example "user"
+   */
   roles: UserRoleEnum[];
-
   /** @example true */
   verified: boolean;
-
-  /** @example user */
+  /**
+   * @default "user"
+   * @example "user"
+   */
   type: JwtType;
 }
 
@@ -506,111 +456,102 @@ export enum TenantRoleEnum {
 }
 
 export interface TenantJwtPayloadDto {
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   sub: string;
-
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   iss: string;
-
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   aud?: string[];
-
   /** @example 1516239022 */
   exp?: number;
-
   /** @example 1516239022 */
   iat?: number;
-
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   tenantId: string;
-
-  /** @example application */
+  /**
+   * @default "application"
+   * @example "application"
+   */
   roles: TenantRoleEnum[];
-
-  /** @example tenant */
+  /**
+   * @default "tenant"
+   * @example "tenant"
+   */
   type: JwtType;
 }
 
 export interface VerifySignupResponseDto {
-  /** @example true */
+  /**
+   * @default true
+   * @example true
+   */
   verified: boolean;
 }
 
 export interface TooManyRequestsExceptionDto {
-  /** @example 2022-07-25T17:24:07.042Z */
+  /** @example "2022-07-25T17:24:07.042Z" */
   timestamp: string;
-
-  /** @example /api/foo/bar */
+  /** @example "/api/foo/bar" */
   path: string;
   error: string;
-
   /** @example 429 */
   statusCode: number;
-
-  /** @example Too many requests */
+  /** @example "Too many requests" */
   message: object;
-
   /** @example null */
   data?: object;
 }
 
 export interface RequestConfirmationEmailDto {
   email: string;
-
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   tenantId?: string;
   callbackUrl?: string;
+  /** @default "invisible" */
   verificationType?: VerificationType;
 }
 
 export interface RequestPasswordResetDto {
-  /** @example email@example.com */
+  /** @example "email@example.com" */
   email: string;
-
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   tenantId?: string;
   callbackUrl?: string;
+  /** @default "invisible" */
   verificationType?: VerificationType;
 }
 
 export interface ResetPasswordDto {
   /**
    * Password should include lowercase, uppercase and digits
-   * @example P@ssw0rd
+   * @example "P@ssw0rd"
    */
   password: string;
-
-  /** @example P@ssw0rd */
+  /** @example "P@ssw0rd" */
   confirmation: string;
-
-  /** @example user@example.com */
+  /** @example "user@example.com" */
   email: string;
   token: string;
 }
 
 export interface SignInResponseDto {
-  /** @example eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJlbWFpbCI6InBpeHdheUB3M2Jsb2NrLmlvIiwibmFtZSI6IlBpeHdheSIsInJvbGUiOiJhZG1pbiIsImNvbXBhbnlJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRlbmFudElkIjoiNWJkOTZhYWYtMTg4OC00OTNlLWI4NGUtN2M1NGE0NzMxODY4IiwidmVyaWZpZWQiOnRydWUsImlhdCI6MTY1ODUwODE3OSwiZXhwIjoxNjkwMDQ0MTc5fQ.L_0Py_M_1Ija_QnFKl7uNZr9fpkcVpZSv-tnNf07YQOcIEuR-TU0S9DMkLkHtmYrHKJe_vzzf14FS7J43NYVILn3NrXb-pC5-YO8V3JnMX4yBsgM2t0xdqEW6fqILk8_oxXsDFAhNkaNeBa2ljNilDncSepps7q69PP-TP7JVkjKQg2Za_E6ZwU */
+  /** @example "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJlbWFpbCI6InBpeHdheUB3M2Jsb2NrLmlvIiwibmFtZSI6IlBpeHdheSIsInJvbGUiOiJhZG1pbiIsImNvbXBhbnlJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRlbmFudElkIjoiNWJkOTZhYWYtMTg4OC00OTNlLWI4NGUtN2M1NGE0NzMxODY4IiwidmVyaWZpZWQiOnRydWUsImlhdCI6MTY1ODUwODE3OSwiZXhwIjoxNjkwMDQ0MTc5fQ.L_0Py_M_1Ija_QnFKl7uNZr9fpkcVpZSv-tnNf07YQOcIEuR-TU0S9DMkLkHtmYrHKJe_vzzf14FS7J43NYVILn3NrXb-pC5-YO8V3JnMX4yBsgM2t0xdqEW6fqILk8_oxXsDFAhNkaNeBa2ljNilDncSepps7q69PP-TP7JVkjKQg2Za_E6ZwU" */
   token: string;
-
-  /** @example eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJ0ZW5hbnRJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRva2VuSGFzaCI6ImJiMmFjMzE4M2EzZDZlMDljYTI2ZDkzNDEzNjQyNzU4MGY3Yjc5NWVlYWU3YTFlYzUzNDU2MjU5NThjMDZhYWQiLCJpYXQiOjE2NTg1MDgxNzksImV4cCI6MTY5MDA0NDE3OX0.au6dcpbcSmF134J335G4CymEUlwK39TT-4jXQwEUm0zRokFBiHpkXZzy23fTufyo_XzW_Tr_IUfO9b_y5e0thjIfvng4dS7akdeQAykcN7nRhwNBtqCVZxFHyZE39yzz38JLMwC00EtaKowM6lPykJYC5qZC0bBj4g4Yb1GG9IU5dQodibdXj00 */
+  /** @example "eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJ0ZW5hbnRJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRva2VuSGFzaCI6ImJiMmFjMzE4M2EzZDZlMDljYTI2ZDkzNDEzNjQyNzU4MGY3Yjc5NWVlYWU3YTFlYzUzNDU2MjU5NThjMDZhYWQiLCJpYXQiOjE2NTg1MDgxNzksImV4cCI6MTY5MDA0NDE3OX0.au6dcpbcSmF134J335G4CymEUlwK39TT-4jXQwEUm0zRokFBiHpkXZzy23fTufyo_XzW_Tr_IUfO9b_y5e0thjIfvng4dS7akdeQAykcN7nRhwNBtqCVZxFHyZE39yzz38JLMwC00EtaKowM6lPykJYC5qZC0bBj4g4Yb1GG9IU5dQodibdXj00" */
   refreshToken: string;
   data: UserJwtPayloadDto | TenantJwtPayloadDto;
 }
 
 export interface BadRequestExceptionDto {
-  /** @example 2022-07-25T17:24:07.042Z */
+  /** @example "2022-07-25T17:24:07.042Z" */
   timestamp: string;
-
-  /** @example /api/foo/bar */
+  /** @example "/api/foo/bar" */
   path: string;
   error: string;
-
   /** @example 400 */
   statusCode: number;
-
-  /** @example Bad Request */
+  /** @example "Bad Request" */
   message: object;
-
   /** @example null */
   data?: object;
 }
@@ -618,83 +559,70 @@ export interface BadRequestExceptionDto {
 export interface SignupUserDto {
   /**
    * Password should include lowercase, uppercase and digits
-   * @example P@ssw0rd
+   * @example "P@ssw0rd"
    */
   password: string;
-
-  /** @example P@ssw0rd */
+  /** @example "P@ssw0rd" */
   confirmation: string;
-
-  /** @example 00000000-0000-0000-0000-000000000000 */
+  /** @example "00000000-0000-0000-0000-000000000000" */
   tenantId: string;
-
-  /** @example email@example.com */
+  /** @example "email@example.com" */
   email: string;
-
-  /** @example Jon Doe */
+  /** @example "Jon Doe" */
   name?: string;
-
-  /** @example pt-br */
+  /**
+   * @default "pt-br"
+   * @example "pt-br"
+   */
   i18nLocale?: I18NLocaleEnum;
   callbackUrl: string;
 }
 
 export interface UnauthorizedExceptionDto {
-  /** @example 2022-07-25T17:24:07.042Z */
+  /** @example "2022-07-25T17:24:07.042Z" */
   timestamp: string;
-
-  /** @example /api/foo/bar */
+  /** @example "/api/foo/bar" */
   path: string;
   error: string;
-
   /** @example 401 */
   statusCode: number;
-
-  /** @example Unauthorized */
+  /** @example "Unauthorized" */
   message: object;
-
   /** @example null */
   data?: object;
 }
 
 export interface LoginUserDto {
-  /** @example user@example.com */
+  /** @example "user@example.com" */
   email: string;
-
-  /** @example P@ssw0rd */
+  /** @example "P@ssw0rd" */
   password: string;
-
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   tenantId?: string;
 }
 
 export interface RefreshTokenDto {
-  /** @example eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiI4NGViM2Q2NC01OTk4LTRjM2UtODliMS0yZTgyZmQ2NDRjMDciLCJpc3MiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJhdWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJjb21wYW55SWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJ0b2tlbkhhc2giOiI5NGFkMzFjMjcwMWI0NzQxNjk5ZjI1YTA4NWM0NmQyNDE4ZTk2MjNhYTcyYjM3MGZhZWZkNWJhYWYzYzM3YzgzIiwiaWF0IjoxNjU3MzEwMzQwLCJleHAiOjE2NTc0ODMxNDB9.epg4Grc6LkJMMxNlFbsdEc5Rq2nupXZTsFQeD-JgKZMWg4ey_ialD-mmSBehHD_xFF4Ho_BbWG1ld9aCuQBQcft4zxDfMdxogM5fMfdhAnAccM7a4J0NyKECzYHhIDe_jnrpT4QVHs4x78NIookQiKguANuSa7dNViFphpC9K5LRcxVwS6sEqT8 */
+  /** @example "eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiI4NGViM2Q2NC01OTk4LTRjM2UtODliMS0yZTgyZmQ2NDRjMDciLCJpc3MiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJhdWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJjb21wYW55SWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJ0b2tlbkhhc2giOiI5NGFkMzFjMjcwMWI0NzQxNjk5ZjI1YTA4NWM0NmQyNDE4ZTk2MjNhYTcyYjM3MGZhZWZkNWJhYWYzYzM3YzgzIiwiaWF0IjoxNjU3MzEwMzQwLCJleHAiOjE2NTc0ODMxNDB9.epg4Grc6LkJMMxNlFbsdEc5Rq2nupXZTsFQeD-JgKZMWg4ey_ialD-mmSBehHD_xFF4Ho_BbWG1ld9aCuQBQcft4zxDfMdxogM5fMfdhAnAccM7a4J0NyKECzYHhIDe_jnrpT4QVHs4x78NIookQiKguANuSa7dNViFphpC9K5LRcxVwS6sEqT8" */
   refreshToken: string;
 }
 
 export interface RefreshTokenResponseDto {
-  /** @example eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJlbWFpbCI6InBpeHdheUB3M2Jsb2NrLmlvIiwibmFtZSI6IlBpeHdheSIsInJvbGUiOiJhZG1pbiIsImNvbXBhbnlJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRlbmFudElkIjoiNWJkOTZhYWYtMTg4OC00OTNlLWI4NGUtN2M1NGE0NzMxODY4IiwidmVyaWZpZWQiOnRydWUsImlhdCI6MTY1ODUwODE3OSwiZXhwIjoxNjkwMDQ0MTc5fQ.L_0Py_M_1Ija_QnFKl7uNZr9fpkcVpZSv-tnNf07YQOcIEuR-TU0S9DMkLkHtmYrHKJe_vzzf14FS7J43NYVILn3NrXb-pC5-YO8V3JnMX4yBsgM2t0xdqEW6fqILk8_oxXsDFAhNkaNeBa2ljNilDncSepps7q69PP-TP7JVkjKQg2Za_E6ZwU */
+  /** @example "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJlbWFpbCI6InBpeHdheUB3M2Jsb2NrLmlvIiwibmFtZSI6IlBpeHdheSIsInJvbGUiOiJhZG1pbiIsImNvbXBhbnlJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRlbmFudElkIjoiNWJkOTZhYWYtMTg4OC00OTNlLWI4NGUtN2M1NGE0NzMxODY4IiwidmVyaWZpZWQiOnRydWUsImlhdCI6MTY1ODUwODE3OSwiZXhwIjoxNjkwMDQ0MTc5fQ.L_0Py_M_1Ija_QnFKl7uNZr9fpkcVpZSv-tnNf07YQOcIEuR-TU0S9DMkLkHtmYrHKJe_vzzf14FS7J43NYVILn3NrXb-pC5-YO8V3JnMX4yBsgM2t0xdqEW6fqILk8_oxXsDFAhNkaNeBa2ljNilDncSepps7q69PP-TP7JVkjKQg2Za_E6ZwU" */
   token: string;
-
-  /** @example eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJ0ZW5hbnRJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRva2VuSGFzaCI6ImJiMmFjMzE4M2EzZDZlMDljYTI2ZDkzNDEzNjQyNzU4MGY3Yjc5NWVlYWU3YTFlYzUzNDU2MjU5NThjMDZhYWQiLCJpYXQiOjE2NTg1MDgxNzksImV4cCI6MTY5MDA0NDE3OX0.au6dcpbcSmF134J335G4CymEUlwK39TT-4jXQwEUm0zRokFBiHpkXZzy23fTufyo_XzW_Tr_IUfO9b_y5e0thjIfvng4dS7akdeQAykcN7nRhwNBtqCVZxFHyZE39yzz38JLMwC00EtaKowM6lPykJYC5qZC0bBj4g4Yb1GG9IU5dQodibdXj00 */
+  /** @example "eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJ0ZW5hbnRJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRva2VuSGFzaCI6ImJiMmFjMzE4M2EzZDZlMDljYTI2ZDkzNDEzNjQyNzU4MGY3Yjc5NWVlYWU3YTFlYzUzNDU2MjU5NThjMDZhYWQiLCJpYXQiOjE2NTg1MDgxNzksImV4cCI6MTY5MDA0NDE3OX0.au6dcpbcSmF134J335G4CymEUlwK39TT-4jXQwEUm0zRokFBiHpkXZzy23fTufyo_XzW_Tr_IUfO9b_y5e0thjIfvng4dS7akdeQAykcN7nRhwNBtqCVZxFHyZE39yzz38JLMwC00EtaKowM6lPykJYC5qZC0bBj4g4Yb1GG9IU5dQodibdXj00" */
   refreshToken: string;
 }
 
 export interface ForbiddenExceptionDto {
-  /** @example 2022-07-25T17:24:07.042Z */
+  /** @example "2022-07-25T17:24:07.042Z" */
   timestamp: string;
-
-  /** @example /api/foo/bar */
+  /** @example "/api/foo/bar" */
   path: string;
   error: string;
-
   /** @example 403 */
   statusCode: number;
-
-  /** @example Forbidden */
+  /** @example "Forbidden" */
   message: object;
-
   /** @example null */
   data?: object;
 }
@@ -702,16 +630,14 @@ export interface ForbiddenExceptionDto {
 export interface LoginTenantDto {
   key: string;
   secret: string;
-
-  /** @example 00000000-0000-0000-0000-000000000001 */
+  /** @example "00000000-0000-0000-0000-000000000001" */
   tenantId: string;
 }
 
 export interface JSONWebKeyDto {
-  /** @example RSA */
+  /** @example "RSA" */
   kty: string;
-
-  /** @example LySdYaP3_-DOrOElTtHy9TAM9EZ8veMzPftUWibTTNI */
+  /** @example "LySdYaP3_-DOrOElTtHy9TAM9EZ8veMzPftUWibTTNI" */
   kid: string;
   alg?: string;
   n?: string;
@@ -978,11 +904,9 @@ export enum CountryCodeEnum {
 export interface CreateTenantDto {
   name: string;
   document: string;
-
-  /** @example BRA */
+  /** @example "BRA" */
   countryCode: CountryCodeEnum;
-
-  /** @example example.com */
+  /** @example "example.com" */
   hostname: string;
 }
 
@@ -997,23 +921,24 @@ export interface TenantEntityDto {
   id: string;
   name: string;
   document: string;
-
-  /** @example BRA */
+  /**
+   * @default "BRA"
+   * @example "BRA"
+   */
   countryCode: CountryCodeEnum;
-
-  /** @example ["application"] */
+  /**
+   * @default "application"
+   * @example ["application"]
+   */
   roles: TenantRoleEnum;
   wallets: string[];
   client?: object;
   clientId?: object;
   info: TenantInfoDto;
-
   /** @format date-time */
   createdAt?: string;
-
   /** @format date-time */
   updatedAt?: string;
-
   /** @format date-time */
   deletedAt?: string;
 }
@@ -1025,13 +950,11 @@ export interface TenantPaginateResponseDto {
 }
 
 export interface TenantClientResponseDto {
-  /** @example 193d34cd9f6ca1f2661357e346822a3643bd5c3d0590a670ee896af6ca9a8141 */
+  /** @example "193d34cd9f6ca1f2661357e346822a3643bd5c3d0590a670ee896af6ca9a8141" */
   apiKey: string;
-
   /** @format uuid */
   clientId: string;
-
-  /** @example ef9b4f3cc540501fa1d7c4f0fc1216851500ed52aa85f2adb34d978f70688f37 */
+  /** @example "ef9b4f3cc540501fa1d7c4f0fc1216851500ed52aa85f2adb34d978f70688f37" */
   signatureKey: string;
 }
 
@@ -1042,13 +965,12 @@ export interface UpdateTenantProfileDto {
 export interface UpdateTenantDto {
   name?: string;
   document?: string;
-
-  /** @example BRA */
+  /** @example "BRA" */
   countryCode?: CountryCodeEnum;
 }
 
 export interface FindByHostnameDto {
-  /** @example example.com */
+  /** @example "example.com" */
   hostname: string;
 }
 
@@ -1078,19 +1000,17 @@ export interface TenantAccessPaginateResponseDto {
 export interface TenantHostPathsDto {
   /**
    * The path to the user complete profile page. Only fill in if different from default
-   * @example /auth/complete-profile/
+   * @example "/auth/complete-profile/"
    */
   fillProfileForm?: string;
-
   /**
    * The path to user sign in page. Only fill in if different from default
-   * @example /auth/signIn/
+   * @example "/auth/signIn/"
    */
   userSignIn?: string;
-
   /**
    * The path to see certificate of NFT. Only fill in if different from default
-   * @example /token/{{contractAddress}}/{{chainId}}/{{tokenId}}
+   * @example "/token/{{contractAddress}}/{{chainId}}/{{tokenId}}"
    */
   nftCertificate?: string;
 }
@@ -1099,8 +1019,7 @@ export interface CreateTenantHostDto {
   /** @format uuid */
   id?: string;
   isMain?: boolean;
-
-  /** @example example.com */
+  /** @example "example.com" */
   hostname: string;
   paths?: TenantHostPathsDto;
 }
@@ -1108,19 +1027,17 @@ export interface CreateTenantHostDto {
 export interface TenantHostPathsResponse {
   /**
    * The path for the user to finish filling out their profile form. Only exists when it is different from default
-   * @example /auth/complete-profile/
+   * @example "/auth/complete-profile/"
    */
   fillProfileForm?: string;
-
   /**
    * The path to user sign in page. Only exists when it is different from default
-   * @example /auth/signIn/
+   * @example "/auth/signIn/"
    */
   userSignIn?: string;
-
   /**
    * The path to  see certificate of NF. Only exists when it is different from default
-   * @example /token/{{contractAddress}}/{{chainId}}/{{tokenId}}
+   * @example "/token/{{contractAddress}}/{{chainId}}/{{tokenId}}"
    */
   nftCertificate?: string;
 }
@@ -1128,8 +1045,7 @@ export interface TenantHostPathsResponse {
 export interface TenantHostResponseDto {
   /** @format uuid */
   id: string;
-
-  /** @example example.com */
+  /** @example "example.com" */
   hostname: string;
   tenantId: string;
   isMain: boolean;
@@ -1140,8 +1056,7 @@ export interface TenantHostResponseDto {
 export interface TenantHostEntityDto {
   /** @format uuid */
   id: string;
-
-  /** @example example.com */
+  /** @example "example.com" */
   hostname: string;
   tenant: TenantEntity;
   tenantId: string;
@@ -1160,19 +1075,44 @@ export interface UpdateTenantHostDto {
   /** @format uuid */
   id?: string;
   isMain?: boolean;
-
-  /** @example example.com */
+  /** @example "example.com" */
   hostname: string;
   paths?: TenantHostPathsDto;
+}
+
+export interface PublicDataDto {
+  WALLET_CONNECT?: object;
+  METAMASK?: object;
+}
+
+export interface PrivateDataDto {
+  WALLET_CONNECT?: object;
+  METAMASK?: object;
+}
+
+export enum IntegrationType {
+  WALLET_CONNECT = 'WALLET_CONNECT',
+  METAMASK = 'METAMASK',
+}
+
+export interface IntegrationResponseDto {
+  id: string;
+  tenantId: string;
+  type: IntegrationType;
+  publicData: PublicDataDto;
+  userId: string;
+  active: boolean;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
 }
 
 export interface CheckWhitelistUserResponseDto {
   /** @format uuid */
   whitelistId: string;
-
   /** @format uuid */
   userId: string;
-
   /** @example false */
   hasAccess: boolean;
 }
@@ -1193,20 +1133,18 @@ export interface WalletGroupResponseDto {
   id: string;
   tenantId: string;
   contractAddress: string;
-
   /** @format date-time */
   createdAt?: string;
-
   /** @format date-time */
   updatedAt?: string;
-
   /** @format date-time */
   deletedAt?: string;
-
   /** @format uuid */
   actionId?: string;
-
-  /** @example 137 */
+  /**
+   * @default 137
+   * @example 137
+   */
   chainId: ChainId;
   status: WalletGroupStatus;
   whitelistId?: string;
@@ -1217,19 +1155,14 @@ export interface WalletGroupResponseDto {
 export interface WhitelistResponseDto {
   /** @format uuid */
   id: string;
-
   /** @format uuid */
   tenantId: string;
-
-  /** @example W3Block Whitelist */
+  /** @example "W3Block Whitelist" */
   name: string;
-
   /** @format date-time */
   createdAt?: string;
-
   /** @format date-time */
   updatedAt?: string;
-
   /** @format date-time */
   deletedAt?: string;
   walletGroups?: WalletGroupResponseDto[];
@@ -1242,12 +1175,15 @@ export interface WhitelistPaginateResponseDto {
 }
 
 export interface CreateOrUpdateWhitelistDto {
-  /** @example W3Block Whitelist */
+  /** @example "W3Block Whitelist" */
   name: string;
 }
 
 export interface WhitelistOnChainDto {
-  /** @example 137 */
+  /**
+   * @default 137
+   * @example 137
+   */
   chainId: ChainId;
 }
 
@@ -1266,20 +1202,15 @@ export enum WhitelistEntryType {
 export interface WhitelistEntryResponseDto {
   /** @format uuid */
   id: string;
-
   /** @format uuid */
   whitelistId: string;
-
   /** @format date-time */
   createdAt?: string;
-
   /** @format date-time */
   updatedAt?: string;
-
-  /** @example collection_holder */
+  /** @example "collection_holder" */
   type: WhitelistEntryType;
-
-  /** @example 0xd3304183ec1fa687e380b67419875f97f1db05f5 */
+  /** @example "0xd3304183ec1fa687e380b67419875f97f1db05f5" */
   value: string;
   additionalData?: object;
   wallets?: WalletResponseDto[];
@@ -1292,12 +1223,13 @@ export interface WhitelistEntryPaginateResponseDto {
 }
 
 export interface CreateWhitelistEntryDto {
-  /** @example collection_holder */
+  /**
+   * @default "collection_holder"
+   * @example "collection_holder"
+   */
   type: WhitelistEntryType;
-
-  /** @example 0xd3304183ec1fa687e380b67419875f97f1db05f5 */
+  /** @example "0xd3304183ec1fa687e380b67419875f97f1db05f5" */
   value: string;
-
   /** @example {"chainId":80001} */
   additionalData?: object;
 }
@@ -1309,6 +1241,8 @@ export namespace Users {
    * @name Create
    * @request POST:/users
    * @secure
+   * @response `201` `UserPublicResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace Create {
     export type RequestParams = {};
@@ -1323,6 +1257,8 @@ export namespace Users {
    * @name Invite
    * @request POST:/users/invite
    * @secure
+   * @response `201` `UserPublicResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace Invite {
     export type RequestParams = {};
@@ -1337,10 +1273,17 @@ export namespace Users {
    * @name GetUserByEmail
    * @request GET:/users/find-user-by-email
    * @secure
+   * @response `200` `UserPublicResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace GetUserByEmail {
     export type RequestParams = {};
-    export type RequestQuery = { email: string; tenantId: string };
+    export type RequestQuery = {
+      /** @example "email@example.com" */
+      email: string;
+      /** @example "00000000-0000-0000-0000-000000000001" */
+      tenantId: string;
+    };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = UserPublicResponseDto;
@@ -1351,6 +1294,8 @@ export namespace Users {
    * @name GetProfileByUserLogged
    * @request GET:/users/profile
    * @secure
+   * @response `200` `UserPublicResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
    */
   export namespace GetProfileByUserLogged {
     export type RequestParams = {};
@@ -1365,9 +1310,14 @@ export namespace Users {
    * @name GetUsersReport
    * @request GET:/users/{tenantId}/report/{email}
    * @secure
+   * @response `204` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin
    */
   export namespace GetUsersReport {
-    export type RequestParams = { tenantId: string; email: string };
+    export type RequestParams = {
+      tenantId: string;
+      email: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1379,9 +1329,14 @@ export namespace Users {
    * @name GetProfileUserById
    * @request GET:/users/{tenantId}/{id}
    * @secure
+   * @response `200` `UserPublicResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace GetProfileUserById {
-    export type RequestParams = { id: string; tenantId: string };
+    export type RequestParams = {
+      id: string;
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1393,15 +1348,22 @@ export namespace Users {
    * @name GetUsersByTenantId
    * @request GET:/users/{tenantId}
    * @secure
+   * @response `200` `UserPaginateResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace GetUsersByTenantId {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {
+      /** @default 1 */
       page?: number;
+      /** @default 10 */
       limit?: number;
       search?: string;
       sortBy?: string;
       orderBy?: OrderByEnum;
+      /** @example "user" */
       role?: UserRoleEnum;
       userId?: string[];
     };
@@ -1415,9 +1377,13 @@ export namespace Users {
    * @name UpdateProfileByUserLogged
    * @request PATCH:/users/{tenantId}/profile
    * @secure
+   * @response `200` `UserPublicResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
    */
   export namespace UpdateProfileByUserLogged {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = UpdateProfileUserDto;
     export type RequestHeaders = {};
@@ -1429,6 +1395,8 @@ export namespace Users {
    * @name ChangePassword
    * @request PATCH:/users/change-password
    * @secure
+   * @response `204` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
    */
   export namespace ChangePassword {
     export type RequestParams = {};
@@ -1443,6 +1411,7 @@ export namespace Users {
    * @name SetWalletDefault
    * @request PATCH:/users/main-wallet
    * @secure
+   * @response `204` `void`
    */
   export namespace SetWalletDefault {
     export type RequestParams = {};
@@ -1457,9 +1426,14 @@ export namespace Users {
    * @name UpdateToken
    * @request PATCH:/users/{tenantId}/{id}/token
    * @secure
+   * @response `200` `UserTokenResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace UpdateToken {
-    export type RequestParams = { id: string; tenantId: string };
+    export type RequestParams = {
+      id: string;
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = UpdateTokenDto;
     export type RequestHeaders = {};
@@ -1471,9 +1445,14 @@ export namespace Users {
    * @name Update
    * @request PATCH:/users/{tenantId}/{id}/edit
    * @secure
+   * @response `200` `UserPublicResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace Update {
-    export type RequestParams = { id: string; tenantId: string };
+    export type RequestParams = {
+      id: string;
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = UpdateUserDto;
     export type RequestHeaders = {};
@@ -1485,6 +1464,7 @@ export namespace Users {
    * @name AccountCompleteRetry
    * @request POST:/users/account-complete/retry
    * @secure
+   * @response `204` `void`
    */
   export namespace AccountCompleteRetry {
     export type RequestParams = {};
@@ -1499,9 +1479,12 @@ export namespace Users {
    * @name CreateVault
    * @request POST:/users/{tenantId}/wallets/vault/claim
    * @secure
+   * @response `200` `WalletResponseDto`
    */
   export namespace CreateVault {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1513,9 +1496,14 @@ export namespace Users {
    * @name FindByAddress
    * @request GET:/users/{tenantId}/wallets/by-address/{address}
    * @secure
+   * @response `200` `WalletResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, administrator,integration
    */
   export namespace FindByAddress {
-    export type RequestParams = { tenantId: string; address: string };
+    export type RequestParams = {
+      tenantId: string;
+      address: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1527,9 +1515,14 @@ export namespace Users {
    * @name FindOwnWalletByAddress
    * @request GET:/users/{tenantId}/wallets/own-wallet-by-address/{address}
    * @secure
+   * @response `200` `WalletResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
    */
   export namespace FindOwnWalletByAddress {
-    export type RequestParams = { tenantId: string; address: string };
+    export type RequestParams = {
+      tenantId: string;
+      address: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1541,9 +1534,13 @@ export namespace Users {
    * @name FindAllWalletByUserId
    * @request GET:/users/{tenantId}/wallets/{userId}
    * @secure
+   * @response `200` `(WalletResponseDto)[]`
    */
   export namespace FindAllWalletByUserId {
-    export type RequestParams = { userId: string; tenantId: string };
+    export type RequestParams = {
+      userId: string;
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1555,9 +1552,14 @@ export namespace Users {
    * @name FindWallet
    * @request GET:/users/{tenantId}/wallets/{userId}/{walletId}
    * @secure
+   * @response `200` `WalletResponseDto`
    */
   export namespace FindWallet {
-    export type RequestParams = { walletId: string; userId: string; tenantId: string };
+    export type RequestParams = {
+      walletId: string;
+      userId: string;
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1569,9 +1571,12 @@ export namespace Users {
    * @name RequestMetamask
    * @request POST:/users/{tenantId}/wallets/metamask/request
    * @secure
+   * @response `201` `RequestMetamaskResponseDto`
    */
   export namespace RequestMetamask {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = RequestMetamaskDto;
     export type RequestHeaders = {};
@@ -1583,9 +1588,12 @@ export namespace Users {
    * @name ClaimMetamask
    * @request POST:/users/{tenantId}/wallets/metamask/claim
    * @secure
+   * @response `201` `WalletResponseDto`
    */
   export namespace ClaimMetamask {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = ClaimMetamaskDto;
     export type RequestHeaders = {};
@@ -1599,12 +1607,18 @@ export namespace Blockchain {
    * @tags Blockchain
    * @name ReceiveEventWebhook
    * @request POST:/blockchain/webhook/event/{tenantId}
+   * @response `401` `void` Unauthorized - Invalid Pixchain signature
    */
   export namespace ReceiveEventWebhook {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = EventNotifyDto;
-    export type RequestHeaders = { 'x-pixchain-signature': string; 'x-pixchain-client-id'?: string };
+    export type RequestHeaders = {
+      'x-pixchain-signature': string;
+      'x-pixchain-client-id'?: string;
+    };
     export type ResponseBody = any;
   }
   /**
@@ -1612,12 +1626,18 @@ export namespace Blockchain {
    * @tags Blockchain
    * @name ReceiveTransactionWebhook
    * @request POST:/blockchain/webhook/transaction/{tenantId}
+   * @response `401` `void` Unauthorized - Invalid Pixchain signature
    */
   export namespace ReceiveTransactionWebhook {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
-    export type RequestHeaders = { 'x-pixchain-signature': string; 'x-pixchain-client-id'?: string };
+    export type RequestHeaders = {
+      'x-pixchain-signature': string;
+      'x-pixchain-client-id'?: string;
+    };
     export type ResponseBody = any;
   }
   /**
@@ -1625,12 +1645,18 @@ export namespace Blockchain {
    * @tags Blockchain
    * @name ReceiveExternalTransactionSigningRequestWebhook
    * @request POST:/blockchain/webhook/external-transaction-signing-request/{tenantId}
+   * @response `401` `void` Unauthorized - Invalid Pixchain signature
    */
   export namespace ReceiveExternalTransactionSigningRequestWebhook {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
-    export type RequestHeaders = { 'x-pixchain-signature': string; 'x-pixchain-client-id'?: string };
+    export type RequestHeaders = {
+      'x-pixchain-signature': string;
+      'x-pixchain-client-id'?: string;
+    };
     export type ResponseBody = any;
   }
   /**
@@ -1640,9 +1666,15 @@ export namespace Blockchain {
    * @request GET:/blockchain/balance/{address}/{chainId}
    * @deprecated
    * @secure
+   * @response `200` `void`
    */
   export namespace GetBalance {
-    export type RequestParams = { address: string; chainId: ChainId };
+    export type RequestParams = {
+      /** @example "0x82dbB0A14F79f50c8f8e0D50FC9F1ef30Aeb6C79" */
+      address: string;
+      /** @example 137 */
+      chainId: ChainId;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1654,11 +1686,27 @@ export namespace Blockchain {
    * @name RequestSessionWalletConnect
    * @request POST:/blockchain/request-session-wallet-connect
    * @secure
+   * @response `201` `ResponseWalletConnectSessionDto`
    */
   export namespace RequestSessionWalletConnect {
     export type RequestParams = {};
     export type RequestQuery = {};
-    export type RequestBody = never;
+    export type RequestBody = RequestWalletConnectSessionDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResponseWalletConnectSessionDto;
+  }
+  /**
+   * No description
+   * @tags Blockchain
+   * @name DisconnectSessionWalletConnect
+   * @request DELETE:/blockchain/disconnect-session-wallet-connect
+   * @secure
+   * @response `200` `void`
+   */
+  export namespace DisconnectSessionWalletConnect {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = RequestWalletConnectSessionDto;
     export type RequestHeaders = {};
     export type ResponseBody = void;
   }
@@ -1670,10 +1718,16 @@ export namespace Auth {
    * @tags Authentication
    * @name VerifySignUp
    * @request GET:/auth/verify-sign-up
+   * @response `200` `VerifySignupResponseDto` Response for verify sign up
+   * @response `429` `TooManyRequestsExceptionDto`
    */
   export namespace VerifySignUp {
     export type RequestParams = {};
-    export type RequestQuery = { email: string; token: string };
+    export type RequestQuery = {
+      /** @example "user@example.com" */
+      email: string;
+      token: string;
+    };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = VerifySignupResponseDto;
@@ -1683,6 +1737,8 @@ export namespace Auth {
    * @tags Authentication
    * @name RequestConfirmationEmail
    * @request POST:/auth/request-confirmation-email
+   * @response `204` `void`
+   * @response `429` `TooManyRequestsExceptionDto`
    */
   export namespace RequestConfirmationEmail {
     export type RequestParams = {};
@@ -1696,6 +1752,8 @@ export namespace Auth {
    * @tags Authentication
    * @name RequestPasswordReset
    * @request POST:/auth/request-password-reset
+   * @response `204` `void`
+   * @response `429` `TooManyRequestsExceptionDto`
    */
   export namespace RequestPasswordReset {
     export type RequestParams = {};
@@ -1709,6 +1767,9 @@ export namespace Auth {
    * @tags Authentication
    * @name ResetPassword
    * @request POST:/auth/reset-password
+   * @response `200` `SignInResponseDto`
+   * @response `400` `BadRequestExceptionDto`
+   * @response `429` `TooManyRequestsExceptionDto`
    */
   export namespace ResetPassword {
     export type RequestParams = {};
@@ -1722,6 +1783,8 @@ export namespace Auth {
    * @tags Authentication
    * @name SignUp
    * @request POST:/auth/signup
+   * @response `201` `SignInResponseDto`
+   * @response `401` `UnauthorizedExceptionDto`
    */
   export namespace SignUp {
     export type RequestParams = {};
@@ -1735,6 +1798,9 @@ export namespace Auth {
    * @tags Authentication
    * @name SignIn
    * @request POST:/auth/signin
+   * @response `201` `SignInResponseDto`
+   * @response `401` `UnauthorizedExceptionDto`
+   * @response `429` `TooManyRequestsExceptionDto`
    */
   export namespace SignIn {
     export type RequestParams = {};
@@ -1749,6 +1815,8 @@ export namespace Auth {
    * @name RefreshToken
    * @request POST:/auth/refresh-token
    * @secure
+   * @response `201` `RefreshTokenResponseDto`
+   * @response `403` `ForbiddenExceptionDto`
    */
   export namespace RefreshToken {
     export type RequestParams = {};
@@ -1762,6 +1830,9 @@ export namespace Auth {
    * @tags Authentication
    * @name SignInTenant
    * @request POST:/auth/signin/tenant
+   * @response `201` `SignInResponseDto`
+   * @response `401` `UnauthorizedExceptionDto`
+   * @response `429` `TooManyRequestsExceptionDto`
    */
   export namespace SignInTenant {
     export type RequestParams = {};
@@ -1776,6 +1847,7 @@ export namespace Auth {
    * @name LogOut
    * @request POST:/auth/logout
    * @secure
+   * @response `403` `ForbiddenExceptionDto`
    */
   export namespace LogOut {
     export type RequestParams = {};
@@ -1789,6 +1861,7 @@ export namespace Auth {
    * @tags Authentication
    * @name GetJwks
    * @request GET:/auth/jwks.json
+   * @response `200` `JSONWebKeySetDto`
    */
   export namespace GetJwks {
     export type RequestParams = {};
@@ -1806,6 +1879,8 @@ export namespace Tenant {
    * @name Create
    * @request POST:/tenant
    * @secure
+   * @response `201` `TenantEntityDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator
    */
   export namespace Create {
     export type RequestParams = {};
@@ -1820,11 +1895,15 @@ export namespace Tenant {
    * @name FindAll
    * @request GET:/tenant
    * @secure
+   * @response `200` `TenantPaginateResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
    */
   export namespace FindAll {
     export type RequestParams = {};
     export type RequestQuery = {
+      /** @default 1 */
       page?: number;
+      /** @default 10 */
       limit?: number;
       search?: string;
       sortBy?: string;
@@ -1840,9 +1919,12 @@ export namespace Tenant {
    * @name FindOne
    * @request GET:/tenant/{tenantId}
    * @secure
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
    */
   export namespace FindOne {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1854,9 +1936,12 @@ export namespace Tenant {
    * @name Update
    * @request PUT:/tenant/{tenantId}
    * @secure
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
    */
   export namespace Update {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = UpdateTenantDto;
     export type RequestHeaders = {};
@@ -1868,9 +1953,12 @@ export namespace Tenant {
    * @name Remove
    * @request DELETE:/tenant/{tenantId}
    * @secure
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
    */
   export namespace Remove {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1882,9 +1970,13 @@ export namespace Tenant {
    * @name GetTenantClientOrFail
    * @request GET:/tenant/client/{tenantId}
    * @secure
+   * @response `200` `TenantClientResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, integration
    */
   export namespace GetTenantClientOrFail {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1896,9 +1988,12 @@ export namespace Tenant {
    * @name UpdateProfile
    * @request PUT:/tenant/profile/{tenantId}
    * @secure
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
    */
   export namespace UpdateProfile {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = UpdateTenantProfileDto;
     export type RequestHeaders = {};
@@ -1913,10 +2008,14 @@ export namespace PublicTenant {
    * @name GetCompanyByHost
    * @request GET:/public-tenant/by-hostname
    * @secure
+   * @response `200` `FindByHostnameDto`
    */
   export namespace GetCompanyByHost {
     export type RequestParams = {};
-    export type RequestQuery = { hostname: string };
+    export type RequestQuery = {
+      /** @example "example.com" */
+      hostname: string;
+    };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = FindByHostnameDto;
@@ -1930,9 +2029,13 @@ export namespace TenantAccess {
    * @name Create
    * @request POST:/tenant-access/{tenantId}
    * @secure
+   * @response `201` `TenantAccessEntityDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
    */
   export namespace Create {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = CreateTenantAccessDto;
     export type RequestHeaders = {};
@@ -1944,11 +2047,17 @@ export namespace TenantAccess {
    * @name FindAll
    * @request GET:/tenant-access/{tenantId}
    * @secure
+   * @response `200` `TenantAccessPaginateResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
    */
   export namespace FindAll {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {
+      /** @default 1 */
       page?: number;
+      /** @default 10 */
       limit?: number;
       search?: string;
       sortBy?: string;
@@ -1964,9 +2073,14 @@ export namespace TenantAccess {
    * @name FindOne
    * @request GET:/tenant-access/{tenantId}/{id}
    * @secure
+   * @response `200` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
    */
   export namespace FindOne {
-    export type RequestParams = { id: string; tenantId: string };
+    export type RequestParams = {
+      id: string;
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1981,9 +2095,13 @@ export namespace TenantHosts {
    * @name Create
    * @request POST:/tenant-hosts/{tenantId}
    * @secure
+   * @response `201` `TenantHostResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace Create {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = CreateTenantHostDto;
     export type RequestHeaders = {};
@@ -1995,11 +2113,17 @@ export namespace TenantHosts {
    * @name FindAll
    * @request GET:/tenant-hosts/{tenantId}
    * @secure
+   * @response `200` `TenantHostPaginateResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace FindAll {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {
+      /** @default 1 */
       page?: number;
+      /** @default 10 */
       limit?: number;
       search?: string;
       sortBy?: string;
@@ -2015,9 +2139,13 @@ export namespace TenantHosts {
    * @name GetMainHostByTenantId
    * @request GET:/tenant-hosts/{tenantId}/main-host
    * @secure
+   * @response `200` `TenantHostEntityDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace GetMainHostByTenantId {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -2029,9 +2157,14 @@ export namespace TenantHosts {
    * @name FindOne
    * @request GET:/tenant-hosts/{tenantId}/{id}
    * @secure
+   * @response `200` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace FindOne {
-    export type RequestParams = { tenantId: string; id: string };
+    export type RequestParams = {
+      tenantId: string;
+      id: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -2043,13 +2176,36 @@ export namespace TenantHosts {
    * @name Update
    * @request PATCH:/tenant-hosts/{tenantId}/{id}
    * @secure
+   * @response `200` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace Update {
-    export type RequestParams = { tenantId: string; id: string };
+    export type RequestParams = {
+      tenantId: string;
+      id: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = UpdateTenantHostDto;
     export type RequestHeaders = {};
     export type ResponseBody = void;
+  }
+}
+
+export namespace Integrations {
+  /**
+   * No description
+   * @tags Integration
+   * @name List
+   * @request GET:/integrations
+   * @secure
+   * @response `200` `(IntegrationResponseDto)[]`
+   */
+  export namespace List {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = IntegrationResponseDto[];
   }
 }
 
@@ -2060,10 +2216,22 @@ export namespace Whitelists {
    * @name CheckUserInMultipleWhitelists
    * @request GET:/whitelists/{tenantId}/check-user
    * @secure
+   * @response `200` `CheckUserInMultipleWhitelistsResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace CheckUserInMultipleWhitelists {
-    export type RequestParams = { tenantId: string };
-    export type RequestQuery = { userId: string; whitelistsIds: string[] };
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      /**
+       * @format uuid
+       * @example "00000000-0000-0000-0000-000000000000"
+       */
+      userId: string;
+      /** @example ["00000000-0000-0000-0000-000000000000"] */
+      whitelistsIds: string[];
+    };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = CheckUserInMultipleWhitelistsResponseDto;
@@ -2074,11 +2242,17 @@ export namespace Whitelists {
    * @name FindWhitelists
    * @request GET:/whitelists/{tenantId}
    * @secure
+   * @response `200` `WhitelistPaginateResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace FindWhitelists {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {
+      /** @default 1 */
       page?: number;
+      /** @default 10 */
       limit?: number;
       search?: string;
       sortBy?: string;
@@ -2094,9 +2268,13 @@ export namespace Whitelists {
    * @name CreateWhitelist
    * @request POST:/whitelists/{tenantId}
    * @secure
+   * @response `201` `WhitelistResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace CreateWhitelist {
-    export type RequestParams = { tenantId: string };
+    export type RequestParams = {
+      tenantId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = CreateOrUpdateWhitelistDto;
     export type RequestHeaders = {};
@@ -2108,9 +2286,14 @@ export namespace Whitelists {
    * @name GetWhitelist
    * @request GET:/whitelists/{tenantId}/{id}
    * @secure
+   * @response `200` `WhitelistResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace GetWhitelist {
-    export type RequestParams = { tenantId: string; id: string };
+    export type RequestParams = {
+      tenantId: string;
+      id: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -2122,9 +2305,14 @@ export namespace Whitelists {
    * @name UpdateWhitelist
    * @request PATCH:/whitelists/{tenantId}/{id}
    * @secure
+   * @response `200` `WhitelistResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace UpdateWhitelist {
-    export type RequestParams = { tenantId: string; id: string };
+    export type RequestParams = {
+      tenantId: string;
+      id: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = CreateOrUpdateWhitelistDto;
     export type RequestHeaders = {};
@@ -2136,9 +2324,14 @@ export namespace Whitelists {
    * @name DeleteWhitelist
    * @request DELETE:/whitelists/{tenantId}/{id}
    * @secure
+   * @response `204` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace DeleteWhitelist {
-    export type RequestParams = { tenantId: string; id: string };
+    export type RequestParams = {
+      tenantId: string;
+      id: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -2150,9 +2343,14 @@ export namespace Whitelists {
    * @name PromoteWhitelistOnChain
    * @request PATCH:/whitelists/{tenantId}/{id}/promote-on-chain
    * @secure
+   * @response `200` `WalletGroupResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace PromoteWhitelistOnChain {
-    export type RequestParams = { tenantId: string; id: string };
+    export type RequestParams = {
+      tenantId: string;
+      id: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = WhitelistOnChainDto;
     export type RequestHeaders = {};
@@ -2164,10 +2362,21 @@ export namespace Whitelists {
    * @name CheckUserInWhitelist
    * @request GET:/whitelists/{tenantId}/{id}/check-user
    * @secure
+   * @response `200` `CheckWhitelistUserResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace CheckUserInWhitelist {
-    export type RequestParams = { tenantId: string; id: string };
-    export type RequestQuery = { userId: string };
+    export type RequestParams = {
+      tenantId: string;
+      id: string;
+    };
+    export type RequestQuery = {
+      /**
+       * @format uuid
+       * @example "00000000-0000-0000-0000-000000000000"
+       */
+      userId: string;
+    };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = CheckWhitelistUserResponseDto;
@@ -2178,16 +2387,26 @@ export namespace Whitelists {
    * @name FindWhitelistEntries
    * @request GET:/whitelists/{tenantId}/{id}/entries
    * @secure
+   * @response `200` `WhitelistEntryPaginateResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace FindWhitelistEntries {
-    export type RequestParams = { tenantId: string; id: string };
+    export type RequestParams = {
+      tenantId: string;
+      id: string;
+    };
     export type RequestQuery = {
+      /** @default 1 */
       page?: number;
+      /** @default 10 */
       limit?: number;
       search?: string;
+      /** @example "createdAt" */
       sortBy?: WhitelistEntriesSortBy;
       orderBy?: OrderByEnum;
+      /** @default [] */
       type?: ('user_id' | 'email' | 'wallet_address' | 'collection_holder')[];
+      /** @example false */
       showWallets?: boolean;
     };
     export type RequestBody = never;
@@ -2200,9 +2419,14 @@ export namespace Whitelists {
    * @name CreateWhitelistEntry
    * @request POST:/whitelists/{tenantId}/{id}/entries
    * @secure
+   * @response `201` `WhitelistEntryResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace CreateWhitelistEntry {
-    export type RequestParams = { tenantId: string; id: string };
+    export type RequestParams = {
+      tenantId: string;
+      id: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = CreateWhitelistEntryDto;
     export type RequestHeaders = {};
@@ -2214,9 +2438,15 @@ export namespace Whitelists {
    * @name DeleteWhitelistEntry
    * @request DELETE:/whitelists/{tenantId}/{id}/entries/{entryId}
    * @secure
+   * @response `204` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace DeleteWhitelistEntry {
-    export type RequestParams = { tenantId: string; id: string; entryId: string };
+    export type RequestParams = {
+      tenantId: string;
+      id: string;
+      entryId: string;
+    };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -2224,7 +2454,7 @@ export namespace Whitelists {
   }
 }
 
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, ResponseType } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from 'axios';
 
 export type QueryParamsType = Record<string | number, any>;
 
@@ -2257,6 +2487,7 @@ export enum ContentType {
   Json = 'application/json',
   FormData = 'multipart/form-data',
   UrlEncoded = 'application/x-www-form-urlencoded',
+  Text = 'text/plain',
 }
 
 export class HttpClient<SecurityDataType = unknown> {
@@ -2277,30 +2508,39 @@ export class HttpClient<SecurityDataType = unknown> {
     this.securityData = data;
   };
 
-  private mergeRequestParams(params1: AxiosRequestConfig, params2?: AxiosRequestConfig): AxiosRequestConfig {
+  protected mergeRequestParams(params1: AxiosRequestConfig, params2?: AxiosRequestConfig): AxiosRequestConfig {
+    const method = params1.method || (params2 && params2.method);
+
     return {
       ...this.instance.defaults,
       ...params1,
       ...(params2 || {}),
       headers: {
-        ...(this.instance.defaults.headers || {}),
+        ...((method && this.instance.defaults.headers[method.toLowerCase() as keyof HeadersDefaults]) || {}),
         ...(params1.headers || {}),
         ...((params2 && params2.headers) || {}),
       },
     };
   }
 
-  private createFormData(input: Record<string, unknown>): FormData {
+  protected stringifyFormItem(formItem: unknown) {
+    if (typeof formItem === 'object' && formItem !== null) {
+      return JSON.stringify(formItem);
+    } else {
+      return `${formItem}`;
+    }
+  }
+
+  protected createFormData(input: Record<string, unknown>): FormData {
     return Object.keys(input || {}).reduce((formData, key) => {
       const property = input[key];
-      formData.append(
-        key,
-        property instanceof Blob
-          ? property
-          : typeof property === 'object' && property !== null
-          ? JSON.stringify(property)
-          : `${property}`,
-      );
+      const propertyContent: any[] = property instanceof Array ? property : [property];
+
+      for (const formItem of propertyContent) {
+        const isFileType = formItem instanceof Blob || formItem instanceof File;
+        formData.append(key, isFileType ? formItem : this.stringifyFormItem(formItem));
+      }
+
       return formData;
     }, new FormData());
   }
@@ -2320,21 +2560,21 @@ export class HttpClient<SecurityDataType = unknown> {
         (await this.securityWorker(this.securityData))) ||
       {};
     const requestParams = this.mergeRequestParams(params, secureParams);
-    const responseFormat = (format && this.format) || void 0;
+    const responseFormat = format || this.format || undefined;
 
     if (type === ContentType.FormData && body && body !== null && typeof body === 'object') {
-      requestParams.headers.common = { Accept: '*/*' };
-      requestParams.headers.post = {};
-      requestParams.headers.put = {};
-
       body = this.createFormData(body as Record<string, unknown>);
+    }
+
+    if (type === ContentType.Text && body && body !== null && typeof body !== 'string') {
+      body = JSON.stringify(body);
     }
 
     return this.instance.request({
       ...requestParams,
       headers: {
-        ...(type && type !== ContentType.FormData ? { 'Content-Type': type } : {}),
         ...(requestParams.headers || {}),
+        ...(type && type !== ContentType.FormData ? { 'Content-Type': type } : {}),
       },
       params: query,
       responseType: responseFormat,
@@ -2359,6 +2599,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name Create
      * @request POST:/users
      * @secure
+     * @response `201` `UserPublicResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     create: (data: CreateUserDto, params: RequestParams = {}) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
@@ -2378,6 +2620,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name Invite
      * @request POST:/users/invite
      * @secure
+     * @response `201` `UserPublicResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     invite: (data: InviteUserDto, params: RequestParams = {}) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
@@ -2397,8 +2641,18 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name GetUserByEmail
      * @request GET:/users/find-user-by-email
      * @secure
+     * @response `200` `UserPublicResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
-    getUserByEmail: (query: { email: string; tenantId: string }, params: RequestParams = {}) =>
+    getUserByEmail: (
+      query: {
+        /** @example "email@example.com" */
+        email: string;
+        /** @example "00000000-0000-0000-0000-000000000001" */
+        tenantId: string;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
         path: `/users/find-user-by-email`,
         method: 'GET',
@@ -2415,6 +2669,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name GetProfileByUserLogged
      * @request GET:/users/profile
      * @secure
+     * @response `200` `UserPublicResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
      */
     getProfileByUserLogged: (params: RequestParams = {}) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
@@ -2432,6 +2688,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name GetUsersReport
      * @request GET:/users/{tenantId}/report/{email}
      * @secure
+     * @response `204` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin
      */
     getUsersReport: (tenantId: string, email: string, params: RequestParams = {}) =>
       this.request<void, HttpExceptionDto>({
@@ -2448,6 +2706,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name GetProfileUserById
      * @request GET:/users/{tenantId}/{id}
      * @secure
+     * @response `200` `UserPublicResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     getProfileUserById: (id: string, tenantId: string, params: RequestParams = {}) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
@@ -2465,15 +2725,20 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name GetUsersByTenantId
      * @request GET:/users/{tenantId}
      * @secure
+     * @response `200` `UserPaginateResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     getUsersByTenantId: (
       tenantId: string,
       query?: {
+        /** @default 1 */
         page?: number;
+        /** @default 10 */
         limit?: number;
         search?: string;
         sortBy?: string;
         orderBy?: OrderByEnum;
+        /** @example "user" */
         role?: UserRoleEnum;
         userId?: string[];
       },
@@ -2495,6 +2760,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name UpdateProfileByUserLogged
      * @request PATCH:/users/{tenantId}/profile
      * @secure
+     * @response `200` `UserPublicResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
      */
     updateProfileByUserLogged: (tenantId: string, data: UpdateProfileUserDto, params: RequestParams = {}) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
@@ -2514,6 +2781,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name ChangePassword
      * @request PATCH:/users/change-password
      * @secure
+     * @response `204` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
      */
     changePassword: (data: ChangePasswordDto, params: RequestParams = {}) =>
       this.request<void, HttpExceptionDto>({
@@ -2532,6 +2801,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name SetWalletDefault
      * @request PATCH:/users/main-wallet
      * @secure
+     * @response `204` `void`
      */
     setWalletDefault: (data: MainWalletDto, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -2550,6 +2820,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name UpdateToken
      * @request PATCH:/users/{tenantId}/{id}/token
      * @secure
+     * @response `200` `UserTokenResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     updateToken: (id: string, tenantId: string, data: UpdateTokenDto, params: RequestParams = {}) =>
       this.request<UserTokenResponseDto, HttpExceptionDto>({
@@ -2569,6 +2841,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name Update
      * @request PATCH:/users/{tenantId}/{id}/edit
      * @secure
+     * @response `200` `UserPublicResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     update: (id: string, tenantId: string, data: UpdateUserDto, params: RequestParams = {}) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
@@ -2588,6 +2862,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name AccountCompleteRetry
      * @request POST:/users/account-complete/retry
      * @secure
+     * @response `204` `void`
      */
     accountCompleteRetry: (data: AccountCompleteRetryDto, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -2606,6 +2881,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name CreateVault
      * @request POST:/users/{tenantId}/wallets/vault/claim
      * @secure
+     * @response `200` `WalletResponseDto`
      */
     createVault: (tenantId: string, params: RequestParams = {}) =>
       this.request<WalletResponseDto, any>({
@@ -2623,6 +2899,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindByAddress
      * @request GET:/users/{tenantId}/wallets/by-address/{address}
      * @secure
+     * @response `200` `WalletResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, administrator,integration
      */
     findByAddress: (tenantId: string, address: string, params: RequestParams = {}) =>
       this.request<WalletResponseDto, HttpExceptionDto>({
@@ -2640,6 +2918,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindOwnWalletByAddress
      * @request GET:/users/{tenantId}/wallets/own-wallet-by-address/{address}
      * @secure
+     * @response `200` `WalletResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
      */
     findOwnWalletByAddress: (tenantId: string, address: string, params: RequestParams = {}) =>
       this.request<WalletResponseDto, HttpExceptionDto>({
@@ -2657,6 +2937,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindAllWalletByUserId
      * @request GET:/users/{tenantId}/wallets/{userId}
      * @secure
+     * @response `200` `(WalletResponseDto)[]`
      */
     findAllWalletByUserId: (userId: string, tenantId: string, params: RequestParams = {}) =>
       this.request<WalletResponseDto[], any>({
@@ -2674,6 +2955,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindWallet
      * @request GET:/users/{tenantId}/wallets/{userId}/{walletId}
      * @secure
+     * @response `200` `WalletResponseDto`
      */
     findWallet: (walletId: string, userId: string, tenantId: string, params: RequestParams = {}) =>
       this.request<WalletResponseDto, any>({
@@ -2691,6 +2973,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name RequestMetamask
      * @request POST:/users/{tenantId}/wallets/metamask/request
      * @secure
+     * @response `201` `RequestMetamaskResponseDto`
      */
     requestMetamask: (tenantId: string, data: RequestMetamaskDto, params: RequestParams = {}) =>
       this.request<RequestMetamaskResponseDto, any>({
@@ -2710,6 +2993,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name ClaimMetamask
      * @request POST:/users/{tenantId}/wallets/metamask/claim
      * @secure
+     * @response `201` `WalletResponseDto`
      */
     claimMetamask: (tenantId: string, data: ClaimMetamaskDto, params: RequestParams = {}) =>
       this.request<WalletResponseDto, any>({
@@ -2729,6 +3013,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Blockchain
      * @name ReceiveEventWebhook
      * @request POST:/blockchain/webhook/event/{tenantId}
+     * @response `401` `void` Unauthorized - Invalid Pixchain signature
      */
     receiveEventWebhook: (tenantId: string, data: EventNotifyDto, params: RequestParams = {}) =>
       this.request<any, void>({
@@ -2745,6 +3030,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Blockchain
      * @name ReceiveTransactionWebhook
      * @request POST:/blockchain/webhook/transaction/{tenantId}
+     * @response `401` `void` Unauthorized - Invalid Pixchain signature
      */
     receiveTransactionWebhook: (tenantId: string, params: RequestParams = {}) =>
       this.request<any, void>({
@@ -2759,6 +3045,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Blockchain
      * @name ReceiveExternalTransactionSigningRequestWebhook
      * @request POST:/blockchain/webhook/external-transaction-signing-request/{tenantId}
+     * @response `401` `void` Unauthorized - Invalid Pixchain signature
      */
     receiveExternalTransactionSigningRequestWebhook: (tenantId: string, params: RequestParams = {}) =>
       this.request<any, void>({
@@ -2775,6 +3062,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/blockchain/balance/{address}/{chainId}
      * @deprecated
      * @secure
+     * @response `200` `void`
      */
     getBalance: (address: string, chainId: ChainId, params: RequestParams = {}) =>
       this.request<void, any>({
@@ -2791,12 +3079,35 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name RequestSessionWalletConnect
      * @request POST:/blockchain/request-session-wallet-connect
      * @secure
+     * @response `201` `ResponseWalletConnectSessionDto`
      */
-    requestSessionWalletConnect: (params: RequestParams = {}) =>
-      this.request<void, any>({
+    requestSessionWalletConnect: (data: RequestWalletConnectSessionDto, params: RequestParams = {}) =>
+      this.request<ResponseWalletConnectSessionDto, any>({
         path: `/blockchain/request-session-wallet-connect`,
         method: 'POST',
+        body: data,
         secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Blockchain
+     * @name DisconnectSessionWalletConnect
+     * @request DELETE:/blockchain/disconnect-session-wallet-connect
+     * @secure
+     * @response `200` `void`
+     */
+    disconnectSessionWalletConnect: (data: RequestWalletConnectSessionDto, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/blockchain/disconnect-session-wallet-connect`,
+        method: 'DELETE',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
   };
@@ -2807,8 +3118,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Authentication
      * @name VerifySignUp
      * @request GET:/auth/verify-sign-up
+     * @response `200` `VerifySignupResponseDto` Response for verify sign up
+     * @response `429` `TooManyRequestsExceptionDto`
      */
-    verifySignUp: (query: { email: string; token: string }, params: RequestParams = {}) =>
+    verifySignUp: (
+      query: {
+        /** @example "user@example.com" */
+        email: string;
+        token: string;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<VerifySignupResponseDto, TooManyRequestsExceptionDto>({
         path: `/auth/verify-sign-up`,
         method: 'GET',
@@ -2823,6 +3143,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Authentication
      * @name RequestConfirmationEmail
      * @request POST:/auth/request-confirmation-email
+     * @response `204` `void`
+     * @response `429` `TooManyRequestsExceptionDto`
      */
     requestConfirmationEmail: (data: RequestConfirmationEmailDto, params: RequestParams = {}) =>
       this.request<void, TooManyRequestsExceptionDto>({
@@ -2839,6 +3161,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Authentication
      * @name RequestPasswordReset
      * @request POST:/auth/request-password-reset
+     * @response `204` `void`
+     * @response `429` `TooManyRequestsExceptionDto`
      */
     requestPasswordReset: (data: RequestPasswordResetDto, params: RequestParams = {}) =>
       this.request<void, TooManyRequestsExceptionDto>({
@@ -2855,6 +3179,9 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Authentication
      * @name ResetPassword
      * @request POST:/auth/reset-password
+     * @response `200` `SignInResponseDto`
+     * @response `400` `BadRequestExceptionDto`
+     * @response `429` `TooManyRequestsExceptionDto`
      */
     resetPassword: (data: ResetPasswordDto, params: RequestParams = {}) =>
       this.request<SignInResponseDto, BadRequestExceptionDto | TooManyRequestsExceptionDto>({
@@ -2872,6 +3199,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Authentication
      * @name SignUp
      * @request POST:/auth/signup
+     * @response `201` `SignInResponseDto`
+     * @response `401` `UnauthorizedExceptionDto`
      */
     signUp: (data: SignupUserDto, params: RequestParams = {}) =>
       this.request<SignInResponseDto, UnauthorizedExceptionDto>({
@@ -2889,6 +3218,9 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Authentication
      * @name SignIn
      * @request POST:/auth/signin
+     * @response `201` `SignInResponseDto`
+     * @response `401` `UnauthorizedExceptionDto`
+     * @response `429` `TooManyRequestsExceptionDto`
      */
     signIn: (data: LoginUserDto, params: RequestParams = {}) =>
       this.request<SignInResponseDto, UnauthorizedExceptionDto | TooManyRequestsExceptionDto>({
@@ -2907,6 +3239,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name RefreshToken
      * @request POST:/auth/refresh-token
      * @secure
+     * @response `201` `RefreshTokenResponseDto`
+     * @response `403` `ForbiddenExceptionDto`
      */
     refreshToken: (data: RefreshTokenDto, params: RequestParams = {}) =>
       this.request<RefreshTokenResponseDto, ForbiddenExceptionDto>({
@@ -2925,6 +3259,9 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Authentication
      * @name SignInTenant
      * @request POST:/auth/signin/tenant
+     * @response `201` `SignInResponseDto`
+     * @response `401` `UnauthorizedExceptionDto`
+     * @response `429` `TooManyRequestsExceptionDto`
      */
     signInTenant: (data: LoginTenantDto, params: RequestParams = {}) =>
       this.request<SignInResponseDto, UnauthorizedExceptionDto | TooManyRequestsExceptionDto>({
@@ -2943,6 +3280,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name LogOut
      * @request POST:/auth/logout
      * @secure
+     * @response `403` `ForbiddenExceptionDto`
      */
     logOut: (params: RequestParams = {}) =>
       this.request<any, ForbiddenExceptionDto>({
@@ -2958,6 +3296,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Authentication
      * @name GetJwks
      * @request GET:/auth/jwks.json
+     * @response `200` `JSONWebKeySetDto`
      */
     getJwks: (params: RequestParams = {}) =>
       this.request<JSONWebKeySetDto, any>({
@@ -2975,6 +3314,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name Create
      * @request POST:/tenant
      * @secure
+     * @response `201` `TenantEntityDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator
      */
     create: (data: CreateTenantDto, params: RequestParams = {}) =>
       this.request<TenantEntityDto, HttpExceptionDto>({
@@ -2994,9 +3335,19 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindAll
      * @request GET:/tenant
      * @secure
+     * @response `200` `TenantPaginateResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
      */
     findAll: (
-      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+      },
       params: RequestParams = {},
     ) =>
       this.request<TenantPaginateResponseDto, HttpExceptionDto>({
@@ -3015,6 +3366,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindOne
      * @request GET:/tenant/{tenantId}
      * @secure
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
      */
     findOne: (tenantId: string, params: RequestParams = {}) =>
       this.request<any, HttpExceptionDto>({
@@ -3031,6 +3383,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name Update
      * @request PUT:/tenant/{tenantId}
      * @secure
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
      */
     update: (tenantId: string, data: UpdateTenantDto, params: RequestParams = {}) =>
       this.request<any, HttpExceptionDto>({
@@ -3049,6 +3402,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name Remove
      * @request DELETE:/tenant/{tenantId}
      * @secure
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
      */
     remove: (tenantId: string, params: RequestParams = {}) =>
       this.request<any, HttpExceptionDto>({
@@ -3065,6 +3419,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name GetTenantClientOrFail
      * @request GET:/tenant/client/{tenantId}
      * @secure
+     * @response `200` `TenantClientResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, integration
      */
     getTenantClientOrFail: (tenantId: string, params: RequestParams = {}) =>
       this.request<TenantClientResponseDto, HttpExceptionDto>({
@@ -3082,6 +3438,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name UpdateProfile
      * @request PUT:/tenant/profile/{tenantId}
      * @secure
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
      */
     updateProfile: (tenantId: string, data: UpdateTenantProfileDto, params: RequestParams = {}) =>
       this.request<any, HttpExceptionDto>({
@@ -3101,8 +3458,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name GetCompanyByHost
      * @request GET:/public-tenant/by-hostname
      * @secure
+     * @response `200` `FindByHostnameDto`
      */
-    getCompanyByHost: (query: { hostname: string }, params: RequestParams = {}) =>
+    getCompanyByHost: (
+      query: {
+        /** @example "example.com" */
+        hostname: string;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<FindByHostnameDto, any>({
         path: `/public-tenant/by-hostname`,
         method: 'GET',
@@ -3120,6 +3484,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name Create
      * @request POST:/tenant-access/{tenantId}
      * @secure
+     * @response `201` `TenantAccessEntityDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
      */
     create: (tenantId: string, data: CreateTenantAccessDto, params: RequestParams = {}) =>
       this.request<TenantAccessEntityDto, HttpExceptionDto>({
@@ -3139,10 +3505,20 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindAll
      * @request GET:/tenant-access/{tenantId}
      * @secure
+     * @response `200` `TenantAccessPaginateResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
      */
     findAll: (
       tenantId: string,
-      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+      },
       params: RequestParams = {},
     ) =>
       this.request<TenantAccessPaginateResponseDto, HttpExceptionDto>({
@@ -3161,6 +3537,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindOne
      * @request GET:/tenant-access/{tenantId}/{id}
      * @secure
+     * @response `200` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
      */
     findOne: (id: string, tenantId: string, params: RequestParams = {}) =>
       this.request<void, HttpExceptionDto>({
@@ -3178,6 +3556,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name Create
      * @request POST:/tenant-hosts/{tenantId}
      * @secure
+     * @response `201` `TenantHostResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     create: (tenantId: string, data: CreateTenantHostDto, params: RequestParams = {}) =>
       this.request<TenantHostResponseDto, HttpExceptionDto>({
@@ -3197,10 +3577,20 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindAll
      * @request GET:/tenant-hosts/{tenantId}
      * @secure
+     * @response `200` `TenantHostPaginateResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     findAll: (
       tenantId: string,
-      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+      },
       params: RequestParams = {},
     ) =>
       this.request<TenantHostPaginateResponseDto, HttpExceptionDto>({
@@ -3219,6 +3609,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name GetMainHostByTenantId
      * @request GET:/tenant-hosts/{tenantId}/main-host
      * @secure
+     * @response `200` `TenantHostEntityDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     getMainHostByTenantId: (tenantId: string, params: RequestParams = {}) =>
       this.request<TenantHostEntityDto, HttpExceptionDto>({
@@ -3236,6 +3628,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindOne
      * @request GET:/tenant-hosts/{tenantId}/{id}
      * @secure
+     * @response `200` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     findOne: (tenantId: string, id: string, params: RequestParams = {}) =>
       this.request<void, HttpExceptionDto>({
@@ -3252,6 +3646,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name Update
      * @request PATCH:/tenant-hosts/{tenantId}/{id}
      * @secure
+     * @response `200` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     update: (tenantId: string, id: string, data: UpdateTenantHostDto, params: RequestParams = {}) =>
       this.request<void, HttpExceptionDto>({
@@ -3263,6 +3659,25 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
+  integrations = {
+    /**
+     * No description
+     *
+     * @tags Integration
+     * @name List
+     * @request GET:/integrations
+     * @secure
+     * @response `200` `(IntegrationResponseDto)[]`
+     */
+    list: (params: RequestParams = {}) =>
+      this.request<IntegrationResponseDto[], any>({
+        path: `/integrations`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+  };
   whitelists = {
     /**
      * No description
@@ -3271,10 +3686,20 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name CheckUserInMultipleWhitelists
      * @request GET:/whitelists/{tenantId}/check-user
      * @secure
+     * @response `200` `CheckUserInMultipleWhitelistsResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     checkUserInMultipleWhitelists: (
       tenantId: string,
-      query: { userId: string; whitelistsIds: string[] },
+      query: {
+        /**
+         * @format uuid
+         * @example "00000000-0000-0000-0000-000000000000"
+         */
+        userId: string;
+        /** @example ["00000000-0000-0000-0000-000000000000"] */
+        whitelistsIds: string[];
+      },
       params: RequestParams = {},
     ) =>
       this.request<CheckUserInMultipleWhitelistsResponseDto, HttpExceptionDto>({
@@ -3293,10 +3718,20 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindWhitelists
      * @request GET:/whitelists/{tenantId}
      * @secure
+     * @response `200` `WhitelistPaginateResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     findWhitelists: (
       tenantId: string,
-      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+      },
       params: RequestParams = {},
     ) =>
       this.request<WhitelistPaginateResponseDto, HttpExceptionDto>({
@@ -3315,6 +3750,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name CreateWhitelist
      * @request POST:/whitelists/{tenantId}
      * @secure
+     * @response `201` `WhitelistResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     createWhitelist: (tenantId: string, data: CreateOrUpdateWhitelistDto, params: RequestParams = {}) =>
       this.request<WhitelistResponseDto, HttpExceptionDto>({
@@ -3334,6 +3771,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name GetWhitelist
      * @request GET:/whitelists/{tenantId}/{id}
      * @secure
+     * @response `200` `WhitelistResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     getWhitelist: (tenantId: string, id: string, params: RequestParams = {}) =>
       this.request<WhitelistResponseDto, HttpExceptionDto>({
@@ -3351,6 +3790,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name UpdateWhitelist
      * @request PATCH:/whitelists/{tenantId}/{id}
      * @secure
+     * @response `200` `WhitelistResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     updateWhitelist: (tenantId: string, id: string, data: CreateOrUpdateWhitelistDto, params: RequestParams = {}) =>
       this.request<WhitelistResponseDto, HttpExceptionDto>({
@@ -3370,6 +3811,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name DeleteWhitelist
      * @request DELETE:/whitelists/{tenantId}/{id}
      * @secure
+     * @response `204` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     deleteWhitelist: (tenantId: string, id: string, params: RequestParams = {}) =>
       this.request<void, HttpExceptionDto>({
@@ -3386,6 +3829,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name PromoteWhitelistOnChain
      * @request PATCH:/whitelists/{tenantId}/{id}/promote-on-chain
      * @secure
+     * @response `200` `WalletGroupResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     promoteWhitelistOnChain: (tenantId: string, id: string, data: WhitelistOnChainDto, params: RequestParams = {}) =>
       this.request<WalletGroupResponseDto, HttpExceptionDto>({
@@ -3405,8 +3850,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name CheckUserInWhitelist
      * @request GET:/whitelists/{tenantId}/{id}/check-user
      * @secure
+     * @response `200` `CheckWhitelistUserResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
-    checkUserInWhitelist: (tenantId: string, id: string, query: { userId: string }, params: RequestParams = {}) =>
+    checkUserInWhitelist: (
+      tenantId: string,
+      id: string,
+      query: {
+        /**
+         * @format uuid
+         * @example "00000000-0000-0000-0000-000000000000"
+         */
+        userId: string;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<CheckWhitelistUserResponseDto, HttpExceptionDto>({
         path: `/whitelists/${tenantId}/${id}/check-user`,
         method: 'GET',
@@ -3423,17 +3881,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindWhitelistEntries
      * @request GET:/whitelists/{tenantId}/{id}/entries
      * @secure
+     * @response `200` `WhitelistEntryPaginateResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     findWhitelistEntries: (
       tenantId: string,
       id: string,
       query?: {
+        /** @default 1 */
         page?: number;
+        /** @default 10 */
         limit?: number;
         search?: string;
+        /** @example "createdAt" */
         sortBy?: WhitelistEntriesSortBy;
         orderBy?: OrderByEnum;
+        /** @default [] */
         type?: ('user_id' | 'email' | 'wallet_address' | 'collection_holder')[];
+        /** @example false */
         showWallets?: boolean;
       },
       params: RequestParams = {},
@@ -3454,6 +3919,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name CreateWhitelistEntry
      * @request POST:/whitelists/{tenantId}/{id}/entries
      * @secure
+     * @response `201` `WhitelistEntryResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     createWhitelistEntry: (tenantId: string, id: string, data: CreateWhitelistEntryDto, params: RequestParams = {}) =>
       this.request<WhitelistEntryResponseDto, HttpExceptionDto>({
@@ -3473,6 +3940,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name DeleteWhitelistEntry
      * @request DELETE:/whitelists/{tenantId}/{id}/entries/{entryId}
      * @secure
+     * @response `204` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     deleteWhitelistEntry: (tenantId: string, id: string, entryId: string, params: RequestParams = {}) =>
       this.request<void, HttpExceptionDto>({

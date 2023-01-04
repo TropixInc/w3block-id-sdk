@@ -20,6 +20,8 @@ async function run() {
     input: path.resolve(config.swagger.dest, config.swagger.filename),
     httpClientType: 'axios',
     generateRouteTypes: true,
+    generateResponses: true,
+    defaultResponseAsSuccess: true,
     hooks: {
       onParseSchema: (schema, parsed) => {
         // Parse ChainId enum correctly
