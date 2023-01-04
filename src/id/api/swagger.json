@@ -1167,8 +1167,54 @@
       "post": {
         "operationId": "requestSessionWalletConnect",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWalletConnectSessionDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseWalletConnectSessionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Blockchain"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/blockchain/disconnect-session-wallet-connect": {
+      "delete": {
+        "operationId": "disconnectSessionWalletConnect",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWalletConnectSessionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
             "description": ""
           }
         },
@@ -2409,6 +2455,35 @@
         },
         "tags": [
           "Tenant Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/integrations": {
+      "get": {
+        "operationId": "list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IntegrationResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Integration"
         ],
         "security": [
           {
@@ -3997,6 +4072,48 @@
           "args"
         ]
       },
+      "RequestWalletConnectSessionDto": {
+        "type": "object",
+        "properties": {
+          "chainId": {
+            "default": 137,
+            "example": 137,
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "address": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "chainId",
+          "address",
+          "uri"
+        ]
+      },
+      "ResponseWalletConnectSessionDto": {
+        "type": "object",
+        "properties": {
+          "chainId": {
+            "default": 137,
+            "example": 137,
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "address": {
+            "type": "string"
+          },
+          "handshakeTopic": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "chainId",
+          "address",
+          "handshakeTopic"
+        ]
+      },
       "JwtPayloadDto": {
         "type": "object",
         "properties": {
@@ -5251,6 +5368,74 @@
         },
         "required": [
           "hostname"
+        ]
+      },
+      "PublicDataDto": {
+        "type": "object",
+        "properties": {
+          "WALLET_CONNECT": {
+            "type": "object"
+          },
+          "METAMASK": {
+            "type": "object"
+          }
+        }
+      },
+      "PrivateDataDto": {
+        "type": "object",
+        "properties": {
+          "WALLET_CONNECT": {
+            "type": "object"
+          },
+          "METAMASK": {
+            "type": "object"
+          }
+        }
+      },
+      "IntegrationType": {
+        "type": "string",
+        "enum": [
+          "WALLET_CONNECT",
+          "METAMASK"
+        ]
+      },
+      "IntegrationResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/IntegrationType"
+          },
+          "publicData": {
+            "$ref": "#/components/schemas/PublicDataDto"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "type",
+          "publicData",
+          "userId",
+          "active"
         ]
       },
       "CheckWhitelistUserResponseDto": {
