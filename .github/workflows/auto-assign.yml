@@ -8,6 +8,5 @@ permissions:
 jobs:
   assign:
     runs-on: ubuntu-latest
-    needs: pr-compliance
     steps:
       - uses: kentaro-m/auto-assign-action@v1.2.3
