@@ -556,6 +556,13 @@ export interface BadRequestExceptionDto {
   data?: object;
 }
 
+export interface DocumentDto {
+  /** @format uuid */
+  inputId: string;
+  value?: string;
+  assetId?: string;
+}
+
 export interface SignupUserDto {
   /**
    * Password should include lowercase, uppercase and digits
@@ -576,6 +583,7 @@ export interface SignupUserDto {
    */
   i18nLocale?: I18NLocaleEnum;
   callbackUrl: string;
+  documents?: DocumentDto[];
 }
 
 export interface UnauthorizedExceptionDto {
@@ -1078,6 +1086,234 @@ export interface UpdateTenantHostDto {
   /** @example "example.com" */
   hostname: string;
   paths?: TenantHostPathsDto;
+}
+
+export enum DataTypesEnum {
+  File = 'file',
+  Url = 'url',
+  Cpf = 'cpf',
+  Phone = 'phone',
+  Text = 'text',
+  Email = 'email',
+}
+
+export interface CreateTenantInputDto {
+  contextId: string;
+  /** @example "Input label" */
+  label: string;
+  /** @example "Input description" */
+  description: string;
+  /** @example "cpf" */
+  type: DataTypesEnum;
+  /** @example 1 */
+  order: number;
+  /** @example true */
+  mandatory: boolean;
+  /** @example true */
+  active: boolean;
+}
+
+export interface TenantInputEntityDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId: string;
+  contextId: string;
+  label: string;
+  description: string;
+  /** @example "cpf" */
+  type: DataTypesEnum;
+  order: number;
+  mandatory: boolean;
+  /** @example true */
+  active: boolean;
+}
+
+export interface TenantInputPaginateResponseDto {
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+  items: TenantContextDto[];
+}
+
+export type TenantInputEntity = object;
+
+export enum AssetType {
+  Image = 'image',
+  Document = 'document',
+}
+
+export enum AssetStatus {
+  WaitingUpload = 'waitingUpload',
+  WaitingAssociation = 'waitingAssociation',
+  Associated = 'associated',
+  Excluded = 'excluded',
+  Expired = 'expired',
+}
+
+export enum AssetProvider {
+  Cloudinary = 'cloudinary',
+}
+
+export enum AssetTarget {
+  UserDocument = 'userDocument',
+}
+
+export interface AssetEntityDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId: string;
+  /** @example "image" */
+  type: AssetType;
+  /** @example "associated" */
+  status: AssetStatus;
+  /** @example "cloudinary" */
+  provider: AssetProvider;
+  /** @example "https://dummyimage.com/200x200/fff/000" */
+  directLink?: string | null;
+  /** @example "userDocument" */
+  target?: AssetTarget | null;
+}
+
+export interface DocumentEntityDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId: string;
+  contextId: string;
+  userId: string;
+  /** @format uuid */
+  inputId: string;
+  input?: TenantInputEntity;
+  /** @example true */
+  active: boolean;
+  value: string;
+  /** @format uuid */
+  assetId: string | null;
+  asset?: AssetEntityDto | null;
+}
+
+export interface DocumentPaginateResponseDto {
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+  items: DocumentEntityDto[];
+}
+
+export enum AssetTypeEnum {
+  Image = 'image',
+  Document = 'document',
+}
+
+export enum AssetTargetEnum {
+  UserDocument = 'userDocument',
+}
+
+export interface RequestAssetUploadDto {
+  /**
+   * @default "image"
+   * @example "image"
+   */
+  type: AssetTypeEnum;
+  /** @example "userDocument" */
+  target: AssetTargetEnum;
+}
+
+export interface CloudinaryProviderUploadParamsDto {
+  /** @example "000000000000" */
+  apiKey: string;
+  /** @example 1666215568 */
+  timestamp: number;
+  /** @example "directory/3fa85f64-5717-4562-b3fc-2c963f66afa6" */
+  publicId: string;
+  /** @example "bfd09f95f331f558cbd1320e67aa8d488770583e" */
+  signature: string;
+  /** @example "filename_override=false&public_id=directory/3fa85f64-5717-4562-b3fc-2c963f66afa6&timestamp=1666215568&unique_filename=true&upload_preset=upload_preset&api_key=000000000000&signature=bfd09f95f331f558cbd1320e67aa8d488770583e" */
+  signedParams: string;
+  /** @example {"filename_override":"false","public_id":"directory/3fa85f64-5717-4562-b3fc-2c963f66afa6","timestamp":"1666215568","unique_filename":"true"} */
+  queryParams: object;
+  /** @example "upload_preset" */
+  uploadPreset: string;
+}
+
+export interface AssetEntityWithProviderUploadParamsDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId: string;
+  /** @example "image" */
+  type: AssetType;
+  /** @example "associated" */
+  status: AssetStatus;
+  /** @example "cloudinary" */
+  provider: AssetProvider;
+  /** @example "https://dummyimage.com/200x200/fff/000" */
+  directLink?: string | null;
+  /** @example "userDocument" */
+  target?: AssetTarget | null;
+  providerUploadParams: CloudinaryProviderUploadParamsDto;
+}
+
+export interface CreateContextsDto {
+  description: string;
+  slug: string;
+  tenantId?: string;
+}
+
+export interface ContextDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  description: string;
+  slug: string;
+  /** @format uuid */
+  tenantId?: string | null;
+}
+
+export interface UpdateContextsDto {
+  description: string;
+  slug: string;
+}
+
+export type DuplicatedContextException = object;
+
+export interface CreateTenantContextDto {
+  contextId: string;
+  /** @example true */
+  active: boolean;
+}
+
+export interface TenantContextDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId: string;
+  contextId: string;
+  context?: ContextDto;
+  /** @example true */
+  active: boolean;
 }
 
 export interface PublicDataDto {
@@ -1598,6 +1834,41 @@ export namespace Users {
     export type RequestBody = ClaimMetamaskDto;
     export type RequestHeaders = {};
     export type ResponseBody = WalletResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users Documents
+   * @name FindAll
+   * @request GET:/users/{tenantId}/documents/{userId}
+   * @secure
+   * @response `200` `DocumentPaginateResponseDto`
+   */
+  export namespace FindAll {
+    export type RequestParams = {
+      userId: string;
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      /** @default 1 */
+      page?: number;
+      /** @default 10 */
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+      /**
+       * Filter by document type
+       * @example null
+       */
+      type?: DataTypesEnum[];
+      /** Filter by document contextId */
+      contextId?: string;
+      /** Filter by document inputId */
+      inputId?: string;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = DocumentPaginateResponseDto;
   }
 }
 
@@ -2191,6 +2462,266 @@ export namespace TenantHosts {
   }
 }
 
+export namespace TenantInput {
+  /**
+   * No description
+   * @tags Tenant Input
+   * @name Create
+   * @request POST:/tenant-input/{tenantId}
+   * @secure
+   * @response `201` `TenantInputEntityDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+   */
+  export namespace Create {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = CreateTenantInputDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantInputEntityDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Input
+   * @name FindAll
+   * @request GET:/tenant-input/{tenantId}
+   * @secure
+   * @response `200` `TenantInputPaginateResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+   */
+  export namespace FindAll {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      /** @default 1 */
+      page?: number;
+      /** @default 10 */
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantInputPaginateResponseDto;
+  } /**
+ * @description Get all tenant param by tenant and context
+ * @tags Tenant Input
+ * @name ListBySlugContext
+ * @request GET:/tenant-input/{tenantId}/slug/{slug}
+ * @response `200` `(TenantInputEntityDto)[]`
+ * @response `404` `{
+  \** @example 404 *\
+    statusCode: number,
+  \** @example "Tenant context 'slug' is disabled from 'tenant'" *\
+    message: string,
+  \** @example "Not Found" *\
+    error?: string,
+
+}`
+*/
+  export namespace ListBySlugContext {
+    export type RequestParams = {
+      tenantId: string;
+      slug: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantInputEntityDto[];
+  }
+  /**
+   * No description
+   * @tags Tenant Input
+   * @name FindOne
+   * @request GET:/tenant-input/{tenantId}/{id}
+   * @secure
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+   */
+  export namespace FindOne {
+    export type RequestParams = {
+      id: string;
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
+}
+
+export namespace Assets {
+  /**
+   * @description Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)
+   * @tags Assets
+   * @name RequestUpload
+   * @request POST:/assets/{tenantId}
+   * @response `201` `AssetEntityWithProviderUploadParamsDto` Asset upload request successfully created!
+   */
+  export namespace RequestUpload {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = RequestAssetUploadDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = AssetEntityWithProviderUploadParamsDto;
+  }
+}
+
+export namespace Contexts {
+  /**
+ * @description Create a new context
+ * @tags Contexts
+ * @name Create
+ * @request POST:/contexts
+ * @secure
+ * @response `201` `ContextDto` Context created successfully
+ * @response `401` `void` Unauthorized - Integration API key or JWT required
+ * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+ * @response `409` `{
+  \** @example 409 *\
+    statusCode: number,
+  \** @example "Context "slug" already exists for tenant "tenantId"." *\
+    message: string,
+  \** @example "Conflict" *\
+    error?: string,
+
+}`
+*/
+  export namespace Create {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = CreateContextsDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ContextDto;
+  }
+  /**
+   * @description Returns all contexts
+   * @tags Contexts
+   * @name ListAll
+   * @request GET:/contexts
+   * @secure
+   * @response `200` `(ContextDto)[]` Returns all contexts
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin
+   */
+  export namespace ListAll {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ContextDto[];
+  }
+  /**
+   * @description Update a context by id
+   * @tags Contexts
+   * @name Update
+   * @request PATCH:/contexts/{id}
+   * @secure
+   * @response `204` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+   * @response `404` `DuplicatedContextException` Not found context to update
+   */
+  export namespace Update {
+    export type RequestParams = {
+      id: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateContextsDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Delete a context by id
+   * @tags Contexts
+   * @name Delete
+   * @request DELETE:/contexts/{id}
+   * @secure
+   * @response `204` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+   */
+  export namespace Delete {
+    export type RequestParams = {
+      id: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+}
+
+export namespace TenantContext {
+  /**
+   * No description
+   * @tags Tenant Context
+   * @name Create
+   * @request POST:/tenant-context/{tenantId}
+   * @secure
+   * @response `201` `TenantContextDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+   */
+  export namespace Create {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = CreateTenantContextDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantContextDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Context
+   * @name FindAll
+   * @request GET:/tenant-context/{tenantId}
+   * @secure
+   * @response `200` `TenantInputPaginateResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+   */
+  export namespace FindAll {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      /** @default 1 */
+      page?: number;
+      /** @default 10 */
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantInputPaginateResponseDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Context
+   * @name FindOne
+   * @request GET:/tenant-context/{tenantId}/{id}
+   * @secure
+   * @response `200` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+   */
+  export namespace FindOne {
+    export type RequestParams = {
+      id: string;
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+}
+
 export namespace Integrations {
   /**
    * No description
@@ -2586,7 +3117,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.6.6
+ * @version 0.7.0
  * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */
@@ -3002,6 +3533,47 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Documents
+     * @name FindAll
+     * @request GET:/users/{tenantId}/documents/{userId}
+     * @secure
+     * @response `200` `DocumentPaginateResponseDto`
+     */
+    findAll: (
+      userId: string,
+      tenantId: string,
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+        /**
+         * Filter by document type
+         * @example null
+         */
+        type?: DataTypesEnum[];
+        /** Filter by document contextId */
+        contextId?: string;
+        /** Filter by document inputId */
+        inputId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<DocumentPaginateResponseDto, any>({
+        path: `/users/${tenantId}/documents/${userId}`,
+        method: 'GET',
+        query: query,
+        secure: true,
         format: 'json',
         ...params,
       }),
@@ -3656,6 +4228,308 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
+        ...params,
+      }),
+  };
+  tenantInput = {
+    /**
+     * No description
+     *
+     * @tags Tenant Input
+     * @name Create
+     * @request POST:/tenant-input/{tenantId}
+     * @secure
+     * @response `201` `TenantInputEntityDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+     */
+    create: (tenantId: string, data: CreateTenantInputDto, params: RequestParams = {}) =>
+      this.request<TenantInputEntityDto, HttpExceptionDto>({
+        path: `/tenant-input/${tenantId}`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Input
+     * @name FindAll
+     * @request GET:/tenant-input/{tenantId}
+     * @secure
+     * @response `200` `TenantInputPaginateResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+     */
+    findAll: (
+      tenantId: string,
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TenantInputPaginateResponseDto, HttpExceptionDto>({
+        path: `/tenant-input/${tenantId}`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+ * @description Get all tenant param by tenant and context
+ *
+ * @tags Tenant Input
+ * @name ListBySlugContext
+ * @request GET:/tenant-input/{tenantId}/slug/{slug}
+ * @response `200` `(TenantInputEntityDto)[]`
+ * @response `404` `{
+  \** @example 404 *\
+    statusCode: number,
+  \** @example "Tenant context 'slug' is disabled from 'tenant'" *\
+    message: string,
+  \** @example "Not Found" *\
+    error?: string,
+
+}`
+ */
+    listBySlugContext: (tenantId: string, slug: string, params: RequestParams = {}) =>
+      this.request<
+        TenantInputEntityDto[],
+        {
+          /** @example 404 */
+          statusCode: number;
+          /** @example "Tenant context 'slug' is disabled from 'tenant'" */
+          message: string;
+          /** @example "Not Found" */
+          error?: string;
+        }
+      >({
+        path: `/tenant-input/${tenantId}/slug/${slug}`,
+        method: 'GET',
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Input
+     * @name FindOne
+     * @request GET:/tenant-input/{tenantId}/{id}
+     * @secure
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+     */
+    findOne: (id: string, tenantId: string, params: RequestParams = {}) =>
+      this.request<any, HttpExceptionDto>({
+        path: `/tenant-input/${tenantId}/${id}`,
+        method: 'GET',
+        secure: true,
+        ...params,
+      }),
+  };
+  assets = {
+    /**
+     * @description Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)
+     *
+     * @tags Assets
+     * @name RequestUpload
+     * @request POST:/assets/{tenantId}
+     * @response `201` `AssetEntityWithProviderUploadParamsDto` Asset upload request successfully created!
+     */
+    requestUpload: (tenantId: string, data: RequestAssetUploadDto, params: RequestParams = {}) =>
+      this.request<AssetEntityWithProviderUploadParamsDto, any>({
+        path: `/assets/${tenantId}`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+  };
+  contexts = {
+    /**
+ * @description Create a new context
+ *
+ * @tags Contexts
+ * @name Create
+ * @request POST:/contexts
+ * @secure
+ * @response `201` `ContextDto` Context created successfully
+ * @response `401` `void` Unauthorized - Integration API key or JWT required
+ * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+ * @response `409` `{
+  \** @example 409 *\
+    statusCode: number,
+  \** @example "Context "slug" already exists for tenant "tenantId"." *\
+    message: string,
+  \** @example "Conflict" *\
+    error?: string,
+
+}`
+ */
+    create: (data: CreateContextsDto, params: RequestParams = {}) =>
+      this.request<
+        ContextDto,
+        | void
+        | HttpExceptionDto
+        | {
+            /** @example 409 */
+            statusCode: number;
+            /** @example "Context "slug" already exists for tenant "tenantId"." */
+            message: string;
+            /** @example "Conflict" */
+            error?: string;
+          }
+      >({
+        path: `/contexts`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Returns all contexts
+     *
+     * @tags Contexts
+     * @name ListAll
+     * @request GET:/contexts
+     * @secure
+     * @response `200` `(ContextDto)[]` Returns all contexts
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin
+     */
+    listAll: (params: RequestParams = {}) =>
+      this.request<ContextDto[], void | HttpExceptionDto>({
+        path: `/contexts`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Update a context by id
+     *
+     * @tags Contexts
+     * @name Update
+     * @request PATCH:/contexts/{id}
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+     * @response `404` `DuplicatedContextException` Not found context to update
+     */
+    update: (id: string, data: UpdateContextsDto, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto | DuplicatedContextException>({
+        path: `/contexts/${id}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * @description Delete a context by id
+     *
+     * @tags Contexts
+     * @name Delete
+     * @request DELETE:/contexts/{id}
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+     */
+    delete: (id: string, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/contexts/${id}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+  };
+  tenantContext = {
+    /**
+     * No description
+     *
+     * @tags Tenant Context
+     * @name Create
+     * @request POST:/tenant-context/{tenantId}
+     * @secure
+     * @response `201` `TenantContextDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+     */
+    create: (tenantId: string, data: CreateTenantContextDto, params: RequestParams = {}) =>
+      this.request<TenantContextDto, HttpExceptionDto>({
+        path: `/tenant-context/${tenantId}`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Context
+     * @name FindAll
+     * @request GET:/tenant-context/{tenantId}
+     * @secure
+     * @response `200` `TenantInputPaginateResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+     */
+    findAll: (
+      tenantId: string,
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TenantInputPaginateResponseDto, HttpExceptionDto>({
+        path: `/tenant-context/${tenantId}`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Context
+     * @name FindOne
+     * @request GET:/tenant-context/{tenantId}/{id}
+     * @secure
+     * @response `200` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+     */
+    findOne: (id: string, tenantId: string, params: RequestParams = {}) =>
+      this.request<void, HttpExceptionDto>({
+        path: `/tenant-context/${tenantId}/${id}`,
+        method: 'GET',
+        secure: true,
         ...params,
       }),
   };
