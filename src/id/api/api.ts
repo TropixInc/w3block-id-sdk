@@ -1316,6 +1316,42 @@ export interface TenantContextDto {
   active: boolean;
 }
 
+export enum UserContextStatus {
+  Approved = 'approved',
+  Denied = 'denied',
+  WaitingInfo = 'waitingInfo',
+  MissingDocuments = 'missingDocuments',
+  Processing = 'processing',
+  Created = 'created',
+}
+
+export interface UserContextEntityDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId: string;
+  contextId: string;
+  userId: string;
+  /** @example "created" */
+  status: UserContextStatus;
+  context?: ContextDto | null;
+}
+
+export interface UsersContextsPaginateResponseDto {
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+  items: UserContextEntityDto[];
+}
+
+export interface UserContextStatusDto {
+  /** @example "created" */
+  status: UserContextStatus;
+}
+
 export interface PublicDataDto {
   WALLET_CONNECT?: object;
   METAMASK?: object;
@@ -1399,8 +1435,6 @@ export interface WhitelistResponseDto {
   createdAt?: string;
   /** @format date-time */
   updatedAt?: string;
-  /** @format date-time */
-  deletedAt?: string;
   walletGroups?: WalletGroupResponseDto[];
 }
 
@@ -1869,6 +1903,60 @@ export namespace Users {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = DocumentPaginateResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users Contexts
+   * @name FindAll2
+   * @request GET:/users/{tenantId}/contexts/{userId}
+   * @originalName findAll
+   * @duplicate
+   * @secure
+   * @response `200` `UsersContextsPaginateResponseDto`
+   */
+  export namespace FindAll2 {
+    export type RequestParams = {
+      userId: string;
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      /** @default 1 */
+      page?: number;
+      /** @default 10 */
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+      /**
+       * Filter by status
+       * @example null
+       */
+      status?: UserContextStatus;
+      /** Filter by document contextId */
+      contextId?: string;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UsersContextsPaginateResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users Contexts
+   * @name ChangeStatusByUserAndContextAndTenant
+   * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/change-status
+   * @secure
+   * @response `204` `void`
+   */
+  export namespace ChangeStatusByUserAndContextAndTenant {
+    export type RequestParams = {
+      userId: string;
+      contextId: string;
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UserContextStatusDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
   }
 }
 
@@ -3575,6 +3663,72 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         query: query,
         secure: true,
         format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Contexts
+     * @name FindAll2
+     * @request GET:/users/{tenantId}/contexts/{userId}
+     * @originalName findAll
+     * @duplicate
+     * @secure
+     * @response `200` `UsersContextsPaginateResponseDto`
+     */
+    findAll2: (
+      userId: string,
+      tenantId: string,
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+        /**
+         * Filter by status
+         * @example null
+         */
+        status?: UserContextStatus;
+        /** Filter by document contextId */
+        contextId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UsersContextsPaginateResponseDto, any>({
+        path: `/users/${tenantId}/contexts/${userId}`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Contexts
+     * @name ChangeStatusByUserAndContextAndTenant
+     * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/change-status
+     * @secure
+     * @response `204` `void`
+     */
+    changeStatusByUserAndContextAndTenant: (
+      userId: string,
+      contextId: string,
+      tenantId: string,
+      data: UserContextStatusDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/users/${tenantId}/contexts/${userId}/${contextId}/change-status`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
   };

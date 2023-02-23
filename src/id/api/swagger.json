@@ -3322,6 +3322,164 @@
         ]
       }
     },
+    "/users/{tenantId}/contexts/{userId}": {
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Filter by status",
+            "example": null,
+            "schema": {
+              "$ref": "#/components/schemas/UserContextStatus"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by document contextId",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersContextsPaginateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/contexts/{userId}/{contextId}/change-status": {
+      "patch": {
+        "operationId": "changeStatusByUserAndContextAndTenant",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserContextStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/integrations": {
       "get": {
         "operationId": "list",
@@ -6816,6 +6974,98 @@
           "active"
         ]
       },
+      "UserContextStatus": {
+        "type": "string",
+        "enum": [
+          "approved",
+          "denied",
+          "waitingInfo",
+          "missingDocuments",
+          "processing",
+          "created"
+        ]
+      },
+      "UserContextEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contextId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "status": {
+            "example": "created",
+            "$ref": "#/components/schemas/UserContextStatus"
+          },
+          "context": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ContextDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "tenantId",
+          "contextId",
+          "userId",
+          "status"
+        ]
+      },
+      "UsersContextsPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserContextEntityDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
+      "UserContextStatusDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "example": "created",
+            "$ref": "#/components/schemas/UserContextStatus"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
       "PublicDataDto": {
         "type": "object",
         "properties": {
@@ -7008,10 +7258,6 @@
             "type": "string"
           },
           "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "deletedAt": {
             "format": "date-time",
             "type": "string"
           },
