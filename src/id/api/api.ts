@@ -145,6 +145,7 @@ export interface UserPublicResponseDto {
   createdAt?: string;
   /** @format date-time */
   updatedAt?: string;
+  kycStatus: 'noRequired' | 'approved' | 'denied' | 'pending' | 'pendingReview';
 }
 
 export interface HttpExceptionDto {
@@ -1183,6 +1184,13 @@ export interface AssetEntityDto {
   target?: AssetTarget | null;
 }
 
+export enum UserDocumentStatus {
+  Approved = 'approved',
+  Denied = 'denied',
+  RequiredReview = 'requiredReview',
+  Created = 'created',
+}
+
 export interface DocumentEntityDto {
   /** @format uuid */
   id: string;
@@ -1203,12 +1211,70 @@ export interface DocumentEntityDto {
   /** @format uuid */
   assetId: string | null;
   asset?: AssetEntityDto | null;
+  status: UserDocumentStatus;
 }
 
 export interface DocumentPaginateResponseDto {
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
   items: DocumentEntityDto[];
+}
+
+export interface AttachDocumentsToUser {
+  documents: DocumentDto[];
+}
+
+export enum UserContextStatus {
+  Approved = 'approved',
+  Denied = 'denied',
+  RequiredReview = 'requiredReview',
+  Created = 'created',
+}
+
+export interface ContextDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  description: string;
+  slug: string;
+  /** @format uuid */
+  tenantId?: string | null;
+}
+
+export interface UserContextEntityDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId: string;
+  contextId: string;
+  userId: string;
+  /** @example "created" */
+  status: UserContextStatus;
+  context?: ContextDto | null;
+  logs: any[][];
+}
+
+export interface UsersContextsPaginateResponseDto {
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+  items: UserContextEntityDto[];
+}
+
+export interface UserContextStatusDto {
+  reason?: string | null;
+}
+
+export interface RequiredReviewContextStatusDto {
+  reason?: string | null;
+  /** @example [] */
+  inputIds: any[][];
 }
 
 export enum AssetTypeEnum {
@@ -1275,19 +1341,6 @@ export interface CreateContextsDto {
   tenantId?: string;
 }
 
-export interface ContextDto {
-  /** @format uuid */
-  id: string;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  description: string;
-  slug: string;
-  /** @format uuid */
-  tenantId?: string | null;
-}
-
 export interface UpdateContextsDto {
   description: string;
   slug: string;
@@ -1314,42 +1367,6 @@ export interface TenantContextDto {
   context?: ContextDto;
   /** @example true */
   active: boolean;
-}
-
-export enum UserContextStatus {
-  Approved = 'approved',
-  Denied = 'denied',
-  WaitingInfo = 'waitingInfo',
-  MissingDocuments = 'missingDocuments',
-  Processing = 'processing',
-  Created = 'created',
-}
-
-export interface UserContextEntityDto {
-  /** @format uuid */
-  id: string;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  /** @format uuid */
-  tenantId: string;
-  contextId: string;
-  userId: string;
-  /** @example "created" */
-  status: UserContextStatus;
-  context?: ContextDto | null;
-}
-
-export interface UsersContextsPaginateResponseDto {
-  meta: PaginationMetaDto;
-  links?: PaginationLinksDto;
-  items: UserContextEntityDto[];
-}
-
-export interface UserContextStatusDto {
-  /** @example "created" */
-  status: UserContextStatus;
 }
 
 export interface PublicDataDto {
@@ -1879,8 +1896,8 @@ export namespace Users {
    */
   export namespace FindAll {
     export type RequestParams = {
-      userId: string;
       tenantId: string;
+      userId: string;
     };
     export type RequestQuery = {
       /** @default 1 */
@@ -1906,6 +1923,44 @@ export namespace Users {
   }
   /**
    * No description
+   * @tags Users Documents
+   * @name GetAllByContext
+   * @request GET:/users/{tenantId}/documents/{userId}/context/{contextId}
+   * @secure
+   * @response `200` `(DocumentEntityDto)[]`
+   */
+  export namespace GetAllByContext {
+    export type RequestParams = {
+      tenantId: string;
+      userId: string;
+      contextId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = DocumentEntityDto[];
+  }
+  /**
+   * No description
+   * @tags Users Documents
+   * @name AttachDocumentsToUserByContextId
+   * @request POST:/users/{tenantId}/documents/{userId}/context/{contextId}
+   * @secure
+   * @response `201` `void`
+   */
+  export namespace AttachDocumentsToUserByContextId {
+    export type RequestParams = {
+      tenantId: string;
+      userId: string;
+      contextId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = AttachDocumentsToUser;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
    * @tags Users Contexts
    * @name FindAll2
    * @request GET:/users/{tenantId}/contexts/{userId}
@@ -1916,8 +1971,8 @@ export namespace Users {
    */
   export namespace FindAll2 {
     export type RequestParams = {
-      userId: string;
       tenantId: string;
+      userId: string;
     };
     export type RequestQuery = {
       /** @default 1 */
@@ -1942,19 +1997,57 @@ export namespace Users {
   /**
    * No description
    * @tags Users Contexts
-   * @name ChangeStatusByUserAndContextAndTenant
-   * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/change-status
+   * @name Approve
+   * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/approve
    * @secure
    * @response `204` `void`
    */
-  export namespace ChangeStatusByUserAndContextAndTenant {
+  export namespace Approve {
     export type RequestParams = {
+      tenantId: string;
       userId: string;
       contextId: string;
-      tenantId: string;
     };
     export type RequestQuery = {};
     export type RequestBody = UserContextStatusDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users Contexts
+   * @name Reject
+   * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/reject
+   * @secure
+   * @response `204` `void`
+   */
+  export namespace Reject {
+    export type RequestParams = {
+      tenantId: string;
+      userId: string;
+      contextId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UserContextStatusDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users Contexts
+   * @name RequireReview
+   * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/require-review
+   * @secure
+   * @response `204` `void`
+   */
+  export namespace RequireReview {
+    export type RequestParams = {
+      tenantId: string;
+      userId: string;
+      contextId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = RequiredReviewContextStatusDto;
     export type RequestHeaders = {};
     export type ResponseBody = void;
   }
@@ -3635,8 +3728,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @response `200` `DocumentPaginateResponseDto`
      */
     findAll: (
-      userId: string,
       tenantId: string,
+      userId: string,
       query?: {
         /** @default 1 */
         page?: number;
@@ -3669,6 +3762,49 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags Users Documents
+     * @name GetAllByContext
+     * @request GET:/users/{tenantId}/documents/{userId}/context/{contextId}
+     * @secure
+     * @response `200` `(DocumentEntityDto)[]`
+     */
+    getAllByContext: (tenantId: string, userId: string, contextId: string, params: RequestParams = {}) =>
+      this.request<DocumentEntityDto[], any>({
+        path: `/users/${tenantId}/documents/${userId}/context/${contextId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Documents
+     * @name AttachDocumentsToUserByContextId
+     * @request POST:/users/{tenantId}/documents/{userId}/context/{contextId}
+     * @secure
+     * @response `201` `void`
+     */
+    attachDocumentsToUserByContextId: (
+      tenantId: string,
+      userId: string,
+      contextId: string,
+      data: AttachDocumentsToUser,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/users/${tenantId}/documents/${userId}/context/${contextId}`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Users Contexts
      * @name FindAll2
      * @request GET:/users/{tenantId}/contexts/{userId}
@@ -3678,8 +3814,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @response `200` `UsersContextsPaginateResponseDto`
      */
     findAll2: (
-      userId: string,
       tenantId: string,
+      userId: string,
       query?: {
         /** @default 1 */
         page?: number;
@@ -3711,20 +3847,70 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users Contexts
-     * @name ChangeStatusByUserAndContextAndTenant
-     * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/change-status
+     * @name Approve
+     * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/approve
      * @secure
      * @response `204` `void`
      */
-    changeStatusByUserAndContextAndTenant: (
+    approve: (
+      tenantId: string,
       userId: string,
       contextId: string,
-      tenantId: string,
       data: UserContextStatusDto,
       params: RequestParams = {},
     ) =>
       this.request<void, any>({
-        path: `/users/${tenantId}/contexts/${userId}/${contextId}/change-status`,
+        path: `/users/${tenantId}/contexts/${userId}/${contextId}/approve`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Contexts
+     * @name Reject
+     * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/reject
+     * @secure
+     * @response `204` `void`
+     */
+    reject: (
+      tenantId: string,
+      userId: string,
+      contextId: string,
+      data: UserContextStatusDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/users/${tenantId}/contexts/${userId}/${contextId}/reject`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Contexts
+     * @name RequireReview
+     * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/require-review
+     * @secure
+     * @response `204` `void`
+     */
+    requireReview: (
+      tenantId: string,
+      userId: string,
+      contextId: string,
+      data: RequiredReviewContextStatusDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/users/${tenantId}/contexts/${userId}/${contextId}/require-review`,
         method: 'PATCH',
         body: data,
         secure: true,

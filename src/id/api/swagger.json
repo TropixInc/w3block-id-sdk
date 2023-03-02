@@ -2748,7 +2748,7 @@
         "operationId": "findAll",
         "parameters": [
           {
-            "name": "userId",
+            "name": "tenantId",
             "required": true,
             "in": "path",
             "schema": {
@@ -2756,7 +2756,7 @@
             }
           },
           {
-            "name": "tenantId",
+            "name": "userId",
             "required": true,
             "in": "path",
             "schema": {
@@ -2851,6 +2851,378 @@
         },
         "tags": [
           "Users Documents"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/documents/{userId}/context/{contextId}": {
+      "get": {
+        "operationId": "getAllByContext",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DocumentEntityDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Documents"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "attachDocumentsToUserByContextId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttachDocumentsToUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users Documents"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/contexts/{userId}": {
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Filter by status",
+            "example": null,
+            "schema": {
+              "$ref": "#/components/schemas/UserContextStatus"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by document contextId",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersContextsPaginateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/contexts/{userId}/{contextId}/approve": {
+      "patch": {
+        "operationId": "approve",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserContextStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/contexts/{userId}/{contextId}/reject": {
+      "patch": {
+        "operationId": "reject",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserContextStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/contexts/{userId}/{contextId}/require-review": {
+      "patch": {
+        "operationId": "requireReview",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequiredReviewContextStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users Contexts"
         ],
         "security": [
           {
@@ -3314,164 +3686,6 @@
         },
         "tags": [
           "Tenant Context"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/contexts/{userId}": {
-      "get": {
-        "operationId": "findAll",
-        "parameters": [
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          },
-          {
-            "name": "status",
-            "required": false,
-            "in": "query",
-            "description": "Filter by status",
-            "example": null,
-            "schema": {
-              "$ref": "#/components/schemas/UserContextStatus"
-            }
-          },
-          {
-            "name": "contextId",
-            "required": false,
-            "in": "query",
-            "description": "Filter by document contextId",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UsersContextsPaginateResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/contexts/{userId}/{contextId}/change-status": {
-      "patch": {
-        "operationId": "changeStatusByUserAndContextAndTenant",
-        "parameters": [
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contextId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserContextStatusDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Users Contexts"
         ],
         "security": [
           {
@@ -4566,6 +4780,17 @@
           "updatedAt": {
             "format": "date-time",
             "type": "string"
+          },
+          "kycStatus": {
+            "type": "string",
+            "enum": [
+              "noRequired",
+              "approved",
+              "denied",
+              "pending",
+              "pendingReview"
+            ],
+            "nullable": false
           }
         },
         "required": [
@@ -4573,7 +4798,8 @@
           "email",
           "verified",
           "roles",
-          "i18nLocale"
+          "i18nLocale",
+          "kycStatus"
         ]
       },
       "HttpExceptionDto": {
@@ -6626,6 +6852,15 @@
           "provider"
         ]
       },
+      "UserDocumentStatus": {
+        "type": "string",
+        "enum": [
+          "approved",
+          "denied",
+          "requiredReview",
+          "created"
+        ]
+      },
       "DocumentEntityDto": {
         "type": "object",
         "properties": {
@@ -6677,6 +6912,9 @@
                 "$ref": "#/components/schemas/AssetEntityDto"
               }
             ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/UserDocumentStatus"
           }
         },
         "required": [
@@ -6689,7 +6927,8 @@
           "inputId",
           "active",
           "value",
-          "assetId"
+          "assetId",
+          "status"
         ]
       },
       "DocumentPaginateResponseDto": {
@@ -6711,6 +6950,168 @@
         "required": [
           "meta",
           "items"
+        ]
+      },
+      "AttachDocumentsToUser": {
+        "type": "object",
+        "properties": {
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentDto"
+            }
+          }
+        },
+        "required": [
+          "documents"
+        ]
+      },
+      "UserContextStatus": {
+        "type": "string",
+        "enum": [
+          "approved",
+          "denied",
+          "requiredReview",
+          "created"
+        ]
+      },
+      "ContextDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "description",
+          "slug"
+        ]
+      },
+      "UserContextEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contextId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "status": {
+            "example": "created",
+            "$ref": "#/components/schemas/UserContextStatus"
+          },
+          "context": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ContextDto"
+              }
+            ]
+          },
+          "logs": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "tenantId",
+          "contextId",
+          "userId",
+          "status",
+          "logs"
+        ]
+      },
+      "UsersContextsPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserContextEntityDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
+      "UserContextStatusDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RequiredReviewContextStatusDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "inputIds": {
+            "example": [],
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "inputIds"
         ]
       },
       "AssetTypeEnum": {
@@ -6865,41 +7266,6 @@
           "slug"
         ]
       },
-      "ContextDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "slug": {
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          }
-        },
-        "required": [
-          "id",
-          "createdAt",
-          "updatedAt",
-          "description",
-          "slug"
-        ]
-      },
       "UpdateContextsDto": {
         "type": "object",
         "properties": {
@@ -6972,98 +7338,6 @@
           "tenantId",
           "contextId",
           "active"
-        ]
-      },
-      "UserContextStatus": {
-        "type": "string",
-        "enum": [
-          "approved",
-          "denied",
-          "waitingInfo",
-          "missingDocuments",
-          "processing",
-          "created"
-        ]
-      },
-      "UserContextEntityDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "contextId": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "status": {
-            "example": "created",
-            "$ref": "#/components/schemas/UserContextStatus"
-          },
-          "context": {
-            "nullable": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ContextDto"
-              }
-            ]
-          }
-        },
-        "required": [
-          "id",
-          "createdAt",
-          "updatedAt",
-          "tenantId",
-          "contextId",
-          "userId",
-          "status"
-        ]
-      },
-      "UsersContextsPaginateResponseDto": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMetaDto"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PaginationLinksDto"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserContextEntityDto"
-            }
-          }
-        },
-        "required": [
-          "meta",
-          "items"
-        ]
-      },
-      "UserContextStatusDto": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "example": "created",
-            "$ref": "#/components/schemas/UserContextStatus"
-          }
-        },
-        "required": [
-          "status"
         ]
       },
       "PublicDataDto": {
