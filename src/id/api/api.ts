@@ -557,13 +557,6 @@ export interface BadRequestExceptionDto {
   data?: object;
 }
 
-export interface DocumentDto {
-  /** @format uuid */
-  inputId: string;
-  value?: string;
-  assetId?: string;
-}
-
 export interface SignupUserDto {
   /**
    * Password should include lowercase, uppercase and digits
@@ -584,7 +577,6 @@ export interface SignupUserDto {
    */
   i18nLocale?: I18NLocaleEnum;
   callbackUrl: string;
-  documents?: DocumentDto[];
 }
 
 export interface UnauthorizedExceptionDto {
@@ -1134,6 +1126,19 @@ export interface TenantInputEntityDto {
   active: boolean;
 }
 
+export interface UpdateTenantInputDto {
+  /** @example "Input label" */
+  label: string;
+  /** @example "Input description" */
+  description: string;
+  /** @example 1 */
+  order: number;
+  /** @example true */
+  mandatory: boolean;
+  /** @example true */
+  active: boolean;
+}
+
 export interface TenantInputPaginateResponseDto {
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
@@ -1218,6 +1223,13 @@ export interface DocumentPaginateResponseDto {
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
   items: DocumentEntityDto[];
+}
+
+export interface DocumentDto {
+  /** @format uuid */
+  inputId: string;
+  value?: string;
+  assetId?: string;
 }
 
 export interface AttachDocumentsToUser {
@@ -2687,6 +2699,43 @@ export namespace TenantInput {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = TenantInputPaginateResponseDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Input
+   * @name UpdateByInputId
+   * @request PATCH:/tenant-input/{tenantId}/{inputId}
+   * @secure
+   * @response `201` `TenantInputEntityDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+   */
+  export namespace UpdateByInputId {
+    export type RequestParams = {
+      tenantId: string;
+      inputId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateTenantInputDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantInputEntityDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Input
+   * @name FindOne
+   * @request GET:/tenant-input/{tenantId}/{inputId}
+   * @secure
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+   */
+  export namespace FindOne {
+    export type RequestParams = {
+      tenantId: string;
+      inputId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
   } /**
  * @description Get all tenant param by tenant and context
  * @tags Tenant Input
@@ -2712,24 +2761,6 @@ export namespace TenantInput {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = TenantInputEntityDto[];
-  }
-  /**
-   * No description
-   * @tags Tenant Input
-   * @name FindOne
-   * @request GET:/tenant-input/{tenantId}/{id}
-   * @secure
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
-   */
-  export namespace FindOne {
-    export type RequestParams = {
-      id: string;
-      tenantId: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = any;
   }
 }
 
@@ -4626,6 +4657,44 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
+     * No description
+     *
+     * @tags Tenant Input
+     * @name UpdateByInputId
+     * @request PATCH:/tenant-input/{tenantId}/{inputId}
+     * @secure
+     * @response `201` `TenantInputEntityDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+     */
+    updateByInputId: (tenantId: string, inputId: string, data: UpdateTenantInputDto, params: RequestParams = {}) =>
+      this.request<TenantInputEntityDto, HttpExceptionDto>({
+        path: `/tenant-input/${tenantId}/${inputId}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Input
+     * @name FindOne
+     * @request GET:/tenant-input/{tenantId}/{inputId}
+     * @secure
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+     */
+    findOne: (tenantId: string, inputId: string, params: RequestParams = {}) =>
+      this.request<any, HttpExceptionDto>({
+        path: `/tenant-input/${tenantId}/${inputId}`,
+        method: 'GET',
+        secure: true,
+        ...params,
+      }),
+
+    /**
  * @description Get all tenant param by tenant and context
  *
  * @tags Tenant Input
@@ -4657,23 +4726,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/tenant-input/${tenantId}/slug/${slug}`,
         method: 'GET',
         format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Tenant Input
-     * @name FindOne
-     * @request GET:/tenant-input/{tenantId}/{id}
-     * @secure
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
-     */
-    findOne: (id: string, tenantId: string, params: RequestParams = {}) =>
-      this.request<any, HttpExceptionDto>({
-        path: `/tenant-input/${tenantId}/${id}`,
-        method: 'GET',
-        secure: true,
         ...params,
       }),
   };

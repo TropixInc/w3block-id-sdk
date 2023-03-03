@@ -2603,6 +2603,110 @@
         ]
       }
     },
+    "/tenant-input/{tenantId}/{inputId}": {
+      "patch": {
+        "operationId": "updateByInputId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "inputId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTenantInputDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantInputEntityDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Input"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "inputId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Input"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/tenant-input/{tenantId}/slug/{slug}": {
       "get": {
         "operationId": "listBySlugContext",
@@ -2697,49 +2801,6 @@
         },
         "tags": [
           "Tenant Input"
-        ]
-      }
-    },
-    "/tenant-input/{tenantId}/{id}": {
-      "get": {
-        "operationId": "findOne",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Tenant Input"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
         ]
       }
     },
@@ -5710,24 +5771,6 @@
           "message"
         ]
       },
-      "DocumentDto": {
-        "type": "object",
-        "properties": {
-          "inputId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "value": {
-            "type": "string"
-          },
-          "assetId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "inputId"
-        ]
-      },
       "SignupUserDto": {
         "type": "object",
         "properties": {
@@ -5759,12 +5802,6 @@
           },
           "callbackUrl": {
             "type": "string"
-          },
-          "documents": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DocumentDto"
-            }
           }
         },
         "required": [
@@ -6746,6 +6783,38 @@
           "active"
         ]
       },
+      "UpdateTenantInputDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "example": "Input label"
+          },
+          "description": {
+            "type": "string",
+            "example": "Input description"
+          },
+          "order": {
+            "type": "number",
+            "example": 1
+          },
+          "mandatory": {
+            "type": "boolean",
+            "example": true
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "label",
+          "description",
+          "order",
+          "mandatory",
+          "active"
+        ]
+      },
       "TenantInputPaginateResponseDto": {
         "type": "object",
         "properties": {
@@ -6950,6 +7019,24 @@
         "required": [
           "meta",
           "items"
+        ]
+      },
+      "DocumentDto": {
+        "type": "object",
+        "properties": {
+          "inputId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "value": {
+            "type": "string"
+          },
+          "assetId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "inputId"
         ]
       },
       "AttachDocumentsToUser": {
