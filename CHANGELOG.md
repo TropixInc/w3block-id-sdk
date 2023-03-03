@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.40 (2023-03-03)
+
+
+### Bug Fixes
+
+* datefns ([#34](https://github.com/TropixInc/w3block-sdk/issues/34)) ([8541333](https://github.com/TropixInc/w3block-sdk/commit/85413334113c28de6efd5df9acafd4ad46b510c0))
+
 ### [0.1.39](https://github.com/TropixInc/w3block-sdk/compare/v0.1.38...v0.1.39) (2023-03-03)
 
 
