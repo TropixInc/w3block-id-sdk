@@ -41,6 +41,11 @@ export interface CreateAddressDto {
   coordinates?: string;
 }
 
+export enum VerificationType {
+  Numeric = 'numeric',
+  Invisible = 'invisible',
+}
+
 export interface CreateUserDto {
   /**
    * Password should include lowercase, uppercase and digits
@@ -63,6 +68,8 @@ export interface CreateUserDto {
   /** @example true */
   sendEmail?: object;
   callbackUrl?: string;
+  /** @default "invisible" */
+  verificationType?: VerificationType;
 }
 
 export interface AddressResponseDto {
@@ -160,11 +167,6 @@ export interface HttpExceptionDto {
   message: object;
   /** @example null */
   data?: object;
-}
-
-export enum VerificationType {
-  Numeric = 'numeric',
-  Invisible = 'invisible',
 }
 
 export interface InviteUserDto {
@@ -294,6 +296,8 @@ export interface UpdateUserDto {
   email?: string;
   /** @example "pt-br" */
   i18nLocale?: I18NLocaleEnum;
+  /** @default "invisible" */
+  verificationType?: VerificationType;
   address?: UpdateAddressDto;
 }
 
@@ -577,6 +581,9 @@ export interface SignupUserDto {
    */
   i18nLocale?: I18NLocaleEnum;
   callbackUrl: string;
+  /** @default "invisible" */
+  verificationType?: VerificationType;
+  phone?: string;
 }
 
 export interface UnauthorizedExceptionDto {

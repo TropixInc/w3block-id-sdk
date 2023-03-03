@@ -4612,6 +4612,13 @@
           "country"
         ]
       },
+      "VerificationType": {
+        "type": "string",
+        "enum": [
+          "numeric",
+          "invisible"
+        ]
+      },
       "CreateUserDto": {
         "type": "object",
         "properties": {
@@ -4655,6 +4662,10 @@
           },
           "callbackUrl": {
             "type": "string"
+          },
+          "verificationType": {
+            "default": "invisible",
+            "$ref": "#/components/schemas/VerificationType"
           }
         },
         "required": [
@@ -4896,13 +4907,6 @@
           "error",
           "statusCode",
           "message"
-        ]
-      },
-      "VerificationType": {
-        "type": "string",
-        "enum": [
-          "numeric",
-          "invisible"
         ]
       },
       "InviteUserDto": {
@@ -5186,6 +5190,10 @@
           "i18nLocale": {
             "example": "pt-br",
             "$ref": "#/components/schemas/I18nLocaleEnum"
+          },
+          "verificationType": {
+            "default": "invisible",
+            "$ref": "#/components/schemas/VerificationType"
           },
           "address": {
             "$ref": "#/components/schemas/UpdateAddressDto"
@@ -5801,6 +5809,13 @@
             "$ref": "#/components/schemas/I18nLocaleEnum"
           },
           "callbackUrl": {
+            "type": "string"
+          },
+          "verificationType": {
+            "default": "invisible",
+            "$ref": "#/components/schemas/VerificationType"
+          },
+          "phone": {
             "type": "string"
           }
         },
