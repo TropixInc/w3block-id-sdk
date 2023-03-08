@@ -122,6 +122,14 @@ export interface WalletResponseDto {
   status: WalletStatus;
 }
 
+export enum KycStatus {
+  NoRequired = 'noRequired',
+  Approved = 'approved',
+  Denied = 'denied',
+  Pending = 'pending',
+  PendingReview = 'pendingReview',
+}
+
 export interface UserPublicResponseDto {
   /** @format uuid */
   id: string;
@@ -153,7 +161,7 @@ export interface UserPublicResponseDto {
   createdAt?: string;
   /** @format date-time */
   updatedAt?: string;
-  kycStatus: 'noRequired' | 'approved' | 'denied' | 'pending' | 'pendingReview';
+  kycStatus: KycStatus;
 }
 
 export interface HttpExceptionDto {

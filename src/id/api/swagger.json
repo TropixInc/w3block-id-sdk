@@ -4892,6 +4892,16 @@
           "status"
         ]
       },
+      "KycStatus": {
+        "type": "string",
+        "enum": [
+          "noRequired",
+          "approved",
+          "denied",
+          "pending",
+          "pendingReview"
+        ]
+      },
       "UserPublicResponseDto": {
         "type": "object",
         "properties": {
@@ -4970,15 +4980,8 @@
             "type": "string"
           },
           "kycStatus": {
-            "type": "string",
-            "enum": [
-              "noRequired",
-              "approved",
-              "denied",
-              "pending",
-              "pendingReview"
-            ],
-            "nullable": false
+            "nullable": false,
+            "$ref": "#/components/schemas/KycStatus"
           }
         },
         "required": [
