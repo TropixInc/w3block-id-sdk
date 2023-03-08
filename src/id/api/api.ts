@@ -21,6 +21,7 @@ export interface UserPasswordDto {
 export enum UserRoleEnum {
   SuperAdmin = 'superAdmin',
   Admin = 'admin',
+  Operator = 'operator',
   User = 'user',
 }
 
@@ -134,7 +135,7 @@ export interface UserPublicResponseDto {
    * @default ["user"]
    * @example ["user"]
    */
-  roles: ('superAdmin' | 'admin' | 'user')[];
+  roles: ('superAdmin' | 'admin' | 'operator' | 'user')[];
   /** @example "pt-br" */
   i18nLocale: I18NLocaleEnum;
   /** @example "John Doe" */
@@ -1388,6 +1389,11 @@ export interface TenantContextDto {
   active: boolean;
 }
 
+export interface UpdateTenantContextDto {
+  /** @example true */
+  active: boolean;
+}
+
 export interface PublicDataDto {
   WALLET_CONNECT?: object;
   METAMASK?: object;
@@ -1776,6 +1782,25 @@ export namespace Users {
     export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = AccountCompleteRetryDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name ToggleOperatorRole
+   * @request POST:/users/{tenantId}/{userId}/toggle-operator-role
+   * @secure
+   * @response `200` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   */
+  export namespace ToggleOperatorRole {
+    export type RequestParams = {
+      userId: string;
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = void;
   }
@@ -2923,21 +2948,40 @@ export namespace TenantContext {
   /**
    * No description
    * @tags Tenant Context
-   * @name FindOne
-   * @request GET:/tenant-context/{tenantId}/{id}
+   * @name FindOneByTenantContextId
+   * @request GET:/tenant-context/{tenantId}/{tenantContextId}
    * @secure
-   * @response `200` `void`
+   * @response `200` `TenantContextDto`
    * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
    */
-  export namespace FindOne {
+  export namespace FindOneByTenantContextId {
     export type RequestParams = {
-      id: string;
       tenantId: string;
+      tenantContextId: string;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = void;
+    export type ResponseBody = TenantContextDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Context
+   * @name UpdateByTenantContextId
+   * @request PATCH:/tenant-context/{tenantId}/{tenantContextId}
+   * @secure
+   * @response `200` `TenantContextDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+   */
+  export namespace UpdateByTenantContextId {
+    export type RequestParams = {
+      tenantId: string;
+      tenantContextId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateTenantContextDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantContextDto;
   }
 }
 
@@ -3336,7 +3380,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.7.0
+ * @version 0.7.3
  * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */
@@ -3621,6 +3665,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name ToggleOperatorRole
+     * @request POST:/users/{tenantId}/{userId}/toggle-operator-role
+     * @secure
+     * @response `200` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     */
+    toggleOperatorRole: (userId: string, tenantId: string, params: RequestParams = {}) =>
+      this.request<void, HttpExceptionDto>({
+        path: `/users/${tenantId}/${userId}/toggle-operator-role`,
+        method: 'POST',
+        secure: true,
         ...params,
       }),
 
@@ -4918,17 +4980,44 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Tenant Context
-     * @name FindOne
-     * @request GET:/tenant-context/{tenantId}/{id}
+     * @name FindOneByTenantContextId
+     * @request GET:/tenant-context/{tenantId}/{tenantContextId}
      * @secure
-     * @response `200` `void`
+     * @response `200` `TenantContextDto`
      * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
      */
-    findOne: (id: string, tenantId: string, params: RequestParams = {}) =>
-      this.request<void, HttpExceptionDto>({
-        path: `/tenant-context/${tenantId}/${id}`,
+    findOneByTenantContextId: (tenantId: string, tenantContextId: string, params: RequestParams = {}) =>
+      this.request<TenantContextDto, HttpExceptionDto>({
+        path: `/tenant-context/${tenantId}/${tenantContextId}`,
         method: 'GET',
         secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Context
+     * @name UpdateByTenantContextId
+     * @request PATCH:/tenant-context/{tenantId}/{tenantContextId}
+     * @secure
+     * @response `200` `TenantContextDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+     */
+    updateByTenantContextId: (
+      tenantId: string,
+      tenantContextId: string,
+      data: UpdateTenantContextDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<TenantContextDto, HttpExceptionDto>({
+        path: `/tenant-context/${tenantId}/${tenantContextId}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
         ...params,
       }),
   };

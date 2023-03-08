@@ -668,6 +668,52 @@
         ]
       }
     },
+    "/users/{tenantId}/{userId}/toggle-operator-role": {
+      "post": {
+        "operationId": "toggleOperatorRole",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/users/{tenantId}/wallets/vault/claim": {
       "post": {
         "operationId": "createVault",
@@ -3709,12 +3755,12 @@
         ]
       }
     },
-    "/tenant-context/{tenantId}/{id}": {
+    "/tenant-context/{tenantId}/{tenantContextId}": {
       "get": {
-        "operationId": "findOne",
+        "operationId": "findOneByTenantContextId",
         "parameters": [
           {
-            "name": "id",
+            "name": "tenantId",
             "required": true,
             "in": "path",
             "schema": {
@@ -3722,7 +3768,7 @@
             }
           },
           {
-            "name": "tenantId",
+            "name": "tenantContextId",
             "required": true,
             "in": "path",
             "schema": {
@@ -3732,7 +3778,75 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantContextDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Context"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateByTenantContextId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantContextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTenantContextDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantContextDto"
+                }
+              }
+            }
           },
           "403": {
             "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration",
@@ -4519,7 +4633,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.7.0",
+    "version": "0.7.3",
     "contact": {}
   },
   "tags": [],
@@ -4565,6 +4679,7 @@
         "enum": [
           "superAdmin",
           "admin",
+          "operator",
           "user"
         ]
       },
@@ -4809,6 +4924,7 @@
               "enum": [
                 "superAdmin",
                 "admin",
+                "operator",
                 "user"
               ]
             }
@@ -7439,6 +7555,18 @@
           "updatedAt",
           "tenantId",
           "contextId",
+          "active"
+        ]
+      },
+      "UpdateTenantContextDto": {
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
           "active"
         ]
       },
