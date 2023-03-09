@@ -1259,6 +1259,17 @@ export enum UserContextStatus {
   Created = 'created',
 }
 
+export interface LogUserContextDto {
+  /** @default [] */
+  inputIds: any[][];
+  /** @format uuid */
+  moderatorId: string;
+  reason?: string | null;
+  /** @format date-time */
+  registerAt: string;
+  status: UserContextStatus;
+}
+
 export interface ContextDto {
   /** @format uuid */
   id: string;
@@ -1286,7 +1297,7 @@ export interface UserContextEntityDto {
   /** @example "created" */
   status: UserContextStatus;
   context?: ContextDto | null;
-  logs: any[][];
+  logs: LogUserContextDto[];
 }
 
 export interface UsersContextsPaginateResponseDto {

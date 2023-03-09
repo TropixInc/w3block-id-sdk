@@ -7196,6 +7196,39 @@
           "created"
         ]
       },
+      "LogUserContextDto": {
+        "type": "object",
+        "properties": {
+          "inputIds": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "moderatorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "registerAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/UserContextStatus"
+          }
+        },
+        "required": [
+          "inputIds",
+          "moderatorId",
+          "registerAt",
+          "status"
+        ]
+      },
       "ContextDto": {
         "type": "object",
         "properties": {
@@ -7271,7 +7304,7 @@
           "logs": {
             "type": "array",
             "items": {
-              "type": "array"
+              "$ref": "#/components/schemas/LogUserContextDto"
             }
           }
         },
