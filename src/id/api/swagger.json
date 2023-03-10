@@ -2511,7 +2511,7 @@
     },
     "/tenant-input/{tenantId}": {
       "post": {
-        "operationId": "create",
+        "operationId": "createTenantInput",
         "parameters": [
           {
             "name": "tenantId",
@@ -2564,7 +2564,7 @@
         ]
       },
       "get": {
-        "operationId": "findAll",
+        "operationId": "findTenantInput",
         "parameters": [
           {
             "name": "tenantId",
@@ -2712,7 +2712,7 @@
         ]
       },
       "get": {
-        "operationId": "findOne",
+        "operationId": "findTenantInputById",
         "parameters": [
           {
             "name": "tenantId",
@@ -2852,7 +2852,7 @@
     },
     "/users/{tenantId}/documents/{userId}": {
       "get": {
-        "operationId": "findAll",
+        "operationId": "findUserDocumentsByUserId",
         "parameters": [
           {
             "name": "tenantId",
@@ -2968,7 +2968,7 @@
     },
     "/users/{tenantId}/documents/{userId}/context/{contextId}": {
       "get": {
-        "operationId": "getAllByContext",
+        "operationId": "getAllByContextByUserIdAndContextId",
         "parameters": [
           {
             "name": "tenantId",
@@ -3074,7 +3074,7 @@
     },
     "/users/{tenantId}/contexts/{userId}": {
       "get": {
-        "operationId": "findAll",
+        "operationId": "findUsersContextByUserId",
         "parameters": [
           {
             "name": "tenantId",
@@ -3178,7 +3178,7 @@
     },
     "/users/{tenantId}/contexts/{userId}/{contextId}/approve": {
       "patch": {
-        "operationId": "approve",
+        "operationId": "approveTenantContextByUserId",
         "parameters": [
           {
             "name": "tenantId",
@@ -3232,7 +3232,7 @@
     },
     "/users/{tenantId}/contexts/{userId}/{contextId}/reject": {
       "patch": {
-        "operationId": "reject",
+        "operationId": "rejectTenantContextByUserId",
         "parameters": [
           {
             "name": "tenantId",
@@ -3286,7 +3286,7 @@
     },
     "/users/{tenantId}/contexts/{userId}/{contextId}/require-review": {
       "patch": {
-        "operationId": "requireReview",
+        "operationId": "requireReviewTenantContextByUserId",
         "parameters": [
           {
             "name": "tenantId",
@@ -3617,7 +3617,7 @@
     },
     "/tenant-context/{tenantId}": {
       "post": {
-        "operationId": "create",
+        "operationId": "createTenantContext",
         "parameters": [
           {
             "name": "tenantId",
@@ -3670,7 +3670,7 @@
         ]
       },
       "get": {
-        "operationId": "findAll",
+        "operationId": "findTenantContext",
         "parameters": [
           {
             "name": "tenantId",

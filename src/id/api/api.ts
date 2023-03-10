@@ -1952,12 +1952,12 @@ export namespace Users {
   /**
    * No description
    * @tags Users Documents
-   * @name FindAll
+   * @name FindUserDocumentsByUserId
    * @request GET:/users/{tenantId}/documents/{userId}
    * @secure
    * @response `200` `DocumentPaginateResponseDto`
    */
-  export namespace FindAll {
+  export namespace FindUserDocumentsByUserId {
     export type RequestParams = {
       tenantId: string;
       userId: string;
@@ -1987,12 +1987,12 @@ export namespace Users {
   /**
    * No description
    * @tags Users Documents
-   * @name GetAllByContext
+   * @name GetAllByContextByUserIdAndContextId
    * @request GET:/users/{tenantId}/documents/{userId}/context/{contextId}
    * @secure
    * @response `200` `(DocumentEntityDto)[]`
    */
-  export namespace GetAllByContext {
+  export namespace GetAllByContextByUserIdAndContextId {
     export type RequestParams = {
       tenantId: string;
       userId: string;
@@ -2025,14 +2025,12 @@ export namespace Users {
   /**
    * No description
    * @tags Users Contexts
-   * @name FindAll2
+   * @name FindUsersContextByUserId
    * @request GET:/users/{tenantId}/contexts/{userId}
-   * @originalName findAll
-   * @duplicate
    * @secure
    * @response `200` `UsersContextsPaginateResponseDto`
    */
-  export namespace FindAll2 {
+  export namespace FindUsersContextByUserId {
     export type RequestParams = {
       tenantId: string;
       userId: string;
@@ -2060,12 +2058,12 @@ export namespace Users {
   /**
    * No description
    * @tags Users Contexts
-   * @name Approve
+   * @name ApproveTenantContextByUserId
    * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/approve
    * @secure
    * @response `204` `void`
    */
-  export namespace Approve {
+  export namespace ApproveTenantContextByUserId {
     export type RequestParams = {
       tenantId: string;
       userId: string;
@@ -2079,12 +2077,12 @@ export namespace Users {
   /**
    * No description
    * @tags Users Contexts
-   * @name Reject
+   * @name RejectTenantContextByUserId
    * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/reject
    * @secure
    * @response `204` `void`
    */
-  export namespace Reject {
+  export namespace RejectTenantContextByUserId {
     export type RequestParams = {
       tenantId: string;
       userId: string;
@@ -2098,12 +2096,12 @@ export namespace Users {
   /**
    * No description
    * @tags Users Contexts
-   * @name RequireReview
+   * @name RequireReviewTenantContextByUserId
    * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/require-review
    * @secure
    * @response `204` `void`
    */
-  export namespace RequireReview {
+  export namespace RequireReviewTenantContextByUserId {
     export type RequestParams = {
       tenantId: string;
       userId: string;
@@ -2710,13 +2708,13 @@ export namespace TenantInput {
   /**
    * No description
    * @tags Tenant Input
-   * @name Create
+   * @name CreateTenantInput
    * @request POST:/tenant-input/{tenantId}
    * @secure
    * @response `201` `TenantInputEntityDto`
    * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
    */
-  export namespace Create {
+  export namespace CreateTenantInput {
     export type RequestParams = {
       tenantId: string;
     };
@@ -2728,13 +2726,13 @@ export namespace TenantInput {
   /**
    * No description
    * @tags Tenant Input
-   * @name FindAll
+   * @name FindTenantInput
    * @request GET:/tenant-input/{tenantId}
    * @secure
    * @response `200` `TenantInputPaginateResponseDto`
    * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
    */
-  export namespace FindAll {
+  export namespace FindTenantInput {
     export type RequestParams = {
       tenantId: string;
     };
@@ -2773,12 +2771,12 @@ export namespace TenantInput {
   /**
    * No description
    * @tags Tenant Input
-   * @name FindOne
+   * @name FindTenantInputById
    * @request GET:/tenant-input/{tenantId}/{inputId}
    * @secure
    * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
    */
-  export namespace FindOne {
+  export namespace FindTenantInputById {
     export type RequestParams = {
       tenantId: string;
       inputId: string;
@@ -2923,13 +2921,13 @@ export namespace TenantContext {
   /**
    * No description
    * @tags Tenant Context
-   * @name Create
+   * @name CreateTenantContext
    * @request POST:/tenant-context/{tenantId}
    * @secure
    * @response `201` `TenantContextDto`
    * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
    */
-  export namespace Create {
+  export namespace CreateTenantContext {
     export type RequestParams = {
       tenantId: string;
     };
@@ -2941,13 +2939,13 @@ export namespace TenantContext {
   /**
    * No description
    * @tags Tenant Context
-   * @name FindAll
+   * @name FindTenantContext
    * @request GET:/tenant-context/{tenantId}
    * @secure
    * @response `200` `TenantInputPaginateResponseDto`
    * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
    */
-  export namespace FindAll {
+  export namespace FindTenantContext {
     export type RequestParams = {
       tenantId: string;
     };
@@ -3841,12 +3839,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users Documents
-     * @name FindAll
+     * @name FindUserDocumentsByUserId
      * @request GET:/users/{tenantId}/documents/{userId}
      * @secure
      * @response `200` `DocumentPaginateResponseDto`
      */
-    findAll: (
+    findUserDocumentsByUserId: (
       tenantId: string,
       userId: string,
       query?: {
@@ -3882,12 +3880,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users Documents
-     * @name GetAllByContext
+     * @name GetAllByContextByUserIdAndContextId
      * @request GET:/users/{tenantId}/documents/{userId}/context/{contextId}
      * @secure
      * @response `200` `(DocumentEntityDto)[]`
      */
-    getAllByContext: (tenantId: string, userId: string, contextId: string, params: RequestParams = {}) =>
+    getAllByContextByUserIdAndContextId: (
+      tenantId: string,
+      userId: string,
+      contextId: string,
+      params: RequestParams = {},
+    ) =>
       this.request<DocumentEntityDto[], any>({
         path: `/users/${tenantId}/documents/${userId}/context/${contextId}`,
         method: 'GET',
@@ -3925,14 +3928,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users Contexts
-     * @name FindAll2
+     * @name FindUsersContextByUserId
      * @request GET:/users/{tenantId}/contexts/{userId}
-     * @originalName findAll
-     * @duplicate
      * @secure
      * @response `200` `UsersContextsPaginateResponseDto`
      */
-    findAll2: (
+    findUsersContextByUserId: (
       tenantId: string,
       userId: string,
       query?: {
@@ -3966,12 +3967,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users Contexts
-     * @name Approve
+     * @name ApproveTenantContextByUserId
      * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/approve
      * @secure
      * @response `204` `void`
      */
-    approve: (
+    approveTenantContextByUserId: (
       tenantId: string,
       userId: string,
       contextId: string,
@@ -3991,12 +3992,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users Contexts
-     * @name Reject
+     * @name RejectTenantContextByUserId
      * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/reject
      * @secure
      * @response `204` `void`
      */
-    reject: (
+    rejectTenantContextByUserId: (
       tenantId: string,
       userId: string,
       contextId: string,
@@ -4016,12 +4017,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users Contexts
-     * @name RequireReview
+     * @name RequireReviewTenantContextByUserId
      * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/require-review
      * @secure
      * @response `204` `void`
      */
-    requireReview: (
+    requireReviewTenantContextByUserId: (
       tenantId: string,
       userId: string,
       contextId: string,
@@ -4695,13 +4696,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Tenant Input
-     * @name Create
+     * @name CreateTenantInput
      * @request POST:/tenant-input/{tenantId}
      * @secure
      * @response `201` `TenantInputEntityDto`
      * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
      */
-    create: (tenantId: string, data: CreateTenantInputDto, params: RequestParams = {}) =>
+    createTenantInput: (tenantId: string, data: CreateTenantInputDto, params: RequestParams = {}) =>
       this.request<TenantInputEntityDto, HttpExceptionDto>({
         path: `/tenant-input/${tenantId}`,
         method: 'POST',
@@ -4716,13 +4717,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Tenant Input
-     * @name FindAll
+     * @name FindTenantInput
      * @request GET:/tenant-input/{tenantId}
      * @secure
      * @response `200` `TenantInputPaginateResponseDto`
      * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
      */
-    findAll: (
+    findTenantInput: (
       tenantId: string,
       query?: {
         /** @default 1 */
@@ -4769,12 +4770,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Tenant Input
-     * @name FindOne
+     * @name FindTenantInputById
      * @request GET:/tenant-input/{tenantId}/{inputId}
      * @secure
      * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
      */
-    findOne: (tenantId: string, inputId: string, params: RequestParams = {}) =>
+    findTenantInputById: (tenantId: string, inputId: string, params: RequestParams = {}) =>
       this.request<any, HttpExceptionDto>({
         path: `/tenant-input/${tenantId}/${inputId}`,
         method: 'GET',
@@ -4946,13 +4947,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Tenant Context
-     * @name Create
+     * @name CreateTenantContext
      * @request POST:/tenant-context/{tenantId}
      * @secure
      * @response `201` `TenantContextDto`
      * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
      */
-    create: (tenantId: string, data: CreateTenantContextDto, params: RequestParams = {}) =>
+    createTenantContext: (tenantId: string, data: CreateTenantContextDto, params: RequestParams = {}) =>
       this.request<TenantContextDto, HttpExceptionDto>({
         path: `/tenant-context/${tenantId}`,
         method: 'POST',
@@ -4967,13 +4968,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Tenant Context
-     * @name FindAll
+     * @name FindTenantContext
      * @request GET:/tenant-context/{tenantId}
      * @secure
      * @response `200` `TenantInputPaginateResponseDto`
      * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
      */
-    findAll: (
+    findTenantContext: (
       tenantId: string,
       query?: {
         /** @default 1 */
