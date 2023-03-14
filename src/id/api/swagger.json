@@ -235,7 +235,7 @@
         "operationId": "getProfileUserById",
         "parameters": [
           {
-            "name": "id",
+            "name": "tenantId",
             "required": true,
             "in": "path",
             "schema": {
@@ -243,7 +243,7 @@
             }
           },
           {
-            "name": "tenantId",
+            "name": "id",
             "required": true,
             "in": "path",
             "schema": {
@@ -287,6 +287,14 @@
       "get": {
         "operationId": "getUsersByTenantId",
         "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "page",
             "required": false,
@@ -333,7 +341,6 @@
             "name": "role",
             "required": false,
             "in": "query",
-            "example": "user",
             "schema": {
               "$ref": "#/components/schemas/UserRoleEnum"
             }
@@ -350,11 +357,25 @@
             }
           },
           {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
+            "name": "contextIds",
+            "required": false,
+            "in": "query",
             "schema": {
-              "type": "string"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "contextStatus",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/UserContextStatus"
+              }
             }
           }
         ],
@@ -518,7 +539,7 @@
         "operationId": "updateToken",
         "parameters": [
           {
-            "name": "id",
+            "name": "tenantId",
             "required": true,
             "in": "path",
             "schema": {
@@ -526,7 +547,7 @@
             }
           },
           {
-            "name": "tenantId",
+            "name": "id",
             "required": true,
             "in": "path",
             "schema": {
@@ -581,7 +602,7 @@
         "operationId": "update",
         "parameters": [
           {
-            "name": "id",
+            "name": "tenantId",
             "required": true,
             "in": "path",
             "schema": {
@@ -589,7 +610,7 @@
             }
           },
           {
-            "name": "tenantId",
+            "name": "id",
             "required": true,
             "in": "path",
             "schema": {
@@ -673,7 +694,7 @@
         "operationId": "toggleOperatorRole",
         "parameters": [
           {
-            "name": "userId",
+            "name": "tenantId",
             "required": true,
             "in": "path",
             "schema": {
@@ -681,7 +702,7 @@
             }
           },
           {
-            "name": "tenantId",
+            "name": "userId",
             "required": true,
             "in": "path",
             "schema": {
@@ -2509,6 +2530,571 @@
         ]
       }
     },
+    "/users/{tenantId}/contexts/{userId}": {
+      "get": {
+        "operationId": "findUsersContextByUserId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Filter by status",
+            "example": null,
+            "schema": {
+              "$ref": "#/components/schemas/UserContextStatus"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by document contextId",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersContextsPaginateResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/contexts/{userId}/{contextId}/approve": {
+      "patch": {
+        "operationId": "approveTenantContextByUserId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserContextStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/contexts/{userId}/{contextId}/reject": {
+      "patch": {
+        "operationId": "rejectTenantContextByUserId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserContextStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/contexts/{userId}/{contextId}/require-review": {
+      "patch": {
+        "operationId": "requireReviewTenantContextByUserId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequiredReviewContextStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/documents/{userId}": {
+      "get": {
+        "operationId": "findUserDocumentsByUserId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "Filter by document type",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "file",
+                  "url",
+                  "cpf",
+                  "phone",
+                  "text",
+                  "email"
+                ]
+              }
+            }
+          },
+          {
+            "name": "contextId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by document contextId",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "inputId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by document inputId",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentPaginateResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Documents"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/documents/{userId}/context/{contextId}": {
+      "get": {
+        "operationId": "getAllByContextByUserIdAndContextId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DocumentEntityDto"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Documents"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "attachDocumentsToUserByContextId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttachDocumentsToUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Documents"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/tenant-input/{tenantId}": {
       "post": {
         "operationId": "createTenantInput",
@@ -2847,494 +3433,6 @@
         },
         "tags": [
           "Tenant Input"
-        ]
-      }
-    },
-    "/users/{tenantId}/documents/{userId}": {
-      "get": {
-        "operationId": "findUserDocumentsByUserId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          },
-          {
-            "name": "type",
-            "required": false,
-            "in": "query",
-            "description": "Filter by document type",
-            "example": null,
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/DataTypesEnum"
-              }
-            }
-          },
-          {
-            "name": "contextId",
-            "required": false,
-            "in": "query",
-            "description": "Filter by document contextId",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "inputId",
-            "required": false,
-            "in": "query",
-            "description": "Filter by document inputId",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DocumentPaginateResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users Documents"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/documents/{userId}/context/{contextId}": {
-      "get": {
-        "operationId": "getAllByContextByUserIdAndContextId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contextId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DocumentEntityDto"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users Documents"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "post": {
-        "operationId": "attachDocumentsToUserByContextId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contextId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AttachDocumentsToUser"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Users Documents"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/contexts/{userId}": {
-      "get": {
-        "operationId": "findUsersContextByUserId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          },
-          {
-            "name": "status",
-            "required": false,
-            "in": "query",
-            "description": "Filter by status",
-            "example": null,
-            "schema": {
-              "$ref": "#/components/schemas/UserContextStatus"
-            }
-          },
-          {
-            "name": "contextId",
-            "required": false,
-            "in": "query",
-            "description": "Filter by document contextId",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UsersContextsPaginateResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/contexts/{userId}/{contextId}/approve": {
-      "patch": {
-        "operationId": "approveTenantContextByUserId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contextId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserContextStatusDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Users Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/contexts/{userId}/{contextId}/reject": {
-      "patch": {
-        "operationId": "rejectTenantContextByUserId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contextId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserContextStatusDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Users Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/contexts/{userId}/{contextId}/require-review": {
-      "patch": {
-        "operationId": "requireReviewTenantContextByUserId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contextId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequiredReviewContextStatusDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Users Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
         ]
       }
     },
@@ -4892,6 +4990,138 @@
           "status"
         ]
       },
+      "UserContextStatus": {
+        "type": "string",
+        "enum": [
+          "approved",
+          "denied",
+          "requiredReview",
+          "created"
+        ]
+      },
+      "LogUserContextDto": {
+        "type": "object",
+        "properties": {
+          "inputIds": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "moderatorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "registerAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/UserContextStatus"
+          }
+        },
+        "required": [
+          "inputIds",
+          "moderatorId",
+          "registerAt",
+          "status"
+        ]
+      },
+      "ContextDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "description",
+          "slug"
+        ]
+      },
+      "UserContextEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contextId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "status": {
+            "example": "created",
+            "$ref": "#/components/schemas/UserContextStatus"
+          },
+          "context": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ContextDto"
+              }
+            ]
+          },
+          "logs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LogUserContextDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "tenantId",
+          "contextId",
+          "userId",
+          "status",
+          "logs"
+        ]
+      },
       "KycStatus": {
         "type": "string",
         "enum": [
@@ -4969,6 +5199,12 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/WalletResponseDto"
+            }
+          },
+          "contexts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserContextEntityDto"
             }
           },
           "createdAt": {
@@ -6808,148 +7044,7 @@
           "hostname"
         ]
       },
-      "DataTypesEnum": {
-        "type": "string",
-        "enum": [
-          "file",
-          "url",
-          "cpf",
-          "phone",
-          "text",
-          "email"
-        ]
-      },
-      "CreateTenantInputDto": {
-        "type": "object",
-        "properties": {
-          "contextId": {
-            "type": "string"
-          },
-          "label": {
-            "type": "string",
-            "example": "Input label"
-          },
-          "description": {
-            "type": "string",
-            "example": "Input description"
-          },
-          "type": {
-            "example": "cpf",
-            "$ref": "#/components/schemas/DataTypesEnum"
-          },
-          "order": {
-            "type": "number",
-            "example": 1
-          },
-          "mandatory": {
-            "type": "boolean",
-            "example": true
-          },
-          "active": {
-            "type": "boolean",
-            "example": true
-          }
-        },
-        "required": [
-          "contextId",
-          "label",
-          "description",
-          "type",
-          "order",
-          "mandatory",
-          "active"
-        ]
-      },
-      "TenantInputEntityDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "contextId": {
-            "type": "string"
-          },
-          "label": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "type": {
-            "example": "cpf",
-            "$ref": "#/components/schemas/DataTypesEnum"
-          },
-          "order": {
-            "type": "number"
-          },
-          "mandatory": {
-            "type": "boolean"
-          },
-          "active": {
-            "type": "boolean",
-            "example": true
-          }
-        },
-        "required": [
-          "id",
-          "createdAt",
-          "updatedAt",
-          "tenantId",
-          "contextId",
-          "label",
-          "description",
-          "type",
-          "order",
-          "mandatory",
-          "active"
-        ]
-      },
-      "UpdateTenantInputDto": {
-        "type": "object",
-        "properties": {
-          "label": {
-            "type": "string",
-            "example": "Input label"
-          },
-          "description": {
-            "type": "string",
-            "example": "Input description"
-          },
-          "order": {
-            "type": "number",
-            "example": 1
-          },
-          "mandatory": {
-            "type": "boolean",
-            "example": true
-          },
-          "active": {
-            "type": "boolean",
-            "example": true
-          }
-        },
-        "required": [
-          "label",
-          "description",
-          "order",
-          "mandatory",
-          "active"
-        ]
-      },
-      "TenantInputPaginateResponseDto": {
+      "UsersContextsPaginateResponseDto": {
         "type": "object",
         "properties": {
           "meta": {
@@ -6961,13 +7056,41 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TenantContextDto"
+              "$ref": "#/components/schemas/UserContextEntityDto"
             }
           }
         },
         "required": [
           "meta",
           "items"
+        ]
+      },
+      "UserContextStatusDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RequiredReviewContextStatusDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "inputIds": {
+            "example": [],
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          }
+        },
+        "required": [
+          "inputIds"
         ]
       },
       "TenantInputEntity": {
@@ -7199,84 +7322,59 @@
           "documents"
         ]
       },
-      "UserContextStatus": {
+      "DataTypesEnum": {
         "type": "string",
         "enum": [
-          "approved",
-          "denied",
-          "requiredReview",
-          "created"
+          "file",
+          "url",
+          "cpf",
+          "phone",
+          "text",
+          "email"
         ]
       },
-      "LogUserContextDto": {
+      "CreateTenantInputDto": {
         "type": "object",
         "properties": {
-          "inputIds": {
-            "default": [],
-            "type": "array",
-            "items": {
-              "type": "array"
-            }
-          },
-          "moderatorId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "reason": {
-            "type": "string",
-            "nullable": true
-          },
-          "registerAt": {
-            "format": "date-time",
+          "contextId": {
             "type": "string"
           },
-          "status": {
-            "$ref": "#/components/schemas/UserContextStatus"
-          }
-        },
-        "required": [
-          "inputIds",
-          "moderatorId",
-          "registerAt",
-          "status"
-        ]
-      },
-      "ContextDto": {
-        "type": "object",
-        "properties": {
-          "id": {
+          "label": {
             "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
+            "example": "Input label"
           },
           "description": {
-            "type": "string"
-          },
-          "slug": {
-            "type": "string"
-          },
-          "tenantId": {
             "type": "string",
-            "format": "uuid",
-            "nullable": true
+            "example": "Input description"
+          },
+          "type": {
+            "example": "cpf",
+            "$ref": "#/components/schemas/DataTypesEnum"
+          },
+          "order": {
+            "type": "number",
+            "example": 1
+          },
+          "mandatory": {
+            "type": "boolean",
+            "example": true
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
           }
         },
         "required": [
-          "id",
-          "createdAt",
-          "updatedAt",
+          "contextId",
+          "label",
           "description",
-          "slug"
+          "type",
+          "order",
+          "mandatory",
+          "active"
         ]
       },
-      "UserContextEntityDto": {
+      "TenantInputEntityDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -7298,26 +7396,25 @@
           "contextId": {
             "type": "string"
           },
-          "userId": {
+          "label": {
             "type": "string"
           },
-          "status": {
-            "example": "created",
-            "$ref": "#/components/schemas/UserContextStatus"
+          "description": {
+            "type": "string"
           },
-          "context": {
-            "nullable": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ContextDto"
-              }
-            ]
+          "type": {
+            "example": "cpf",
+            "$ref": "#/components/schemas/DataTypesEnum"
           },
-          "logs": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LogUserContextDto"
-            }
+          "order": {
+            "type": "number"
+          },
+          "mandatory": {
+            "type": "boolean"
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
           }
         },
         "required": [
@@ -7326,12 +7423,47 @@
           "updatedAt",
           "tenantId",
           "contextId",
-          "userId",
-          "status",
-          "logs"
+          "label",
+          "description",
+          "type",
+          "order",
+          "mandatory",
+          "active"
         ]
       },
-      "UsersContextsPaginateResponseDto": {
+      "UpdateTenantInputDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "example": "Input label"
+          },
+          "description": {
+            "type": "string",
+            "example": "Input description"
+          },
+          "order": {
+            "type": "number",
+            "example": 1
+          },
+          "mandatory": {
+            "type": "boolean",
+            "example": true
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "label",
+          "description",
+          "order",
+          "mandatory",
+          "active"
+        ]
+      },
+      "TenantInputPaginateResponseDto": {
         "type": "object",
         "properties": {
           "meta": {
@@ -7343,41 +7475,13 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/UserContextEntityDto"
+              "$ref": "#/components/schemas/TenantContextDto"
             }
           }
         },
         "required": [
           "meta",
           "items"
-        ]
-      },
-      "UserContextStatusDto": {
-        "type": "object",
-        "properties": {
-          "reason": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "RequiredReviewContextStatusDto": {
-        "type": "object",
-        "properties": {
-          "reason": {
-            "type": "string",
-            "nullable": true
-          },
-          "inputIds": {
-            "example": [],
-            "type": "array",
-            "items": {
-              "type": "array"
-            }
-          }
-        },
-        "required": [
-          "inputIds"
         ]
       },
       "AssetTypeEnum": {

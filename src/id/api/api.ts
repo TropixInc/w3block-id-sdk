@@ -122,6 +122,54 @@ export interface WalletResponseDto {
   status: WalletStatus;
 }
 
+export enum UserContextStatus {
+  Approved = 'approved',
+  Denied = 'denied',
+  RequiredReview = 'requiredReview',
+  Created = 'created',
+}
+
+export interface LogUserContextDto {
+  /** @default [] */
+  inputIds: any[][];
+  /** @format uuid */
+  moderatorId: string;
+  reason?: string | null;
+  /** @format date-time */
+  registerAt: string;
+  status: UserContextStatus;
+}
+
+export interface ContextDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  description: string;
+  slug: string;
+  /** @format uuid */
+  tenantId?: string | null;
+}
+
+export interface UserContextEntityDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId: string;
+  contextId: string;
+  userId: string;
+  /** @example "created" */
+  status: UserContextStatus;
+  context?: ContextDto | null;
+  logs: LogUserContextDto[];
+}
+
 export enum KycStatus {
   NoRequired = 'noRequired',
   Approved = 'approved',
@@ -157,6 +205,7 @@ export interface UserPublicResponseDto {
   address?: AddressResponseDto;
   mainWallet?: WalletResponseDto;
   wallets?: WalletResponseDto[];
+  contexts?: UserContextEntityDto[];
   /** @format date-time */
   createdAt?: string;
   /** @format date-time */
@@ -1097,68 +1146,20 @@ export interface UpdateTenantHostDto {
   paths?: TenantHostPathsDto;
 }
 
-export enum DataTypesEnum {
-  File = 'file',
-  Url = 'url',
-  Cpf = 'cpf',
-  Phone = 'phone',
-  Text = 'text',
-  Email = 'email',
-}
-
-export interface CreateTenantInputDto {
-  contextId: string;
-  /** @example "Input label" */
-  label: string;
-  /** @example "Input description" */
-  description: string;
-  /** @example "cpf" */
-  type: DataTypesEnum;
-  /** @example 1 */
-  order: number;
-  /** @example true */
-  mandatory: boolean;
-  /** @example true */
-  active: boolean;
-}
-
-export interface TenantInputEntityDto {
-  /** @format uuid */
-  id: string;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  /** @format uuid */
-  tenantId: string;
-  contextId: string;
-  label: string;
-  description: string;
-  /** @example "cpf" */
-  type: DataTypesEnum;
-  order: number;
-  mandatory: boolean;
-  /** @example true */
-  active: boolean;
-}
-
-export interface UpdateTenantInputDto {
-  /** @example "Input label" */
-  label: string;
-  /** @example "Input description" */
-  description: string;
-  /** @example 1 */
-  order: number;
-  /** @example true */
-  mandatory: boolean;
-  /** @example true */
-  active: boolean;
-}
-
-export interface TenantInputPaginateResponseDto {
+export interface UsersContextsPaginateResponseDto {
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
-  items: TenantContextDto[];
+  items: UserContextEntityDto[];
+}
+
+export interface UserContextStatusDto {
+  reason?: string | null;
+}
+
+export interface RequiredReviewContextStatusDto {
+  reason?: string | null;
+  /** @example [] */
+  inputIds: any[][];
 }
 
 export type TenantInputEntity = object;
@@ -1259,38 +1260,32 @@ export interface AttachDocumentsToUser {
   documents: DocumentDto[];
 }
 
-export enum UserContextStatus {
-  Approved = 'approved',
-  Denied = 'denied',
-  RequiredReview = 'requiredReview',
-  Created = 'created',
+export enum DataTypesEnum {
+  File = 'file',
+  Url = 'url',
+  Cpf = 'cpf',
+  Phone = 'phone',
+  Text = 'text',
+  Email = 'email',
 }
 
-export interface LogUserContextDto {
-  /** @default [] */
-  inputIds: any[][];
-  /** @format uuid */
-  moderatorId: string;
-  reason?: string | null;
-  /** @format date-time */
-  registerAt: string;
-  status: UserContextStatus;
-}
-
-export interface ContextDto {
-  /** @format uuid */
-  id: string;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
+export interface CreateTenantInputDto {
+  contextId: string;
+  /** @example "Input label" */
+  label: string;
+  /** @example "Input description" */
   description: string;
-  slug: string;
-  /** @format uuid */
-  tenantId?: string | null;
+  /** @example "cpf" */
+  type: DataTypesEnum;
+  /** @example 1 */
+  order: number;
+  /** @example true */
+  mandatory: boolean;
+  /** @example true */
+  active: boolean;
 }
 
-export interface UserContextEntityDto {
+export interface TenantInputEntityDto {
   /** @format uuid */
   id: string;
   /** @format date-time */
@@ -1300,27 +1295,33 @@ export interface UserContextEntityDto {
   /** @format uuid */
   tenantId: string;
   contextId: string;
-  userId: string;
-  /** @example "created" */
-  status: UserContextStatus;
-  context?: ContextDto | null;
-  logs: LogUserContextDto[];
+  label: string;
+  description: string;
+  /** @example "cpf" */
+  type: DataTypesEnum;
+  order: number;
+  mandatory: boolean;
+  /** @example true */
+  active: boolean;
 }
 
-export interface UsersContextsPaginateResponseDto {
+export interface UpdateTenantInputDto {
+  /** @example "Input label" */
+  label: string;
+  /** @example "Input description" */
+  description: string;
+  /** @example 1 */
+  order: number;
+  /** @example true */
+  mandatory: boolean;
+  /** @example true */
+  active: boolean;
+}
+
+export interface TenantInputPaginateResponseDto {
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
-  items: UserContextEntityDto[];
-}
-
-export interface UserContextStatusDto {
-  reason?: string | null;
-}
-
-export interface RequiredReviewContextStatusDto {
-  reason?: string | null;
-  /** @example [] */
-  inputIds: any[][];
+  items: TenantContextDto[];
 }
 
 export enum AssetTypeEnum {
@@ -1674,8 +1675,8 @@ export namespace Users {
    */
   export namespace GetProfileUserById {
     export type RequestParams = {
-      id: string;
       tenantId: string;
+      id: string;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1703,9 +1704,10 @@ export namespace Users {
       search?: string;
       sortBy?: string;
       orderBy?: OrderByEnum;
-      /** @example "user" */
       role?: UserRoleEnum;
       userId?: string[];
+      contextIds?: string[];
+      contextStatus?: UserContextStatus[];
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1771,8 +1773,8 @@ export namespace Users {
    */
   export namespace UpdateToken {
     export type RequestParams = {
-      id: string;
       tenantId: string;
+      id: string;
     };
     export type RequestQuery = {};
     export type RequestBody = UpdateTokenDto;
@@ -1790,8 +1792,8 @@ export namespace Users {
    */
   export namespace Update {
     export type RequestParams = {
-      id: string;
       tenantId: string;
+      id: string;
     };
     export type RequestQuery = {};
     export type RequestBody = UpdateUserDto;
@@ -1824,8 +1826,8 @@ export namespace Users {
    */
   export namespace ToggleOperatorRole {
     export type RequestParams = {
-      userId: string;
       tenantId: string;
+      userId: string;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1960,84 +1962,12 @@ export namespace Users {
   }
   /**
    * No description
-   * @tags Users Documents
-   * @name FindUserDocumentsByUserId
-   * @request GET:/users/{tenantId}/documents/{userId}
-   * @secure
-   * @response `200` `DocumentPaginateResponseDto`
-   */
-  export namespace FindUserDocumentsByUserId {
-    export type RequestParams = {
-      tenantId: string;
-      userId: string;
-    };
-    export type RequestQuery = {
-      /** @default 1 */
-      page?: number;
-      /** @default 10 */
-      limit?: number;
-      search?: string;
-      sortBy?: string;
-      orderBy?: OrderByEnum;
-      /**
-       * Filter by document type
-       * @example null
-       */
-      type?: DataTypesEnum[];
-      /** Filter by document contextId */
-      contextId?: string;
-      /** Filter by document inputId */
-      inputId?: string;
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = DocumentPaginateResponseDto;
-  }
-  /**
-   * No description
-   * @tags Users Documents
-   * @name GetAllByContextByUserIdAndContextId
-   * @request GET:/users/{tenantId}/documents/{userId}/context/{contextId}
-   * @secure
-   * @response `200` `(DocumentEntityDto)[]`
-   */
-  export namespace GetAllByContextByUserIdAndContextId {
-    export type RequestParams = {
-      tenantId: string;
-      userId: string;
-      contextId: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = DocumentEntityDto[];
-  }
-  /**
-   * No description
-   * @tags Users Documents
-   * @name AttachDocumentsToUserByContextId
-   * @request POST:/users/{tenantId}/documents/{userId}/context/{contextId}
-   * @secure
-   * @response `201` `void`
-   */
-  export namespace AttachDocumentsToUserByContextId {
-    export type RequestParams = {
-      tenantId: string;
-      userId: string;
-      contextId: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = AttachDocumentsToUser;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
    * @tags Users Contexts
    * @name FindUsersContextByUserId
    * @request GET:/users/{tenantId}/contexts/{userId}
    * @secure
    * @response `200` `UsersContextsPaginateResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
    */
   export namespace FindUsersContextByUserId {
     export type RequestParams = {
@@ -2071,6 +2001,7 @@ export namespace Users {
    * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/approve
    * @secure
    * @response `204` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace ApproveTenantContextByUserId {
     export type RequestParams = {
@@ -2090,6 +2021,7 @@ export namespace Users {
    * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/reject
    * @secure
    * @response `204` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace RejectTenantContextByUserId {
     export type RequestParams = {
@@ -2109,6 +2041,7 @@ export namespace Users {
    * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/require-review
    * @secure
    * @response `204` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
    */
   export namespace RequireReviewTenantContextByUserId {
     export type RequestParams = {
@@ -2118,6 +2051,79 @@ export namespace Users {
     };
     export type RequestQuery = {};
     export type RequestBody = RequiredReviewContextStatusDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users Documents
+   * @name FindUserDocumentsByUserId
+   * @request GET:/users/{tenantId}/documents/{userId}
+   * @secure
+   * @response `200` `DocumentPaginateResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+   */
+  export namespace FindUserDocumentsByUserId {
+    export type RequestParams = {
+      tenantId: string;
+      userId: string;
+    };
+    export type RequestQuery = {
+      /** @default 1 */
+      page?: number;
+      /** @default 10 */
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+      /** Filter by document type */
+      type?: ('file' | 'url' | 'cpf' | 'phone' | 'text' | 'email')[];
+      /** Filter by document contextId */
+      contextId?: string;
+      /** Filter by document inputId */
+      inputId?: string;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = DocumentPaginateResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users Documents
+   * @name GetAllByContextByUserIdAndContextId
+   * @request GET:/users/{tenantId}/documents/{userId}/context/{contextId}
+   * @secure
+   * @response `200` `(DocumentEntityDto)[]`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+   */
+  export namespace GetAllByContextByUserIdAndContextId {
+    export type RequestParams = {
+      tenantId: string;
+      userId: string;
+      contextId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = DocumentEntityDto[];
+  }
+  /**
+   * No description
+   * @tags Users Documents
+   * @name AttachDocumentsToUserByContextId
+   * @request POST:/users/{tenantId}/documents/{userId}/context/{contextId}
+   * @secure
+   * @response `201` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+   */
+  export namespace AttachDocumentsToUserByContextId {
+    export type RequestParams = {
+      tenantId: string;
+      userId: string;
+      contextId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = AttachDocumentsToUser;
     export type RequestHeaders = {};
     export type ResponseBody = void;
   }
@@ -3529,7 +3535,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @response `200` `UserPublicResponseDto`
      * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
-    getProfileUserById: (id: string, tenantId: string, params: RequestParams = {}) =>
+    getProfileUserById: (tenantId: string, id: string, params: RequestParams = {}) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
         path: `/users/${tenantId}/${id}`,
         method: 'GET',
@@ -3558,9 +3564,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         search?: string;
         sortBy?: string;
         orderBy?: OrderByEnum;
-        /** @example "user" */
         role?: UserRoleEnum;
         userId?: string[];
+        contextIds?: string[];
+        contextStatus?: UserContextStatus[];
       },
       params: RequestParams = {},
     ) =>
@@ -3643,7 +3650,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @response `200` `UserTokenResponseDto`
      * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
-    updateToken: (id: string, tenantId: string, data: UpdateTokenDto, params: RequestParams = {}) =>
+    updateToken: (tenantId: string, id: string, data: UpdateTokenDto, params: RequestParams = {}) =>
       this.request<UserTokenResponseDto, HttpExceptionDto>({
         path: `/users/${tenantId}/${id}/token`,
         method: 'PATCH',
@@ -3664,7 +3671,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @response `200` `UserPublicResponseDto`
      * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
-    update: (id: string, tenantId: string, data: UpdateUserDto, params: RequestParams = {}) =>
+    update: (tenantId: string, id: string, data: UpdateUserDto, params: RequestParams = {}) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
         path: `/users/${tenantId}/${id}/edit`,
         method: 'PATCH',
@@ -3704,7 +3711,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @response `200` `void`
      * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
-    toggleOperatorRole: (userId: string, tenantId: string, params: RequestParams = {}) =>
+    toggleOperatorRole: (tenantId: string, userId: string, params: RequestParams = {}) =>
       this.request<void, HttpExceptionDto>({
         path: `/users/${tenantId}/${userId}/toggle-operator-role`,
         method: 'POST',
@@ -3847,100 +3854,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Users Documents
-     * @name FindUserDocumentsByUserId
-     * @request GET:/users/{tenantId}/documents/{userId}
-     * @secure
-     * @response `200` `DocumentPaginateResponseDto`
-     */
-    findUserDocumentsByUserId: (
-      tenantId: string,
-      userId: string,
-      query?: {
-        /** @default 1 */
-        page?: number;
-        /** @default 10 */
-        limit?: number;
-        search?: string;
-        sortBy?: string;
-        orderBy?: OrderByEnum;
-        /**
-         * Filter by document type
-         * @example null
-         */
-        type?: DataTypesEnum[];
-        /** Filter by document contextId */
-        contextId?: string;
-        /** Filter by document inputId */
-        inputId?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<DocumentPaginateResponseDto, any>({
-        path: `/users/${tenantId}/documents/${userId}`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Users Documents
-     * @name GetAllByContextByUserIdAndContextId
-     * @request GET:/users/{tenantId}/documents/{userId}/context/{contextId}
-     * @secure
-     * @response `200` `(DocumentEntityDto)[]`
-     */
-    getAllByContextByUserIdAndContextId: (
-      tenantId: string,
-      userId: string,
-      contextId: string,
-      params: RequestParams = {},
-    ) =>
-      this.request<DocumentEntityDto[], any>({
-        path: `/users/${tenantId}/documents/${userId}/context/${contextId}`,
-        method: 'GET',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Users Documents
-     * @name AttachDocumentsToUserByContextId
-     * @request POST:/users/{tenantId}/documents/{userId}/context/{contextId}
-     * @secure
-     * @response `201` `void`
-     */
-    attachDocumentsToUserByContextId: (
-      tenantId: string,
-      userId: string,
-      contextId: string,
-      data: AttachDocumentsToUser,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, any>({
-        path: `/users/${tenantId}/documents/${userId}/context/${contextId}`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
      * @tags Users Contexts
      * @name FindUsersContextByUserId
      * @request GET:/users/{tenantId}/contexts/{userId}
      * @secure
      * @response `200` `UsersContextsPaginateResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
      */
     findUsersContextByUserId: (
       tenantId: string,
@@ -3963,7 +3882,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<UsersContextsPaginateResponseDto, any>({
+      this.request<UsersContextsPaginateResponseDto, HttpExceptionDto>({
         path: `/users/${tenantId}/contexts/${userId}`,
         method: 'GET',
         query: query,
@@ -3980,6 +3899,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/approve
      * @secure
      * @response `204` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     approveTenantContextByUserId: (
       tenantId: string,
@@ -3988,7 +3908,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       data: UserContextStatusDto,
       params: RequestParams = {},
     ) =>
-      this.request<void, any>({
+      this.request<void, HttpExceptionDto>({
         path: `/users/${tenantId}/contexts/${userId}/${contextId}/approve`,
         method: 'PATCH',
         body: data,
@@ -4005,6 +3925,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/reject
      * @secure
      * @response `204` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     rejectTenantContextByUserId: (
       tenantId: string,
@@ -4013,7 +3934,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       data: UserContextStatusDto,
       params: RequestParams = {},
     ) =>
-      this.request<void, any>({
+      this.request<void, HttpExceptionDto>({
         path: `/users/${tenantId}/contexts/${userId}/${contextId}/reject`,
         method: 'PATCH',
         body: data,
@@ -4030,6 +3951,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/require-review
      * @secure
      * @response `204` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
      */
     requireReviewTenantContextByUserId: (
       tenantId: string,
@@ -4038,9 +3960,98 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       data: RequiredReviewContextStatusDto,
       params: RequestParams = {},
     ) =>
-      this.request<void, any>({
+      this.request<void, HttpExceptionDto>({
         path: `/users/${tenantId}/contexts/${userId}/${contextId}/require-review`,
         method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Documents
+     * @name FindUserDocumentsByUserId
+     * @request GET:/users/{tenantId}/documents/{userId}
+     * @secure
+     * @response `200` `DocumentPaginateResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+     */
+    findUserDocumentsByUserId: (
+      tenantId: string,
+      userId: string,
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+        /** Filter by document type */
+        type?: ('file' | 'url' | 'cpf' | 'phone' | 'text' | 'email')[];
+        /** Filter by document contextId */
+        contextId?: string;
+        /** Filter by document inputId */
+        inputId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<DocumentPaginateResponseDto, HttpExceptionDto>({
+        path: `/users/${tenantId}/documents/${userId}`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Documents
+     * @name GetAllByContextByUserIdAndContextId
+     * @request GET:/users/{tenantId}/documents/{userId}/context/{contextId}
+     * @secure
+     * @response `200` `(DocumentEntityDto)[]`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+     */
+    getAllByContextByUserIdAndContextId: (
+      tenantId: string,
+      userId: string,
+      contextId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<DocumentEntityDto[], HttpExceptionDto>({
+        path: `/users/${tenantId}/documents/${userId}/context/${contextId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Documents
+     * @name AttachDocumentsToUserByContextId
+     * @request POST:/users/{tenantId}/documents/{userId}/context/{contextId}
+     * @secure
+     * @response `201` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+     */
+    attachDocumentsToUserByContextId: (
+      tenantId: string,
+      userId: string,
+      contextId: string,
+      data: AttachDocumentsToUser,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, HttpExceptionDto>({
+        path: `/users/${tenantId}/documents/${userId}/context/${contextId}`,
+        method: 'POST',
         body: data,
         secure: true,
         type: ContentType.Json,
