@@ -7003,6 +7003,13 @@
           "userDocument"
         ]
       },
+      "AssetAccess": {
+        "type": "string",
+        "enum": [
+          "public",
+          "private"
+        ]
+      },
       "AssetEntityDto": {
         "type": "object",
         "properties": {
@@ -7041,8 +7048,12 @@
           },
           "target": {
             "example": "userDocument",
-            "nullable": true,
             "$ref": "#/components/schemas/AssetTarget"
+          },
+          "access": {
+            "example": "public",
+            "nullable": true,
+            "$ref": "#/components/schemas/AssetAccess"
           }
         },
         "required": [
@@ -7052,7 +7063,8 @@
           "tenantId",
           "type",
           "status",
-          "provider"
+          "provider",
+          "target"
         ]
       },
       "UserDocumentStatus": {
@@ -7425,15 +7437,16 @@
           "queryParams": {
             "type": "object",
             "example": {
-              "filename_override": "false",
+              "filename_override": false,
               "public_id": "directory/3fa85f64-5717-4562-b3fc-2c963f66afa6",
               "timestamp": "1666215568",
-              "unique_filename": "true"
+              "unique_filename": true
             }
           },
           "uploadPreset": {
             "type": "string",
-            "example": "upload_preset"
+            "example": "upload_preset",
+            "nullable": true
           }
         },
         "required": [
@@ -7442,8 +7455,7 @@
           "publicId",
           "signature",
           "signedParams",
-          "queryParams",
-          "uploadPreset"
+          "queryParams"
         ]
       },
       "AssetEntityWithProviderUploadParamsDto": {
@@ -7484,8 +7496,12 @@
           },
           "target": {
             "example": "userDocument",
-            "nullable": true,
             "$ref": "#/components/schemas/AssetTarget"
+          },
+          "access": {
+            "example": "public",
+            "nullable": true,
+            "$ref": "#/components/schemas/AssetAccess"
           },
           "providerUploadParams": {
             "$ref": "#/components/schemas/CloudinaryProviderUploadParamsDto"
@@ -7499,6 +7515,7 @@
           "type",
           "status",
           "provider",
+          "target",
           "providerUploadParams"
         ]
       },

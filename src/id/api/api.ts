@@ -1184,6 +1184,11 @@ export enum AssetTarget {
   UserDocument = 'userDocument',
 }
 
+export enum AssetAccess {
+  Public = 'public',
+  Private = 'private',
+}
+
 export interface AssetEntityDto {
   /** @format uuid */
   id: string;
@@ -1202,7 +1207,9 @@ export interface AssetEntityDto {
   /** @example "https://dummyimage.com/200x200/fff/000" */
   directLink?: string | null;
   /** @example "userDocument" */
-  target?: AssetTarget | null;
+  target: AssetTarget;
+  /** @example "public" */
+  access?: AssetAccess | null;
 }
 
 export enum UserDocumentStatus {
@@ -1346,10 +1353,10 @@ export interface CloudinaryProviderUploadParamsDto {
   signature: string;
   /** @example "filename_override=false&public_id=directory/3fa85f64-5717-4562-b3fc-2c963f66afa6&timestamp=1666215568&unique_filename=true&upload_preset=upload_preset&api_key=000000000000&signature=bfd09f95f331f558cbd1320e67aa8d488770583e" */
   signedParams: string;
-  /** @example {"filename_override":"false","public_id":"directory/3fa85f64-5717-4562-b3fc-2c963f66afa6","timestamp":"1666215568","unique_filename":"true"} */
+  /** @example {"filename_override":false,"public_id":"directory/3fa85f64-5717-4562-b3fc-2c963f66afa6","timestamp":"1666215568","unique_filename":true} */
   queryParams: object;
   /** @example "upload_preset" */
-  uploadPreset: string;
+  uploadPreset?: string | null;
 }
 
 export interface AssetEntityWithProviderUploadParamsDto {
@@ -1370,7 +1377,9 @@ export interface AssetEntityWithProviderUploadParamsDto {
   /** @example "https://dummyimage.com/200x200/fff/000" */
   directLink?: string | null;
   /** @example "userDocument" */
-  target?: AssetTarget | null;
+  target: AssetTarget;
+  /** @example "public" */
+  access?: AssetAccess | null;
   providerUploadParams: CloudinaryProviderUploadParamsDto;
 }
 
