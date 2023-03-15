@@ -1,6 +1,6 @@
 {
   "name": "@w3block/sdk-id",
-  "version": "0.1.47",
+  "version": "0.1.48",
   "description": "W3block ID SDK",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
