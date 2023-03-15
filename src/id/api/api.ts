@@ -1159,7 +1159,7 @@ export interface UserContextStatusDto {
 export interface RequiredReviewContextStatusDto {
   reason?: string | null;
   /** @example [] */
-  inputIds: any[][];
+  inputIds: string[];
 }
 
 export type TenantInputEntity = object;

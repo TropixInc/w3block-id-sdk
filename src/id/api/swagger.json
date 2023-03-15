@@ -7085,7 +7085,7 @@
             "example": [],
             "type": "array",
             "items": {
-              "type": "array"
+              "type": "string"
             }
           }
         },
