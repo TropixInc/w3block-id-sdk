@@ -1274,6 +1274,9 @@ export enum DataTypesEnum {
   Phone = 'phone',
   Text = 'text',
   Email = 'email',
+  Birthday = 'birthday',
+  Date = 'date',
+  MultifaceSelfie = 'multiface_selfie',
 }
 
 export interface CreateTenantInputDto {
@@ -2119,7 +2122,7 @@ export namespace Users {
       sortBy?: string;
       orderBy?: OrderByEnum;
       /** Filter by document type */
-      type?: ('file' | 'url' | 'cpf' | 'phone' | 'text' | 'email')[];
+      type?: ('file' | 'url' | 'cpf' | 'phone' | 'text' | 'email' | 'birthday' | 'date' | 'multiface_selfie')[];
       /** Filter by document contextId */
       contextId?: string;
       /** Filter by document inputId */
@@ -4063,7 +4066,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         sortBy?: string;
         orderBy?: OrderByEnum;
         /** Filter by document type */
-        type?: ('file' | 'url' | 'cpf' | 'phone' | 'text' | 'email')[];
+        type?: ('file' | 'url' | 'cpf' | 'phone' | 'text' | 'email' | 'birthday' | 'date' | 'multiface_selfie')[];
         /** Filter by document contextId */
         contextId?: string;
         /** Filter by document inputId */

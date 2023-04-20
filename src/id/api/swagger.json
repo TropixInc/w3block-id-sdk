@@ -2977,7 +2977,10 @@
                   "cpf",
                   "phone",
                   "text",
-                  "email"
+                  "email",
+                  "birthday",
+                  "date",
+                  "multiface_selfie"
                 ]
               }
             }
@@ -7403,7 +7406,10 @@
           "cpf",
           "phone",
           "text",
-          "email"
+          "email",
+          "birthday",
+          "date",
+          "multiface_selfie"
         ]
       },
       "CreateTenantInputDto": {
