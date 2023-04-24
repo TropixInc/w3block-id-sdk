@@ -2978,7 +2978,7 @@
                   "phone",
                   "text",
                   "email",
-                  "birthday",
+                  "birthdate",
                   "date",
                   "multiface_selfie"
                 ]
@@ -7407,7 +7407,7 @@
           "phone",
           "text",
           "email",
-          "birthday",
+          "birthdate",
           "date",
           "multiface_selfie"
         ]
