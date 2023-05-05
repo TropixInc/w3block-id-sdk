@@ -2026,7 +2026,7 @@
     },
     "/public-tenant/by-hostname": {
       "get": {
-        "operationId": "getCompanyByHost",
+        "operationId": "getTenantByHost",
         "parameters": [
           {
             "name": "hostname",
@@ -2044,7 +2044,42 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FindByHostnameDto"
+                  "$ref": "#/components/schemas/TenantPublicDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Public"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/public-tenant/by-id": {
+      "get": {
+        "operationId": "getTenantById",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantPublicDto"
                 }
               }
             }
@@ -2839,7 +2874,7 @@
     },
     "/users/{tenantId}/documents/find-user-by-any": {
       "get": {
-        "operationId": "findUserByCPF",
+        "operationId": "findUserByAny",
         "parameters": [
           {
             "name": "tenantId",
@@ -6210,6 +6245,31 @@
           "message"
         ]
       },
+      "UTMParamsDto": {
+        "type": "object",
+        "properties": {
+          "utm_source": {
+            "type": "string",
+            "example": "google"
+          },
+          "utm_medium": {
+            "type": "string",
+            "example": "cpc"
+          },
+          "utm_campaign": {
+            "type": "string",
+            "example": "spring_sale"
+          },
+          "utm_term": {
+            "type": "string",
+            "example": "monkey+nft"
+          },
+          "utm_content": {
+            "type": "string",
+            "example": "content"
+          }
+        }
+      },
       "SignupUserDto": {
         "type": "object",
         "properties": {
@@ -6248,6 +6308,9 @@
           },
           "phone": {
             "type": "string"
+          },
+          "utmParams": {
+            "$ref": "#/components/schemas/UTMParamsDto"
           }
         },
         "required": [
@@ -6733,11 +6796,7 @@
           "bodyCardBackgroundColor": {
             "type": "string"
           }
-        },
-        "required": [
-          "headerBackgroundColor",
-          "bodyCardBackgroundColor"
-        ]
+        }
       },
       "TenantEntityDto": {
         "type": "object",
@@ -6773,7 +6832,7 @@
             "type": "object"
           },
           "clientId": {
-            "type": "object"
+            "type": "string"
           },
           "info": {
             "$ref": "#/components/schemas/TenantInfoDto"
@@ -6867,16 +6926,24 @@
           }
         }
       },
-      "FindByHostnameDto": {
+      "TenantPublicDto": {
         "type": "object",
         "properties": {
-          "hostname": {
+          "id": {
             "type": "string",
-            "example": "example.com"
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "info": {
+            "$ref": "#/components/schemas/TenantInfoDto"
           }
         },
         "required": [
-          "hostname"
+          "id",
+          "name",
+          "info"
         ]
       },
       "CreateTenantAccessDto": {

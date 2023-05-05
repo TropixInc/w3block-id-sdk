@@ -626,6 +626,19 @@ export interface BadRequestExceptionDto {
   data?: object;
 }
 
+export interface UTMParamsDto {
+  /** @example "google" */
+  utm_source?: string;
+  /** @example "cpc" */
+  utm_medium?: string;
+  /** @example "spring_sale" */
+  utm_campaign?: string;
+  /** @example "monkey+nft" */
+  utm_term?: string;
+  /** @example "content" */
+  utm_content?: string;
+}
+
 export interface SignupUserDto {
   /**
    * Password should include lowercase, uppercase and digits
@@ -649,6 +662,7 @@ export interface SignupUserDto {
   /** @default "invisible" */
   verificationType?: VerificationType;
   phone?: string;
+  utmParams?: UTMParamsDto;
 }
 
 export interface UnauthorizedExceptionDto {
@@ -986,8 +1000,8 @@ export interface CreateTenantDto {
 export interface TenantInfoDto {
   emailLogoUrl?: string;
   headerLogoUrl?: string;
-  headerBackgroundColor: string;
-  bodyCardBackgroundColor: string;
+  headerBackgroundColor?: string;
+  bodyCardBackgroundColor?: string;
 }
 
 export interface TenantEntityDto {
@@ -1006,7 +1020,7 @@ export interface TenantEntityDto {
   roles: TenantRoleEnum;
   wallets: string[];
   client?: object;
-  clientId?: object;
+  clientId?: string;
   info: TenantInfoDto;
   /** @format date-time */
   createdAt?: string;
@@ -1042,9 +1056,11 @@ export interface UpdateTenantDto {
   countryCode?: CountryCodeEnum;
 }
 
-export interface FindByHostnameDto {
-  /** @example "example.com" */
-  hostname: string;
+export interface TenantPublicDto {
+  /** @format uuid */
+  id: string;
+  name: string;
+  info: TenantInfoDto;
 }
 
 export interface CreateTenantAccessDto {
@@ -2079,13 +2095,13 @@ export namespace Users {
   /**
    * No description
    * @tags Users Documents
-   * @name FindUserByCpf
+   * @name FindUserByAny
    * @request GET:/users/{tenantId}/documents/find-user-by-any
    * @secure
    * @response `200` `UserPublicResponseDto`
    * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,integration
    */
-  export namespace FindUserByCpf {
+  export namespace FindUserByAny {
     export type RequestParams = {
       tenantId: string;
     };
@@ -2578,12 +2594,12 @@ export namespace PublicTenant {
   /**
    * No description
    * @tags Tenant Public
-   * @name GetCompanyByHost
+   * @name GetTenantByHost
    * @request GET:/public-tenant/by-hostname
    * @secure
-   * @response `200` `FindByHostnameDto`
+   * @response `200` `TenantPublicDto`
    */
-  export namespace GetCompanyByHost {
+  export namespace GetTenantByHost {
     export type RequestParams = {};
     export type RequestQuery = {
       /** @example "example.com" */
@@ -2591,7 +2607,24 @@ export namespace PublicTenant {
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = FindByHostnameDto;
+    export type ResponseBody = TenantPublicDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Public
+   * @name GetTenantById
+   * @request GET:/public-tenant/by-id
+   * @secure
+   * @response `200` `TenantPublicDto`
+   */
+  export namespace GetTenantById {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      tenantId: string;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantPublicDto;
   }
 }
 
@@ -4019,13 +4052,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users Documents
-     * @name FindUserByCpf
+     * @name FindUserByAny
      * @request GET:/users/{tenantId}/documents/find-user-by-any
      * @secure
      * @response `200` `UserPublicResponseDto`
      * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,integration
      */
-    findUserByCpf: (
+    findUserByAny: (
       tenantId: string,
       query?: {
         /** @format uuid */
@@ -4582,20 +4615,44 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Tenant Public
-     * @name GetCompanyByHost
+     * @name GetTenantByHost
      * @request GET:/public-tenant/by-hostname
      * @secure
-     * @response `200` `FindByHostnameDto`
+     * @response `200` `TenantPublicDto`
      */
-    getCompanyByHost: (
+    getTenantByHost: (
       query: {
         /** @example "example.com" */
         hostname: string;
       },
       params: RequestParams = {},
     ) =>
-      this.request<FindByHostnameDto, any>({
+      this.request<TenantPublicDto, any>({
         path: `/public-tenant/by-hostname`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Public
+     * @name GetTenantById
+     * @request GET:/public-tenant/by-id
+     * @secure
+     * @response `200` `TenantPublicDto`
+     */
+    getTenantById: (
+      query: {
+        tenantId: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TenantPublicDto, any>({
+        path: `/public-tenant/by-id`,
         method: 'GET',
         query: query,
         secure: true,
