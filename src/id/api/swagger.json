@@ -804,7 +804,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, administrator,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, administrator,integration,admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -1464,6 +1464,47 @@
         ]
       }
     },
+    "/auth/user-tenants": {
+      "get": {
+        "operationId": "listUserTenants",
+        "parameters": [
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "example": "user@example.com",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists all user administrative tenants which can be used to login on dashboard",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserTenantsResponseDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
     "/auth/signup": {
       "post": {
         "operationId": "signUp",
@@ -2005,6 +2046,104 @@
         "responses": {
           "403": {
             "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant/configurations/{tenantId}": {
+      "post": {
+        "operationId": "upsertConfigurations",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TenantConfigurationsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantConfigurationsResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "getConfigurations",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantConfigurationsResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator",
             "content": {
               "application/json": {
                 "schema": {
@@ -4833,7 +4972,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.8.11",
+    "version": "0.8.17",
     "contact": {}
   },
   "tags": [],
@@ -6245,6 +6384,43 @@
           "message"
         ]
       },
+      "TenantResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "user@example.com"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "UserTenantsResponseDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "tenants": {
+            "example": [],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantResponseDto"
+            }
+          }
+        },
+        "required": [
+          "email",
+          "tenants"
+        ]
+      },
       "UTMParamsDto": {
         "type": "object",
         "properties": {
@@ -6926,6 +7102,50 @@
           }
         }
       },
+      "TenantConfigurationsKycDto": {
+        "type": "object",
+        "properties": {
+          "isUniqueCPF": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TenantConfigurationsDto": {
+        "type": "object",
+        "properties": {
+          "kyc": {
+            "$ref": "#/components/schemas/TenantConfigurationsKycDto"
+          }
+        }
+      },
+      "TenantConfigurationsResponseDto": {
+        "type": "object",
+        "properties": {
+          "kyc": {
+            "$ref": "#/components/schemas/TenantConfigurationsKycDto"
+          }
+        },
+        "required": [
+          "kyc"
+        ]
+      },
+      "PublicHostDto": {
+        "type": "object",
+        "properties": {
+          "hostname": {
+            "type": "string",
+            "example": "example.com"
+          },
+          "isMain": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "hostname",
+          "isMain"
+        ]
+      },
       "TenantPublicDto": {
         "type": "object",
         "properties": {
@@ -6938,12 +7158,19 @@
           },
           "info": {
             "$ref": "#/components/schemas/TenantInfoDto"
+          },
+          "hosts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicHostDto"
+            }
           }
         },
         "required": [
           "id",
           "name",
-          "info"
+          "info",
+          "hosts"
         ]
       },
       "CreateTenantAccessDto": {
@@ -7086,10 +7313,12 @@
             "example": "example.com"
           },
           "tenantId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "isMain": {
-            "type": "boolean"
+            "type": "boolean",
+            "default": false
           },
           "paths": {
             "$ref": "#/components/schemas/TenantHostPathsResponse"
@@ -7119,13 +7348,15 @@
             "example": "example.com"
           },
           "tenant": {
-            "$ref": "#/components/schemas/TenantEntity"
+            "$ref": "#/components/schemas/TenantEntityDto"
           },
           "tenantId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "isMain": {
-            "type": "boolean"
+            "type": "boolean",
+            "default": false
           },
           "paths": {
             "$ref": "#/components/schemas/TenantHostPathsResponse"

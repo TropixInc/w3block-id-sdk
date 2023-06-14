@@ -626,6 +626,20 @@ export interface BadRequestExceptionDto {
   data?: object;
 }
 
+export interface TenantResponseDto {
+  /** @format uuid */
+  id: string;
+  /** @example "user@example.com" */
+  name: string;
+}
+
+export interface UserTenantsResponseDto {
+  /** @example "user@example.com" */
+  email: string;
+  /** @example [] */
+  tenants: TenantResponseDto[];
+}
+
 export interface UTMParamsDto {
   /** @example "google" */
   utm_source?: string;
@@ -1056,11 +1070,31 @@ export interface UpdateTenantDto {
   countryCode?: CountryCodeEnum;
 }
 
+export interface TenantConfigurationsKycDto {
+  isUniqueCPF?: boolean;
+}
+
+export interface TenantConfigurationsDto {
+  kyc?: TenantConfigurationsKycDto;
+}
+
+export interface TenantConfigurationsResponseDto {
+  kyc: TenantConfigurationsKycDto;
+}
+
+export interface PublicHostDto {
+  /** @example "example.com" */
+  hostname: string;
+  /** @default false */
+  isMain: boolean;
+}
+
 export interface TenantPublicDto {
   /** @format uuid */
   id: string;
   name: string;
   info: TenantInfoDto;
+  hosts: PublicHostDto[];
 }
 
 export interface CreateTenantAccessDto {
@@ -1136,7 +1170,9 @@ export interface TenantHostResponseDto {
   id: string;
   /** @example "example.com" */
   hostname: string;
+  /** @format uuid */
   tenantId: string;
+  /** @default false */
   isMain: boolean;
   paths: TenantHostPathsResponse;
   routes: TenantHostPathsResponse;
@@ -1147,8 +1183,10 @@ export interface TenantHostEntityDto {
   id: string;
   /** @example "example.com" */
   hostname: string;
-  tenant: TenantEntity;
+  tenant: TenantEntityDto;
+  /** @format uuid */
   tenantId: string;
+  /** @default false */
   isMain: boolean;
   paths: TenantHostPathsResponse;
   routes: TenantHostPathsResponse;
@@ -1896,7 +1934,7 @@ export namespace Users {
    * @request GET:/users/{tenantId}/wallets/by-address/{address}
    * @secure
    * @response `200` `WalletResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, administrator,integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, administrator,integration,admin
    */
   export namespace FindByAddress {
     export type RequestParams = {
@@ -2370,6 +2408,24 @@ export namespace Auth {
   /**
    * No description
    * @tags Authentication
+   * @name ListUserTenants
+   * @request GET:/auth/user-tenants
+   * @response `200` `UserTenantsResponseDto` Lists all user administrative tenants which can be used to login on dashboard
+   * @response `429` `TooManyRequestsExceptionDto`
+   */
+  export namespace ListUserTenants {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      /** @example "user@example.com" */
+      email: string;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserTenantsResponseDto;
+  }
+  /**
+   * No description
+   * @tags Authentication
    * @name SignUp
    * @request POST:/auth/signup
    * @response `201` `SignInResponseDto`
@@ -2587,6 +2643,42 @@ export namespace Tenant {
     export type RequestBody = UpdateTenantProfileDto;
     export type RequestHeaders = {};
     export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Tenant
+   * @name UpsertConfigurations
+   * @request POST:/tenant/configurations/{tenantId}
+   * @secure
+   * @response `200` `TenantConfigurationsResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator
+   */
+  export namespace UpsertConfigurations {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = TenantConfigurationsDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantConfigurationsResponseDto;
+  }
+  /**
+   * No description
+   * @tags Tenant
+   * @name GetConfigurations
+   * @request GET:/tenant/configurations/{tenantId}
+   * @secure
+   * @response `200` `TenantConfigurationsResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator
+   */
+  export namespace GetConfigurations {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantConfigurationsResponseDto;
   }
 }
 
@@ -3490,7 +3582,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.8.11
+ * @version 0.8.17
  * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */
@@ -3824,7 +3916,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/wallets/by-address/{address}
      * @secure
      * @response `200` `WalletResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, administrator,integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, administrator,integration,admin
      */
     findByAddress: (tenantId: string, address: string, params: RequestParams = {}) =>
       this.request<WalletResponseDto, HttpExceptionDto>({
@@ -4357,6 +4449,30 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Authentication
+     * @name ListUserTenants
+     * @request GET:/auth/user-tenants
+     * @response `200` `UserTenantsResponseDto` Lists all user administrative tenants which can be used to login on dashboard
+     * @response `429` `TooManyRequestsExceptionDto`
+     */
+    listUserTenants: (
+      query: {
+        /** @example "user@example.com" */
+        email: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UserTenantsResponseDto, TooManyRequestsExceptionDto>({
+        path: `/auth/user-tenants`,
+        method: 'GET',
+        query: query,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
      * @name SignUp
      * @request POST:/auth/signup
      * @response `201` `SignInResponseDto`
@@ -4607,6 +4723,46 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant
+     * @name UpsertConfigurations
+     * @request POST:/tenant/configurations/{tenantId}
+     * @secure
+     * @response `200` `TenantConfigurationsResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator
+     */
+    upsertConfigurations: (tenantId: string, data: TenantConfigurationsDto, params: RequestParams = {}) =>
+      this.request<TenantConfigurationsResponseDto, HttpExceptionDto>({
+        path: `/tenant/configurations/${tenantId}`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant
+     * @name GetConfigurations
+     * @request GET:/tenant/configurations/{tenantId}
+     * @secure
+     * @response `200` `TenantConfigurationsResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator
+     */
+    getConfigurations: (tenantId: string, params: RequestParams = {}) =>
+      this.request<TenantConfigurationsResponseDto, HttpExceptionDto>({
+        path: `/tenant/configurations/${tenantId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
         ...params,
       }),
   };
