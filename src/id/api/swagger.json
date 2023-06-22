@@ -4260,6 +4260,16 @@
             }
           },
           {
+            "name": "disableCache",
+            "required": false,
+            "in": "query",
+            "example": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
             "name": "whitelistsIds",
             "required": true,
             "in": "query",
@@ -4696,6 +4706,16 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "name": "disableCache",
+            "required": false,
+            "in": "query",
+            "example": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -4972,7 +4992,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.8.17",
+    "version": "0.8.18",
     "contact": {}
   },
   "tags": [],

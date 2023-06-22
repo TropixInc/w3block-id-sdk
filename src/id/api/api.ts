@@ -3225,6 +3225,11 @@ export namespace Whitelists {
        * @example "00000000-0000-0000-0000-000000000000"
        */
       userId: string;
+      /**
+       * @default false
+       * @example false
+       */
+      disableCache?: boolean;
       /** @example ["00000000-0000-0000-0000-000000000000"] */
       whitelistsIds: string[];
     };
@@ -3372,6 +3377,11 @@ export namespace Whitelists {
        * @example "00000000-0000-0000-0000-000000000000"
        */
       userId: string;
+      /**
+       * @default false
+       * @example false
+       */
+      disableCache?: boolean;
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -3582,7 +3592,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.8.17
+ * @version 0.8.18
  * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */
@@ -5387,6 +5397,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
          * @example "00000000-0000-0000-0000-000000000000"
          */
         userId: string;
+        /**
+         * @default false
+         * @example false
+         */
+        disableCache?: boolean;
         /** @example ["00000000-0000-0000-0000-000000000000"] */
         whitelistsIds: string[];
       },
@@ -5552,6 +5567,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
          * @example "00000000-0000-0000-0000-000000000000"
          */
         userId: string;
+        /**
+         * @default false
+         * @example false
+         */
+        disableCache?: boolean;
       },
       params: RequestParams = {},
     ) =>
