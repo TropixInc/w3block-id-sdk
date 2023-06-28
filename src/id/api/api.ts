@@ -353,17 +353,15 @@ export interface UpdateUserDto {
    * @example "P@ssw0rd"
    */
   password?: string;
-  /** @example "user" */
-  role?: UserRoleEnum;
   phone?: string;
   name?: string;
   /** @example "user@example.com" */
   email?: string;
   /** @example "pt-br" */
   i18nLocale?: I18NLocaleEnum;
-  /** @default "invisible" */
-  verificationType?: VerificationType;
   address?: UpdateAddressDto;
+  /** @example "user" */
+  roles?: UserRoleEnum | null;
 }
 
 export interface AccountCompleteRetryDto {
@@ -3592,7 +3590,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.8.18
+ * @version 0.8.19
  * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */

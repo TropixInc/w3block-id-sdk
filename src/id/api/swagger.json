@@ -4992,7 +4992,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.8.18",
+    "version": "0.8.19",
     "contact": {}
   },
   "tags": [],
@@ -5798,10 +5798,6 @@
             "example": "P@ssw0rd",
             "description": "Password should include lowercase, uppercase and digits"
           },
-          "role": {
-            "example": "user",
-            "$ref": "#/components/schemas/UserRoleEnum"
-          },
           "phone": {
             "type": "string"
           },
@@ -5816,12 +5812,13 @@
             "example": "pt-br",
             "$ref": "#/components/schemas/I18nLocaleEnum"
           },
-          "verificationType": {
-            "default": "invisible",
-            "$ref": "#/components/schemas/VerificationType"
-          },
           "address": {
             "$ref": "#/components/schemas/UpdateAddressDto"
+          },
+          "roles": {
+            "example": "user",
+            "nullable": true,
+            "$ref": "#/components/schemas/UserRoleEnum"
           }
         }
       },
