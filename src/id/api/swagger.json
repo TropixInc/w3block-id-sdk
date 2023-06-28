@@ -5816,9 +5816,12 @@
             "$ref": "#/components/schemas/UpdateAddressDto"
           },
           "roles": {
+            "type": "array",
             "example": "user",
             "nullable": true,
-            "$ref": "#/components/schemas/UserRoleEnum"
+            "items": {
+              "$ref": "#/components/schemas/UserRoleEnum"
+            }
           }
         }
       },

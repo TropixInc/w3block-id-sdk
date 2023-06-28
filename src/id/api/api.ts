@@ -361,7 +361,7 @@ export interface UpdateUserDto {
   i18nLocale?: I18NLocaleEnum;
   address?: UpdateAddressDto;
   /** @example "user" */
-  roles?: UserRoleEnum | null;
+  roles?: UserRoleEnum[] | null;
 }
 
 export interface AccountCompleteRetryDto {
