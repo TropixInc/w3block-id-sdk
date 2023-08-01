@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.60 (2023-08-01)
+
 ### 0.1.59 (2023-07-31)
 
 ### [0.1.58](https://github.com/TropixInc/w3block-sdk/compare/v0.1.57...v0.1.58) (2023-07-25)
