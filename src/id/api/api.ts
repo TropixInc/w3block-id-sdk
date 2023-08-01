@@ -23,6 +23,7 @@ export enum UserRoleEnum {
   Admin = 'admin',
   Operator = 'operator',
   User = 'user',
+  LoyaltyOperator = 'loyaltyOperator',
 }
 
 export enum I18NLocaleEnum {
@@ -191,7 +192,7 @@ export interface UserPublicResponseDto {
    * @default ["user"]
    * @example ["user"]
    */
-  roles: ('superAdmin' | 'admin' | 'operator' | 'user')[];
+  roles: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator')[];
   /** @example "pt-br" */
   i18nLocale: I18NLocaleEnum;
   /** @example "John Doe" */
@@ -1329,6 +1330,15 @@ export enum DataTypesEnum {
   Birthdate = 'birthdate',
   Date = 'date',
   MultifaceSelfie = 'multiface_selfie',
+  UserName = 'user_name',
+  SimpleSelect = 'simple_select',
+}
+
+export interface TenantInputSelectOptionDto {
+  /** @example "Option label" */
+  label: string;
+  /** @example "Option value" */
+  value: string;
 }
 
 export interface CreateTenantInputDto {
@@ -1345,6 +1355,7 @@ export interface CreateTenantInputDto {
   mandatory: boolean;
   /** @example true */
   active: boolean;
+  options?: TenantInputSelectOptionDto[];
 }
 
 export interface TenantInputEntityDto {
@@ -1365,6 +1376,7 @@ export interface TenantInputEntityDto {
   mandatory: boolean;
   /** @example true */
   active: boolean;
+  options?: TenantInputSelectOptionDto[];
 }
 
 export interface UpdateTenantInputDto {
@@ -1378,6 +1390,7 @@ export interface UpdateTenantInputDto {
   mandatory: boolean;
   /** @example true */
   active: boolean;
+  options?: TenantInputSelectOptionDto[];
 }
 
 export interface TenantInputPaginateResponseDto {
@@ -2174,7 +2187,19 @@ export namespace Users {
       sortBy?: string;
       orderBy?: OrderByEnum;
       /** Filter by document type */
-      type?: ('file' | 'url' | 'cpf' | 'phone' | 'text' | 'email' | 'birthdate' | 'date' | 'multiface_selfie')[];
+      type?: (
+        | 'file'
+        | 'url'
+        | 'cpf'
+        | 'phone'
+        | 'text'
+        | 'email'
+        | 'birthdate'
+        | 'date'
+        | 'multiface_selfie'
+        | 'user_name'
+        | 'simple_select'
+      )[];
       /** Filter by document contextId */
       contextId?: string;
       /** Filter by document inputId */
@@ -4199,7 +4224,19 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         sortBy?: string;
         orderBy?: OrderByEnum;
         /** Filter by document type */
-        type?: ('file' | 'url' | 'cpf' | 'phone' | 'text' | 'email' | 'birthdate' | 'date' | 'multiface_selfie')[];
+        type?: (
+          | 'file'
+          | 'url'
+          | 'cpf'
+          | 'phone'
+          | 'text'
+          | 'email'
+          | 'birthdate'
+          | 'date'
+          | 'multiface_selfie'
+          | 'user_name'
+          | 'simple_select'
+        )[];
         /** Filter by document contextId */
         contextId?: string;
         /** Filter by document inputId */

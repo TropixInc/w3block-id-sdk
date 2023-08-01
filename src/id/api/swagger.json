@@ -3154,7 +3154,9 @@
                   "email",
                   "birthdate",
                   "date",
-                  "multiface_selfie"
+                  "multiface_selfie",
+                  "user_name",
+                  "simple_select"
                 ]
               }
             }
@@ -5039,7 +5041,8 @@
           "superAdmin",
           "admin",
           "operator",
-          "user"
+          "user",
+          "loyaltyOperator"
         ]
       },
       "I18nLocaleEnum": {
@@ -5426,7 +5429,8 @@
                 "superAdmin",
                 "admin",
                 "operator",
-                "user"
+                "user",
+                "loyaltyOperator"
               ]
             }
           },
@@ -7727,7 +7731,26 @@
           "email",
           "birthdate",
           "date",
-          "multiface_selfie"
+          "multiface_selfie",
+          "user_name",
+          "simple_select"
+        ]
+      },
+      "TenantInputSelectOptionDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "example": "Option label"
+          },
+          "value": {
+            "type": "string",
+            "example": "Option value"
+          }
+        },
+        "required": [
+          "label",
+          "value"
         ]
       },
       "CreateTenantInputDto": {
@@ -7759,6 +7782,12 @@
           "active": {
             "type": "boolean",
             "example": true
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantInputSelectOptionDto"
+            }
           }
         },
         "required": [
@@ -7812,6 +7841,12 @@
           "active": {
             "type": "boolean",
             "example": true
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantInputSelectOptionDto"
+            }
           }
         },
         "required": [
@@ -7850,6 +7885,12 @@
           "active": {
             "type": "boolean",
             "example": true
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantInputSelectOptionDto"
+            }
           }
         },
         "required": [
