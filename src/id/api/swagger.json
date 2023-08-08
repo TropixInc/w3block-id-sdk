@@ -164,7 +164,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -210,7 +210,7 @@
             "description": ""
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,admin",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -447,7 +447,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -486,7 +486,7 @@
             "description": ""
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -736,6 +736,112 @@
         ]
       }
     },
+    "/users/{tenantId}/code/{userCode}": {
+      "get": {
+        "operationId": "getUserByCode",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userCode",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserByCodeResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, loyaltyOperator",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/code/{userId}": {
+      "post": {
+        "operationId": "getTemporaryCode",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserCodeResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user, loyaltyOperator",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/users/{tenantId}/wallets/vault/claim": {
       "post": {
         "operationId": "createVault",
@@ -804,7 +910,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, administrator,integration,admin",
+            "description": "Need user with one of these roles: superAdmin, integration, application, administrator, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -857,7 +963,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -1767,7 +1873,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator",
             "content": {
               "application/json": {
                 "schema": {
@@ -1844,7 +1950,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1879,7 +1985,7 @@
         ],
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1922,7 +2028,7 @@
         },
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -1955,7 +2061,7 @@
         ],
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -2045,7 +2151,7 @@
         },
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -2100,7 +2206,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator",
             "content": {
               "application/json": {
                 "schema": {
@@ -2143,7 +2249,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator",
             "content": {
               "application/json": {
                 "schema": {
@@ -2269,7 +2375,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -2354,7 +2460,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -2400,7 +2506,7 @@
             "description": ""
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -2799,7 +2905,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -3054,7 +3160,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -3192,7 +3298,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -3256,7 +3362,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -3318,7 +3424,7 @@
             "description": ""
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -3373,7 +3479,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -3458,7 +3564,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -3521,7 +3627,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -3562,7 +3668,7 @@
         ],
         "responses": {
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -3832,7 +3938,7 @@
             "description": "Unauthorized - Integration API key or JWT required"
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin,admin",
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -3991,7 +4097,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin,integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -4076,7 +4182,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -4129,7 +4235,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin,user",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -4994,7 +5100,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.8.23",
+    "version": "0.8.24",
     "contact": {}
   },
   "tags": [],
@@ -5846,6 +5952,40 @@
         "required": [
           "email",
           "tenantId"
+        ]
+      },
+      "UserByCodeResponseDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "avatarUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "UserCodeResponseDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "expiresAt"
         ]
       },
       "ChainId": {

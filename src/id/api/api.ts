@@ -372,6 +372,18 @@ export interface AccountCompleteRetryDto {
   verificationType?: VerificationType;
 }
 
+export interface UserByCodeResponseDto {
+  name?: string;
+  id: string;
+  avatarUrl?: string | null;
+}
+
+export interface UserCodeResponseDto {
+  code: string;
+  /** @format date-time */
+  expiresAt: string;
+}
+
 export enum ChainId {
   Mainnet = 1,
   Ropsten = 3,
@@ -1722,7 +1734,7 @@ export namespace Users {
    * @request GET:/users/profile
    * @secure
    * @response `200` `UserPublicResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
    */
   export namespace GetProfileByUserLogged {
     export type RequestParams = {};
@@ -1738,7 +1750,7 @@ export namespace Users {
    * @request GET:/users/{tenantId}/report/{email}
    * @secure
    * @response `204` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin
    */
   export namespace GetUsersReport {
     export type RequestParams = {
@@ -1807,7 +1819,7 @@ export namespace Users {
    * @request PATCH:/users/{tenantId}/profile
    * @secure
    * @response `200` `UserPublicResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
    */
   export namespace UpdateProfileByUserLogged {
     export type RequestParams = {
@@ -1825,7 +1837,7 @@ export namespace Users {
    * @request PATCH:/users/change-password
    * @secure
    * @response `204` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
    */
   export namespace ChangePassword {
     export type RequestParams = {};
@@ -1923,6 +1935,44 @@ export namespace Users {
   }
   /**
    * No description
+   * @tags Users
+   * @name GetUserByCode
+   * @request GET:/users/{tenantId}/code/{userCode}
+   * @secure
+   * @response `200` `UserByCodeResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, loyaltyOperator
+   */
+  export namespace GetUserByCode {
+    export type RequestParams = {
+      tenantId: string;
+      userCode: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserByCodeResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name GetTemporaryCode
+   * @request POST:/users/{tenantId}/code/{userId}
+   * @secure
+   * @response `200` `UserCodeResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user, loyaltyOperator
+   */
+  export namespace GetTemporaryCode {
+    export type RequestParams = {
+      tenantId: string;
+      userId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserCodeResponseDto;
+  }
+  /**
+   * No description
    * @tags Users Wallet
    * @name CreateVault
    * @request POST:/users/{tenantId}/wallets/vault/claim
@@ -1945,7 +1995,7 @@ export namespace Users {
    * @request GET:/users/{tenantId}/wallets/by-address/{address}
    * @secure
    * @response `200` `WalletResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, administrator,integration,admin
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, administrator, integration, admin
    */
   export namespace FindByAddress {
     export type RequestParams = {
@@ -1964,7 +2014,7 @@ export namespace Users {
    * @request GET:/users/{tenantId}/wallets/own-wallet-by-address/{address}
    * @secure
    * @response `200` `WalletResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
    */
   export namespace FindOwnWalletByAddress {
     export type RequestParams = {
@@ -2054,7 +2104,7 @@ export namespace Users {
    * @request GET:/users/{tenantId}/contexts/{userId}
    * @secure
    * @response `200` `UsersContextsPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
    */
   export namespace FindUsersContextByUserId {
     export type RequestParams = {
@@ -2148,7 +2198,7 @@ export namespace Users {
    * @request GET:/users/{tenantId}/documents/find-user-by-any
    * @secure
    * @response `200` `UserPublicResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, integration
    */
   export namespace FindUserByAny {
     export type RequestParams = {
@@ -2171,7 +2221,7 @@ export namespace Users {
    * @request GET:/users/{tenantId}/documents/{userId}
    * @secure
    * @response `200` `DocumentPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
    */
   export namespace FindUserDocumentsByUserId {
     export type RequestParams = {
@@ -2216,7 +2266,7 @@ export namespace Users {
    * @request GET:/users/{tenantId}/documents/{userId}/context/{contextId}
    * @secure
    * @response `200` `(DocumentEntityDto)[]`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
    */
   export namespace GetAllByContextByUserIdAndContextId {
     export type RequestParams = {
@@ -2236,7 +2286,7 @@ export namespace Users {
    * @request POST:/users/{tenantId}/documents/{userId}/context/{contextId}
    * @secure
    * @response `201` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
    */
   export namespace AttachDocumentsToUserByContextId {
     export type RequestParams = {
@@ -2548,7 +2598,7 @@ export namespace Tenant {
    * @request POST:/tenant
    * @secure
    * @response `201` `TenantEntityDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator
    */
   export namespace Create {
     export type RequestParams = {};
@@ -2564,7 +2614,7 @@ export namespace Tenant {
    * @request GET:/tenant
    * @secure
    * @response `200` `TenantPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
    */
   export namespace FindAll {
     export type RequestParams = {};
@@ -2587,7 +2637,7 @@ export namespace Tenant {
    * @name FindOne
    * @request GET:/tenant/{tenantId}
    * @secure
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
    */
   export namespace FindOne {
     export type RequestParams = {
@@ -2604,7 +2654,7 @@ export namespace Tenant {
    * @name Update
    * @request PUT:/tenant/{tenantId}
    * @secure
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
    */
   export namespace Update {
     export type RequestParams = {
@@ -2621,7 +2671,7 @@ export namespace Tenant {
    * @name Remove
    * @request DELETE:/tenant/{tenantId}
    * @secure
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
    */
   export namespace Remove {
     export type RequestParams = {
@@ -2656,7 +2706,7 @@ export namespace Tenant {
    * @name UpdateProfile
    * @request PUT:/tenant/profile/{tenantId}
    * @secure
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
    */
   export namespace UpdateProfile {
     export type RequestParams = {
@@ -2674,7 +2724,7 @@ export namespace Tenant {
    * @request POST:/tenant/configurations/{tenantId}
    * @secure
    * @response `200` `TenantConfigurationsResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator
    */
   export namespace UpsertConfigurations {
     export type RequestParams = {
@@ -2692,7 +2742,7 @@ export namespace Tenant {
    * @request GET:/tenant/configurations/{tenantId}
    * @secure
    * @response `200` `TenantConfigurationsResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator
    */
   export namespace GetConfigurations {
     export type RequestParams = {
@@ -2751,7 +2801,7 @@ export namespace TenantAccess {
    * @request POST:/tenant-access/{tenantId}
    * @secure
    * @response `201` `TenantAccessEntityDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
    */
   export namespace Create {
     export type RequestParams = {
@@ -2769,7 +2819,7 @@ export namespace TenantAccess {
    * @request GET:/tenant-access/{tenantId}
    * @secure
    * @response `200` `TenantAccessPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
    */
   export namespace FindAll {
     export type RequestParams = {
@@ -2795,7 +2845,7 @@ export namespace TenantAccess {
    * @request GET:/tenant-access/{tenantId}/{id}
    * @secure
    * @response `200` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
    */
   export namespace FindOne {
     export type RequestParams = {
@@ -2920,7 +2970,7 @@ export namespace TenantInput {
    * @request POST:/tenant-input/{tenantId}
    * @secure
    * @response `201` `TenantInputEntityDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
    */
   export namespace CreateTenantInput {
     export type RequestParams = {
@@ -2938,7 +2988,7 @@ export namespace TenantInput {
    * @request GET:/tenant-input/{tenantId}
    * @secure
    * @response `200` `TenantInputPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
    */
   export namespace FindTenantInput {
     export type RequestParams = {
@@ -2964,7 +3014,7 @@ export namespace TenantInput {
    * @request PATCH:/tenant-input/{tenantId}/{inputId}
    * @secure
    * @response `201` `TenantInputEntityDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
    */
   export namespace UpdateByInputId {
     export type RequestParams = {
@@ -2982,7 +3032,7 @@ export namespace TenantInput {
    * @name FindTenantInputById
    * @request GET:/tenant-input/{tenantId}/{inputId}
    * @secure
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
    */
   export namespace FindTenantInputById {
     export type RequestParams = {
@@ -3075,7 +3125,7 @@ export namespace Contexts {
    * @secure
    * @response `200` `(ContextDto)[]` Returns all contexts
    * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin
    */
   export namespace ListAll {
     export type RequestParams = {};
@@ -3133,7 +3183,7 @@ export namespace TenantContext {
    * @request POST:/tenant-context/{tenantId}
    * @secure
    * @response `201` `TenantContextDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, integration
    */
   export namespace CreateTenantContext {
     export type RequestParams = {
@@ -3151,7 +3201,7 @@ export namespace TenantContext {
    * @request GET:/tenant-context/{tenantId}
    * @secure
    * @response `200` `TenantInputPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
    */
   export namespace FindTenantContext {
     export type RequestParams = {
@@ -3177,7 +3227,7 @@ export namespace TenantContext {
    * @request GET:/tenant-context/{tenantId}/{tenantContextId}
    * @secure
    * @response `200` `TenantContextDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
    */
   export namespace FindOneByTenantContextId {
     export type RequestParams = {
@@ -3615,7 +3665,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.8.23
+ * @version 0.8.24
  * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */
@@ -3699,7 +3749,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/profile
      * @secure
      * @response `200` `UserPublicResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
      */
     getProfileByUserLogged: (params: RequestParams = {}) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
@@ -3718,7 +3768,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/report/{email}
      * @secure
      * @response `204` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin
      */
     getUsersReport: (tenantId: string, email: string, params: RequestParams = {}) =>
       this.request<void, HttpExceptionDto>({
@@ -3792,7 +3842,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/users/{tenantId}/profile
      * @secure
      * @response `200` `UserPublicResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
      */
     updateProfileByUserLogged: (tenantId: string, data: UpdateProfileUserDto, params: RequestParams = {}) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
@@ -3813,7 +3863,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/users/change-password
      * @secure
      * @response `204` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
      */
     changePassword: (data: ChangePasswordDto, params: RequestParams = {}) =>
       this.request<void, HttpExceptionDto>({
@@ -3926,6 +3976,44 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags Users
+     * @name GetUserByCode
+     * @request GET:/users/{tenantId}/code/{userCode}
+     * @secure
+     * @response `200` `UserByCodeResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, loyaltyOperator
+     */
+    getUserByCode: (tenantId: string, userCode: string, params: RequestParams = {}) =>
+      this.request<UserByCodeResponseDto, HttpExceptionDto>({
+        path: `/users/${tenantId}/code/${userCode}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name GetTemporaryCode
+     * @request POST:/users/{tenantId}/code/{userId}
+     * @secure
+     * @response `200` `UserCodeResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user, loyaltyOperator
+     */
+    getTemporaryCode: (tenantId: string, userId: string, params: RequestParams = {}) =>
+      this.request<UserCodeResponseDto, HttpExceptionDto>({
+        path: `/users/${tenantId}/code/${userId}`,
+        method: 'POST',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Users Wallet
      * @name CreateVault
      * @request POST:/users/{tenantId}/wallets/vault/claim
@@ -3949,7 +4037,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/wallets/by-address/{address}
      * @secure
      * @response `200` `WalletResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, administrator,integration,admin
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, administrator, integration, admin
      */
     findByAddress: (tenantId: string, address: string, params: RequestParams = {}) =>
       this.request<WalletResponseDto, HttpExceptionDto>({
@@ -3968,7 +4056,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/wallets/own-wallet-by-address/{address}
      * @secure
      * @response `200` `WalletResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
      */
     findOwnWalletByAddress: (tenantId: string, address: string, params: RequestParams = {}) =>
       this.request<WalletResponseDto, HttpExceptionDto>({
@@ -4063,7 +4151,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/contexts/{userId}
      * @secure
      * @response `200` `UsersContextsPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
      */
     findUsersContextByUserId: (
       tenantId: string,
@@ -4181,7 +4269,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/documents/find-user-by-any
      * @secure
      * @response `200` `UserPublicResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, integration
      */
     findUserByAny: (
       tenantId: string,
@@ -4210,7 +4298,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/documents/{userId}
      * @secure
      * @response `200` `DocumentPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
      */
     findUserDocumentsByUserId: (
       tenantId: string,
@@ -4261,7 +4349,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/documents/{userId}/context/{contextId}
      * @secure
      * @response `200` `(DocumentEntityDto)[]`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
      */
     getAllByContextByUserIdAndContextId: (
       tenantId: string,
@@ -4285,7 +4373,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/users/{tenantId}/documents/{userId}/context/{contextId}
      * @secure
      * @response `201` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
      */
     attachDocumentsToUserByContextId: (
       tenantId: string,
@@ -4636,7 +4724,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/tenant
      * @secure
      * @response `201` `TenantEntityDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator
      */
     create: (data: CreateTenantDto, params: RequestParams = {}) =>
       this.request<TenantEntityDto, HttpExceptionDto>({
@@ -4657,7 +4745,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant
      * @secure
      * @response `200` `TenantPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
      */
     findAll: (
       query?: {
@@ -4687,7 +4775,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindOne
      * @request GET:/tenant/{tenantId}
      * @secure
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
      */
     findOne: (tenantId: string, params: RequestParams = {}) =>
       this.request<any, HttpExceptionDto>({
@@ -4704,7 +4792,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name Update
      * @request PUT:/tenant/{tenantId}
      * @secure
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
      */
     update: (tenantId: string, data: UpdateTenantDto, params: RequestParams = {}) =>
       this.request<any, HttpExceptionDto>({
@@ -4723,7 +4811,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name Remove
      * @request DELETE:/tenant/{tenantId}
      * @secure
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
      */
     remove: (tenantId: string, params: RequestParams = {}) =>
       this.request<any, HttpExceptionDto>({
@@ -4759,7 +4847,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name UpdateProfile
      * @request PUT:/tenant/profile/{tenantId}
      * @secure
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
      */
     updateProfile: (tenantId: string, data: UpdateTenantProfileDto, params: RequestParams = {}) =>
       this.request<any, HttpExceptionDto>({
@@ -4779,7 +4867,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/tenant/configurations/{tenantId}
      * @secure
      * @response `200` `TenantConfigurationsResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator
      */
     upsertConfigurations: (tenantId: string, data: TenantConfigurationsDto, params: RequestParams = {}) =>
       this.request<TenantConfigurationsResponseDto, HttpExceptionDto>({
@@ -4800,7 +4888,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant/configurations/{tenantId}
      * @secure
      * @response `200` `TenantConfigurationsResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration,administrator
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator
      */
     getConfigurations: (tenantId: string, params: RequestParams = {}) =>
       this.request<TenantConfigurationsResponseDto, HttpExceptionDto>({
@@ -4870,7 +4958,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/tenant-access/{tenantId}
      * @secure
      * @response `201` `TenantAccessEntityDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
      */
     create: (tenantId: string, data: CreateTenantAccessDto, params: RequestParams = {}) =>
       this.request<TenantAccessEntityDto, HttpExceptionDto>({
@@ -4891,7 +4979,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant-access/{tenantId}
      * @secure
      * @response `200` `TenantAccessPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
      */
     findAll: (
       tenantId: string,
@@ -4923,7 +5011,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant-access/{tenantId}/{id}
      * @secure
      * @response `200` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
      */
     findOne: (id: string, tenantId: string, params: RequestParams = {}) =>
       this.request<void, HttpExceptionDto>({
@@ -5053,7 +5141,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/tenant-input/{tenantId}
      * @secure
      * @response `201` `TenantInputEntityDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
      */
     createTenantInput: (tenantId: string, data: CreateTenantInputDto, params: RequestParams = {}) =>
       this.request<TenantInputEntityDto, HttpExceptionDto>({
@@ -5074,7 +5162,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant-input/{tenantId}
      * @secure
      * @response `200` `TenantInputPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
      */
     findTenantInput: (
       tenantId: string,
@@ -5106,7 +5194,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/tenant-input/{tenantId}/{inputId}
      * @secure
      * @response `201` `TenantInputEntityDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
      */
     updateByInputId: (tenantId: string, inputId: string, data: UpdateTenantInputDto, params: RequestParams = {}) =>
       this.request<TenantInputEntityDto, HttpExceptionDto>({
@@ -5126,7 +5214,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindTenantInputById
      * @request GET:/tenant-input/{tenantId}/{inputId}
      * @secure
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin,integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
      */
     findTenantInputById: (tenantId: string, inputId: string, params: RequestParams = {}) =>
       this.request<any, HttpExceptionDto>({
@@ -5243,7 +5331,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      * @response `200` `(ContextDto)[]` Returns all contexts
      * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin,admin
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin
      */
     listAll: (params: RequestParams = {}) =>
       this.request<ContextDto[], void | HttpExceptionDto>({
@@ -5304,7 +5392,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/tenant-context/{tenantId}
      * @secure
      * @response `201` `TenantContextDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, integration
      */
     createTenantContext: (tenantId: string, data: CreateTenantContextDto, params: RequestParams = {}) =>
       this.request<TenantContextDto, HttpExceptionDto>({
@@ -5325,7 +5413,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant-context/{tenantId}
      * @secure
      * @response `200` `TenantInputPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
      */
     findTenantContext: (
       tenantId: string,
@@ -5357,7 +5445,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant-context/{tenantId}/{tenantContextId}
      * @secure
      * @response `200` `TenantContextDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin,user
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
      */
     findOneByTenantContextId: (tenantId: string, tenantContextId: string, params: RequestParams = {}) =>
       this.request<TenantContextDto, HttpExceptionDto>({
