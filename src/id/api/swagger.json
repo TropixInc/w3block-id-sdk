@@ -5589,6 +5589,10 @@
           "kycStatus": {
             "nullable": false,
             "$ref": "#/components/schemas/KycStatus"
+          },
+          "avatarUrl": {
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [

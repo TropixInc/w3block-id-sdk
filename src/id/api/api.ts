@@ -212,6 +212,7 @@ export interface UserPublicResponseDto {
   /** @format date-time */
   updatedAt?: string;
   kycStatus: KycStatus;
+  avatarUrl?: string | null;
 }
 
 export interface HttpExceptionDto {
