@@ -164,7 +164,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user, operator, loyaltyOperator",
             "content": {
               "application/json": {
                 "schema": {
@@ -342,8 +342,21 @@
             "name": "role",
             "required": false,
             "in": "query",
+            "example": [
+              "user"
+            ],
             "schema": {
-              "$ref": "#/components/schemas/UserRoleEnum"
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "superAdmin",
+                  "admin",
+                  "operator",
+                  "user",
+                  "loyaltyOperator"
+                ]
+              }
             }
           },
           {
@@ -5100,7 +5113,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.8.24",
+    "version": "0.9.1",
     "contact": {}
   },
   "tags": [],
@@ -5970,10 +5983,15 @@
           "avatarUrl": {
             "type": "string",
             "nullable": true
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
           }
         },
         "required": [
-          "id"
+          "id",
+          "expiresAt"
         ]
       },
       "UserCodeResponseDto": {

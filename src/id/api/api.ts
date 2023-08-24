@@ -377,6 +377,8 @@ export interface UserByCodeResponseDto {
   name?: string;
   id: string;
   avatarUrl?: string | null;
+  /** @format date-time */
+  expiresAt: string;
 }
 
 export interface UserCodeResponseDto {
@@ -1735,7 +1737,7 @@ export namespace Users {
    * @request GET:/users/profile
    * @secure
    * @response `200` `UserPublicResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user, operator, loyaltyOperator
    */
   export namespace GetProfileByUserLogged {
     export type RequestParams = {};
@@ -1804,7 +1806,8 @@ export namespace Users {
       /** @example "createdAt" */
       sortBy?: UserSortBy;
       orderBy?: OrderByEnum;
-      role?: UserRoleEnum;
+      /** @example ["user"] */
+      role?: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator')[];
       userId?: string[];
       contextIds?: string[];
       contextStatus?: UserContextStatus[];
@@ -3666,7 +3669,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.8.24
+ * @version 0.9.1
  * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */
@@ -3750,7 +3753,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/profile
      * @secure
      * @response `200` `UserPublicResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user, operator, loyaltyOperator
      */
     getProfileByUserLogged: (params: RequestParams = {}) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
@@ -3819,7 +3822,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @example "createdAt" */
         sortBy?: UserSortBy;
         orderBy?: OrderByEnum;
-        role?: UserRoleEnum;
+        /** @example ["user"] */
+        role?: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator')[];
         userId?: string[];
         contextIds?: string[];
         contextStatus?: UserContextStatus[];
