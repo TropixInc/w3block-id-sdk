@@ -230,6 +230,164 @@
         ]
       }
     },
+    "/users/{tenantId}/xls": {
+      "get": {
+        "operationId": "requestUsersExport",
+        "summary": "",
+        "description": "Requests a users report XLS based on some params",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "example": "2022-01-30T10:30:40-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "example": 1,
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "example": 10,
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "example": [
+              "user"
+            ],
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "superAdmin",
+                  "admin",
+                  "operator",
+                  "user",
+                  "loyaltyOperator",
+                  "commerce.orderReceiver"
+                ]
+              }
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "contextIds",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "contextStatus",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/UserContextStatus"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportEntityDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/users/{tenantId}/{id}": {
       "get": {
         "operationId": "getProfileUserById",
@@ -296,9 +454,38 @@
             }
           },
           {
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "example": "2022-01-30T10:30:40-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
             "name": "page",
             "required": false,
             "in": "query",
+            "example": 1,
             "schema": {
               "default": 1,
               "type": "number"
@@ -308,6 +495,7 @@
             "name": "limit",
             "required": false,
             "in": "query",
+            "example": 10,
             "schema": {
               "default": 10,
               "type": "number"
@@ -319,23 +507,6 @@
             "in": "query",
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "example": "createdAt",
-            "schema": {
-              "$ref": "#/components/schemas/UserSortBy"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
             }
           },
           {
@@ -354,7 +525,8 @@
                   "admin",
                   "operator",
                   "user",
-                  "loyaltyOperator"
+                  "loyaltyOperator",
+                  "commerce.orderReceiver"
                 ]
               }
             }
@@ -864,6 +1036,16 @@
             "required": true,
             "in": "path",
             "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "nullable": true,
               "type": "string"
             }
           }
@@ -3275,7 +3457,8 @@
                   "date",
                   "multiface_selfie",
                   "user_name",
-                  "simple_select"
+                  "simple_select",
+                  "dynamic_select"
                 ]
               }
             }
@@ -4189,7 +4372,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TenantInputPaginateResponseDto"
+                  "$ref": "#/components/schemas/TenantContextPaginateResponseDto"
                 }
               }
             }
@@ -5113,7 +5296,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.1",
+    "version": "0.9.7",
     "contact": {}
   },
   "tags": [],
@@ -5161,7 +5344,8 @@
           "admin",
           "operator",
           "user",
-          "loyaltyOperator"
+          "loyaltyOperator",
+          "commerce.orderReceiver"
         ]
       },
       "I18nLocaleEnum": {
@@ -5549,7 +5733,8 @@
                 "admin",
                 "operator",
                 "user",
-                "loyaltyOperator"
+                "loyaltyOperator",
+                "commerce.orderReceiver"
               ]
             }
           },
@@ -5697,6 +5882,10 @@
           "verificationType": {
             "default": "invisible",
             "$ref": "#/components/schemas/VerificationType"
+          },
+          "createVaultWallet": {
+            "type": "boolean",
+            "example": false
           }
         },
         "required": [
@@ -5705,20 +5894,181 @@
           "i18nLocale"
         ]
       },
-      "UserSortBy": {
-        "type": "string",
-        "enum": [
-          "createdAt",
-          "updatedAt",
-          "name",
-          "email"
-        ]
-      },
       "OrderByEnum": {
         "type": "string",
         "enum": [
           "ASC",
           "DESC"
+        ]
+      },
+      "AssetType": {
+        "type": "string",
+        "enum": [
+          "image",
+          "document"
+        ]
+      },
+      "AssetStatus": {
+        "type": "string",
+        "enum": [
+          "waitingUpload",
+          "waitingAssociation",
+          "associated",
+          "excluded",
+          "expired"
+        ]
+      },
+      "AssetProvider": {
+        "type": "string",
+        "enum": [
+          "cloudinary"
+        ]
+      },
+      "AssetTarget": {
+        "type": "string",
+        "enum": [
+          "userDocument",
+          "export"
+        ]
+      },
+      "AssetAccess": {
+        "type": "string",
+        "enum": [
+          "public",
+          "private"
+        ]
+      },
+      "AssetEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "example": "image",
+            "$ref": "#/components/schemas/AssetType"
+          },
+          "status": {
+            "example": "associated",
+            "$ref": "#/components/schemas/AssetStatus"
+          },
+          "provider": {
+            "example": "cloudinary",
+            "$ref": "#/components/schemas/AssetProvider"
+          },
+          "directLink": {
+            "type": "string",
+            "example": "https://dummyimage.com/200x200/fff/000",
+            "nullable": true
+          },
+          "target": {
+            "example": "userDocument",
+            "$ref": "#/components/schemas/AssetTarget"
+          },
+          "access": {
+            "example": "public",
+            "nullable": true,
+            "$ref": "#/components/schemas/AssetAccess"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "tenantId",
+          "type",
+          "status",
+          "provider",
+          "target"
+        ]
+      },
+      "ExportTypeEnum": {
+        "type": "string",
+        "enum": [
+          "users_report"
+        ]
+      },
+      "ExportStatusEnum": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "generating",
+          "ready_for_download",
+          "failed",
+          "expired"
+        ]
+      },
+      "ExportEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "example": "users_report",
+            "$ref": "#/components/schemas/ExportTypeEnum"
+          },
+          "status": {
+            "example": "ready_for_download",
+            "$ref": "#/components/schemas/ExportStatusEnum"
+          },
+          "readyForDownloadDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "expiresIn": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "assetId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/AssetEntityDto"
+          },
+          "params": {
+            "type": "object",
+            "example": null
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "type",
+          "status",
+          "assetId",
+          "asset"
         ]
       },
       "PaginationMetaDto": {
@@ -6673,6 +7023,10 @@
           },
           "utmParams": {
             "$ref": "#/components/schemas/UTMParamsDto"
+          },
+          "referrer": {
+            "type": "string",
+            "example": "referral-code"
           }
         },
         "required": [
@@ -7657,99 +8011,6 @@
         "type": "object",
         "properties": {}
       },
-      "AssetType": {
-        "type": "string",
-        "enum": [
-          "image",
-          "document"
-        ]
-      },
-      "AssetStatus": {
-        "type": "string",
-        "enum": [
-          "waitingUpload",
-          "waitingAssociation",
-          "associated",
-          "excluded",
-          "expired"
-        ]
-      },
-      "AssetProvider": {
-        "type": "string",
-        "enum": [
-          "cloudinary"
-        ]
-      },
-      "AssetTarget": {
-        "type": "string",
-        "enum": [
-          "userDocument"
-        ]
-      },
-      "AssetAccess": {
-        "type": "string",
-        "enum": [
-          "public",
-          "private"
-        ]
-      },
-      "AssetEntityDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "type": {
-            "example": "image",
-            "$ref": "#/components/schemas/AssetType"
-          },
-          "status": {
-            "example": "associated",
-            "$ref": "#/components/schemas/AssetStatus"
-          },
-          "provider": {
-            "example": "cloudinary",
-            "$ref": "#/components/schemas/AssetProvider"
-          },
-          "directLink": {
-            "type": "string",
-            "example": "https://dummyimage.com/200x200/fff/000",
-            "nullable": true
-          },
-          "target": {
-            "example": "userDocument",
-            "$ref": "#/components/schemas/AssetTarget"
-          },
-          "access": {
-            "example": "public",
-            "nullable": true,
-            "$ref": "#/components/schemas/AssetAccess"
-          }
-        },
-        "required": [
-          "id",
-          "createdAt",
-          "updatedAt",
-          "tenantId",
-          "type",
-          "status",
-          "provider",
-          "target"
-        ]
-      },
       "UserDocumentStatus": {
         "type": "string",
         "enum": [
@@ -7895,7 +8156,8 @@
           "date",
           "multiface_selfie",
           "user_name",
-          "simple_select"
+          "simple_select",
+          "dynamic_select"
         ]
       },
       "TenantInputSelectOptionDto": {
@@ -7950,6 +8212,16 @@
             "items": {
               "$ref": "#/components/schemas/TenantInputSelectOptionDto"
             }
+          },
+          "data": {
+            "type": "object",
+            "example": {
+              "key": "value"
+            }
+          },
+          "step": {
+            "type": "number",
+            "example": 1
           }
         },
         "required": [
@@ -8009,6 +8281,13 @@
             "items": {
               "$ref": "#/components/schemas/TenantInputSelectOptionDto"
             }
+          },
+          "data": {
+            "type": "object"
+          },
+          "step": {
+            "type": "number",
+            "example": 1
           }
         },
         "required": [
@@ -8053,6 +8332,16 @@
             "items": {
               "$ref": "#/components/schemas/TenantInputSelectOptionDto"
             }
+          },
+          "data": {
+            "type": "object",
+            "example": {
+              "key": "value"
+            }
+          },
+          "step": {
+            "type": "number",
+            "example": 1
           }
         },
         "required": [
@@ -8075,7 +8364,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TenantContextDto"
+              "$ref": "#/components/schemas/TenantInputEntityDto"
             }
           }
         },
@@ -8094,7 +8383,8 @@
       "AssetTargetEnum": {
         "type": "string",
         "enum": [
-          "userDocument"
+          "userDocument",
+          "export"
         ]
       },
       "RequestAssetUploadDto": {
@@ -8338,6 +8628,27 @@
           "tenantId",
           "contextId",
           "active"
+        ]
+      },
+      "TenantContextPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantContextDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
         ]
       },
       "UpdateTenantContextDto": {

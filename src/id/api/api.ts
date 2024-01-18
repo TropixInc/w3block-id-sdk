@@ -24,6 +24,7 @@ export enum UserRoleEnum {
   Operator = 'operator',
   User = 'user',
   LoyaltyOperator = 'loyaltyOperator',
+  CommerceOrderReceiver = 'commerce.orderReceiver',
 }
 
 export enum I18NLocaleEnum {
@@ -192,7 +193,7 @@ export interface UserPublicResponseDto {
    * @default ["user"]
    * @example ["user"]
    */
-  roles: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator')[];
+  roles: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator' | 'commerce.orderReceiver')[];
   /** @example "pt-br" */
   i18nLocale: I18NLocaleEnum;
   /** @example "John Doe" */
@@ -253,18 +254,101 @@ export interface InviteUserDto {
   royaltyEligible?: boolean;
   /** @default "invisible" */
   verificationType?: VerificationType;
-}
-
-export enum UserSortBy {
-  CreatedAt = 'createdAt',
-  UpdatedAt = 'updatedAt',
-  Name = 'name',
-  Email = 'email',
+  /** @example false */
+  createVaultWallet?: boolean;
 }
 
 export enum OrderByEnum {
   ASC = 'ASC',
   DESC = 'DESC',
+}
+
+export enum AssetType {
+  Image = 'image',
+  Document = 'document',
+}
+
+export enum AssetStatus {
+  WaitingUpload = 'waitingUpload',
+  WaitingAssociation = 'waitingAssociation',
+  Associated = 'associated',
+  Excluded = 'excluded',
+  Expired = 'expired',
+}
+
+export enum AssetProvider {
+  Cloudinary = 'cloudinary',
+}
+
+export enum AssetTarget {
+  UserDocument = 'userDocument',
+  Export = 'export',
+}
+
+export enum AssetAccess {
+  Public = 'public',
+  Private = 'private',
+}
+
+export interface AssetEntityDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId: string;
+  /** @example "image" */
+  type: AssetType;
+  /** @example "associated" */
+  status: AssetStatus;
+  /** @example "cloudinary" */
+  provider: AssetProvider;
+  /** @example "https://dummyimage.com/200x200/fff/000" */
+  directLink?: string | null;
+  /** @example "userDocument" */
+  target: AssetTarget;
+  /** @example "public" */
+  access?: AssetAccess | null;
+}
+
+export enum ExportTypeEnum {
+  UsersReport = 'users_report',
+}
+
+export enum ExportStatusEnum {
+  Pending = 'pending',
+  Generating = 'generating',
+  ReadyForDownload = 'ready_for_download',
+  Failed = 'failed',
+  Expired = 'expired',
+}
+
+export interface ExportEntityDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+  /** @format date-time */
+  deletedAt?: string;
+  /** @format uuid */
+  tenantId: string;
+  /** @example "users_report" */
+  type: ExportTypeEnum;
+  /** @example "ready_for_download" */
+  status: ExportStatusEnum;
+  /** @format date-time */
+  readyForDownloadDate?: string;
+  /** @format date-time */
+  expiresIn?: string;
+  /** @format uuid */
+  assetId: string;
+  asset: AssetEntityDto;
+  /** @example null */
+  params?: object;
 }
 
 export interface PaginationMetaDto {
@@ -691,6 +775,8 @@ export interface SignupUserDto {
   verificationType?: VerificationType;
   phone?: string;
   utmParams?: UTMParamsDto;
+  /** @example "referral-code" */
+  referrer?: string;
 }
 
 export interface UnauthorizedExceptionDto {
@@ -1239,55 +1325,6 @@ export interface RequiredReviewContextStatusDto {
 
 export type TenantInputEntity = object;
 
-export enum AssetType {
-  Image = 'image',
-  Document = 'document',
-}
-
-export enum AssetStatus {
-  WaitingUpload = 'waitingUpload',
-  WaitingAssociation = 'waitingAssociation',
-  Associated = 'associated',
-  Excluded = 'excluded',
-  Expired = 'expired',
-}
-
-export enum AssetProvider {
-  Cloudinary = 'cloudinary',
-}
-
-export enum AssetTarget {
-  UserDocument = 'userDocument',
-}
-
-export enum AssetAccess {
-  Public = 'public',
-  Private = 'private',
-}
-
-export interface AssetEntityDto {
-  /** @format uuid */
-  id: string;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  /** @format uuid */
-  tenantId: string;
-  /** @example "image" */
-  type: AssetType;
-  /** @example "associated" */
-  status: AssetStatus;
-  /** @example "cloudinary" */
-  provider: AssetProvider;
-  /** @example "https://dummyimage.com/200x200/fff/000" */
-  directLink?: string | null;
-  /** @example "userDocument" */
-  target: AssetTarget;
-  /** @example "public" */
-  access?: AssetAccess | null;
-}
-
 export enum UserDocumentStatus {
   Approved = 'approved',
   Denied = 'denied',
@@ -1347,6 +1384,7 @@ export enum DataTypesEnum {
   MultifaceSelfie = 'multiface_selfie',
   UserName = 'user_name',
   SimpleSelect = 'simple_select',
+  DynamicSelect = 'dynamic_select',
 }
 
 export interface TenantInputSelectOptionDto {
@@ -1371,6 +1409,10 @@ export interface CreateTenantInputDto {
   /** @example true */
   active: boolean;
   options?: TenantInputSelectOptionDto[];
+  /** @example {"key":"value"} */
+  data?: object;
+  /** @example 1 */
+  step?: number;
 }
 
 export interface TenantInputEntityDto {
@@ -1392,6 +1434,9 @@ export interface TenantInputEntityDto {
   /** @example true */
   active: boolean;
   options?: TenantInputSelectOptionDto[];
+  data?: object;
+  /** @example 1 */
+  step?: number;
 }
 
 export interface UpdateTenantInputDto {
@@ -1406,12 +1451,16 @@ export interface UpdateTenantInputDto {
   /** @example true */
   active: boolean;
   options?: TenantInputSelectOptionDto[];
+  /** @example {"key":"value"} */
+  data?: object;
+  /** @example 1 */
+  step?: number;
 }
 
 export interface TenantInputPaginateResponseDto {
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
-  items: TenantContextDto[];
+  items: TenantInputEntityDto[];
 }
 
 export enum AssetTypeEnum {
@@ -1421,6 +1470,7 @@ export enum AssetTypeEnum {
 
 export enum AssetTargetEnum {
   UserDocument = 'userDocument',
+  Export = 'export',
 }
 
 export interface RequestAssetUploadDto {
@@ -1517,6 +1567,12 @@ export interface TenantContextDto {
   context?: ContextDto;
   /** @example true */
   active: boolean;
+}
+
+export interface TenantContextPaginateResponseDto {
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+  items: TenantContextDto[];
 }
 
 export interface UpdateTenantContextDto {
@@ -1766,6 +1822,45 @@ export namespace Users {
     export type ResponseBody = void;
   }
   /**
+   * @description Requests a users report XLS based on some params
+   * @tags Users
+   * @name RequestUsersExport
+   * @request GET:/users/{tenantId}/xls
+   * @secure
+   * @response `201` `ExportEntityDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   */
+  export namespace RequestUsersExport {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      /** @example "2022-01-30T10:30:40-03:00" */
+      createdAt?: string;
+      sortBy?: string[];
+      orderBy?: OrderByEnum;
+      /**
+       * @default 1
+       * @example 1
+       */
+      page?: number;
+      /**
+       * @default 10
+       * @example 10
+       */
+      limit?: number;
+      search?: string;
+      /** @example ["user"] */
+      role?: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator' | 'commerce.orderReceiver')[];
+      userId?: string[];
+      contextIds?: string[];
+      contextStatus?: UserContextStatus[];
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ExportEntityDto;
+  }
+  /**
    * No description
    * @tags Users
    * @name GetProfileUserById
@@ -1798,16 +1893,23 @@ export namespace Users {
       tenantId: string;
     };
     export type RequestQuery = {
-      /** @default 1 */
+      /** @example "2022-01-30T10:30:40-03:00" */
+      createdAt?: string;
+      sortBy?: string[];
+      orderBy?: OrderByEnum;
+      /**
+       * @default 1
+       * @example 1
+       */
       page?: number;
-      /** @default 10 */
+      /**
+       * @default 10
+       * @example 10
+       */
       limit?: number;
       search?: string;
-      /** @example "createdAt" */
-      sortBy?: UserSortBy;
-      orderBy?: OrderByEnum;
       /** @example ["user"] */
-      role?: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator')[];
+      role?: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator' | 'commerce.orderReceiver')[];
       userId?: string[];
       contextIds?: string[];
       contextStatus?: UserContextStatus[];
@@ -1987,7 +2089,10 @@ export namespace Users {
     export type RequestParams = {
       tenantId: string;
     };
-    export type RequestQuery = {};
+    export type RequestQuery = {
+      /** @format uuid */
+      userId?: string | null;
+    };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = WalletResponseDto;
@@ -2253,6 +2358,7 @@ export namespace Users {
         | 'multiface_selfie'
         | 'user_name'
         | 'simple_select'
+        | 'dynamic_select'
       )[];
       /** Filter by document contextId */
       contextId?: string;
@@ -3204,7 +3310,7 @@ export namespace TenantContext {
    * @name FindTenantContext
    * @request GET:/tenant-context/{tenantId}
    * @secure
-   * @response `200` `TenantInputPaginateResponseDto`
+   * @response `200` `TenantContextPaginateResponseDto`
    * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
    */
   export namespace FindTenantContext {
@@ -3222,7 +3328,7 @@ export namespace TenantContext {
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = TenantInputPaginateResponseDto;
+    export type ResponseBody = TenantContextPaginateResponseDto;
   }
   /**
    * No description
@@ -3669,7 +3775,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.1
+ * @version 0.9.7
  * @baseUrl https://pixwayid.stg.pixway.io
  * @contact
  */
@@ -3783,6 +3889,51 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
+     * @description Requests a users report XLS based on some params
+     *
+     * @tags Users
+     * @name RequestUsersExport
+     * @request GET:/users/{tenantId}/xls
+     * @secure
+     * @response `201` `ExportEntityDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     */
+    requestUsersExport: (
+      tenantId: string,
+      query?: {
+        /** @example "2022-01-30T10:30:40-03:00" */
+        createdAt?: string;
+        sortBy?: string[];
+        orderBy?: OrderByEnum;
+        /**
+         * @default 1
+         * @example 1
+         */
+        page?: number;
+        /**
+         * @default 10
+         * @example 10
+         */
+        limit?: number;
+        search?: string;
+        /** @example ["user"] */
+        role?: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator' | 'commerce.orderReceiver')[];
+        userId?: string[];
+        contextIds?: string[];
+        contextStatus?: UserContextStatus[];
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ExportEntityDto, HttpExceptionDto>({
+        path: `/users/${tenantId}/xls`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
      * No description
      *
      * @tags Users
@@ -3814,16 +3965,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getUsersByTenantId: (
       tenantId: string,
       query?: {
-        /** @default 1 */
+        /** @example "2022-01-30T10:30:40-03:00" */
+        createdAt?: string;
+        sortBy?: string[];
+        orderBy?: OrderByEnum;
+        /**
+         * @default 1
+         * @example 1
+         */
         page?: number;
-        /** @default 10 */
+        /**
+         * @default 10
+         * @example 10
+         */
         limit?: number;
         search?: string;
-        /** @example "createdAt" */
-        sortBy?: UserSortBy;
-        orderBy?: OrderByEnum;
         /** @example ["user"] */
-        role?: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator')[];
+        role?: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator' | 'commerce.orderReceiver')[];
         userId?: string[];
         contextIds?: string[];
         contextStatus?: UserContextStatus[];
@@ -4025,10 +4183,18 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      * @response `200` `WalletResponseDto`
      */
-    createVault: (tenantId: string, params: RequestParams = {}) =>
+    createVault: (
+      tenantId: string,
+      query?: {
+        /** @format uuid */
+        userId?: string | null;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<WalletResponseDto, any>({
         path: `/users/${tenantId}/wallets/vault/claim`,
         method: 'POST',
+        query: query,
         secure: true,
         format: 'json',
         ...params,
@@ -4329,6 +4495,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           | 'multiface_selfie'
           | 'user_name'
           | 'simple_select'
+          | 'dynamic_select'
         )[];
         /** Filter by document contextId */
         contextId?: string;
@@ -5417,7 +5584,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindTenantContext
      * @request GET:/tenant-context/{tenantId}
      * @secure
-     * @response `200` `TenantInputPaginateResponseDto`
+     * @response `200` `TenantContextPaginateResponseDto`
      * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
      */
     findTenantContext: (
@@ -5433,7 +5600,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<TenantInputPaginateResponseDto, HttpExceptionDto>({
+      this.request<TenantContextPaginateResponseDto, HttpExceptionDto>({
         path: `/tenant-context/${tenantId}`,
         method: 'GET',
         query: query,
