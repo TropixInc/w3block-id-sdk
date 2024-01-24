@@ -1898,6 +1898,101 @@
         ]
       }
     },
+    "/auth/signin/code": {
+      "post": {
+        "operationId": "signInWithCode",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserWithCodeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/signin/request-code": {
+      "post": {
+        "operationId": "requestCode",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCodeEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
     "/auth/refresh-token": {
       "post": {
         "operationId": "refreshToken",
@@ -2401,7 +2496,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, integration, administrator",
             "content": {
               "application/json": {
                 "schema": {
@@ -2444,7 +2539,7 @@
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, integration, administrator",
             "content": {
               "application/json": {
                 "schema": {
@@ -3458,7 +3553,8 @@
                   "multiface_selfie",
                   "user_name",
                   "simple_select",
-                  "dynamic_select"
+                  "dynamic_select",
+                  "image"
                 ]
               }
             }
@@ -5296,13 +5392,13 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.7",
+    "version": "0.9.8",
     "contact": {}
   },
   "tags": [],
   "servers": [
     {
-      "url": "https://pixwayid.stg.pixway.io",
+      "url": "https://pixwayid.stg.w3block.io",
       "description": "Pixway ID Server",
       "variables": {}
     }
@@ -5441,7 +5537,7 @@
             "example": true
           },
           "callbackUrl": {
-            "type": "string"
+            "type": "object"
           },
           "verificationType": {
             "default": "invisible",
@@ -7012,7 +7108,7 @@
             "$ref": "#/components/schemas/I18nLocaleEnum"
           },
           "callbackUrl": {
-            "type": "string"
+            "type": "object"
           },
           "verificationType": {
             "default": "invisible",
@@ -7033,8 +7129,7 @@
           "password",
           "confirmation",
           "tenantId",
-          "email",
-          "callbackUrl"
+          "email"
         ]
       },
       "UnauthorizedExceptionDto": {
@@ -7091,6 +7186,43 @@
         "required": [
           "email",
           "password"
+        ]
+      },
+      "LoginUserWithCodeDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com"
+          },
+          "code": {
+            "type": "string",
+            "example": "012345"
+          },
+          "tenantId": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          }
+        },
+        "required": [
+          "email",
+          "code"
+        ]
+      },
+      "RequestCodeEmailDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          }
+        },
+        "required": [
+          "email",
+          "tenantId"
         ]
       },
       "RefreshTokenDto": {
@@ -7650,11 +7782,35 @@
           }
         }
       },
+      "PasswordlessConfigurationsDto": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": false
+          },
+          "expirationInMinutes": {
+            "type": "number",
+            "default": 0
+          },
+          "sendEmailWhenRegister": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "enabled",
+          "sendEmailWhenRegister"
+        ]
+      },
       "TenantConfigurationsDto": {
         "type": "object",
         "properties": {
           "kyc": {
             "$ref": "#/components/schemas/TenantConfigurationsKycDto"
+          },
+          "passwordless": {
+            "$ref": "#/components/schemas/PasswordlessConfigurationsDto"
           }
         }
       },
@@ -7686,6 +7842,14 @@
           "isMain"
         ]
       },
+      "TenantConfigurationResponseDto": {
+        "type": "object",
+        "properties": {
+          "passwordless": {
+            "$ref": "#/components/schemas/PasswordlessConfigurationsDto"
+          }
+        }
+      },
       "TenantPublicDto": {
         "type": "object",
         "properties": {
@@ -7704,13 +7868,17 @@
             "items": {
               "$ref": "#/components/schemas/PublicHostDto"
             }
+          },
+          "configuration": {
+            "$ref": "#/components/schemas/TenantConfigurationResponseDto"
           }
         },
         "required": [
           "id",
           "name",
           "info",
-          "hosts"
+          "hosts",
+          "configuration"
         ]
       },
       "CreateTenantAccessDto": {
@@ -8157,7 +8325,8 @@
           "multiface_selfie",
           "user_name",
           "simple_select",
-          "dynamic_select"
+          "dynamic_select",
+          "image"
         ]
       },
       "TenantInputSelectOptionDto": {

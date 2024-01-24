@@ -70,7 +70,7 @@ export interface CreateUserDto {
   address?: CreateAddressDto;
   /** @example true */
   sendEmail?: object;
-  callbackUrl?: string;
+  callbackUrl?: object;
   /** @default "invisible" */
   verificationType?: VerificationType;
 }
@@ -770,7 +770,7 @@ export interface SignupUserDto {
    * @example "pt-br"
    */
   i18nLocale?: I18NLocaleEnum;
-  callbackUrl: string;
+  callbackUrl?: object;
   /** @default "invisible" */
   verificationType?: VerificationType;
   phone?: string;
@@ -800,6 +800,21 @@ export interface LoginUserDto {
   password: string;
   /** @example "00000000-0000-0000-0000-000000000001" */
   tenantId?: string;
+}
+
+export interface LoginUserWithCodeDto {
+  /** @example "user@example.com" */
+  email: string;
+  /** @example "012345" */
+  code: string;
+  /** @example "00000000-0000-0000-0000-000000000001" */
+  tenantId?: string;
+}
+
+export interface RequestCodeEmailDto {
+  email: string;
+  /** @example "00000000-0000-0000-0000-000000000001" */
+  tenantId: string;
 }
 
 export interface RefreshTokenDto {
@@ -1174,8 +1189,18 @@ export interface TenantConfigurationsKycDto {
   isUniqueCPF?: boolean;
 }
 
+export interface PasswordlessConfigurationsDto {
+  /** @default false */
+  enabled: boolean;
+  /** @default 0 */
+  expirationInMinutes?: number;
+  /** @default false */
+  sendEmailWhenRegister: boolean;
+}
+
 export interface TenantConfigurationsDto {
   kyc?: TenantConfigurationsKycDto;
+  passwordless?: PasswordlessConfigurationsDto;
 }
 
 export interface TenantConfigurationsResponseDto {
@@ -1189,12 +1214,17 @@ export interface PublicHostDto {
   isMain: boolean;
 }
 
+export interface TenantConfigurationResponseDto {
+  passwordless?: PasswordlessConfigurationsDto;
+}
+
 export interface TenantPublicDto {
   /** @format uuid */
   id: string;
   name: string;
   info: TenantInfoDto;
   hosts: PublicHostDto[];
+  configuration: TenantConfigurationResponseDto;
 }
 
 export interface CreateTenantAccessDto {
@@ -1385,6 +1415,7 @@ export enum DataTypesEnum {
   UserName = 'user_name',
   SimpleSelect = 'simple_select',
   DynamicSelect = 'dynamic_select',
+  Image = 'image',
 }
 
 export interface TenantInputSelectOptionDto {
@@ -2359,6 +2390,7 @@ export namespace Users {
         | 'user_name'
         | 'simple_select'
         | 'dynamic_select'
+        | 'image'
       )[];
       /** Filter by document contextId */
       contextId?: string;
@@ -2640,6 +2672,38 @@ export namespace Auth {
   /**
    * No description
    * @tags Authentication
+   * @name SignInWithCode
+   * @request POST:/auth/signin/code
+   * @response `201` `SignInResponseDto`
+   * @response `401` `UnauthorizedExceptionDto`
+   * @response `429` `TooManyRequestsExceptionDto`
+   */
+  export namespace SignInWithCode {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = LoginUserWithCodeDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = SignInResponseDto;
+  }
+  /**
+   * No description
+   * @tags Authentication
+   * @name RequestCode
+   * @request POST:/auth/signin/request-code
+   * @response `200` `void`
+   * @response `401` `UnauthorizedExceptionDto`
+   * @response `429` `TooManyRequestsExceptionDto`
+   */
+  export namespace RequestCode {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = RequestCodeEmailDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Authentication
    * @name RefreshToken
    * @request POST:/auth/refresh-token
    * @secure
@@ -2834,7 +2898,7 @@ export namespace Tenant {
    * @request POST:/tenant/configurations/{tenantId}
    * @secure
    * @response `200` `TenantConfigurationsResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, integration, administrator
    */
   export namespace UpsertConfigurations {
     export type RequestParams = {
@@ -2852,7 +2916,7 @@ export namespace Tenant {
    * @request GET:/tenant/configurations/{tenantId}
    * @secure
    * @response `200` `TenantConfigurationsResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, integration, administrator
    */
   export namespace GetConfigurations {
     export type RequestParams = {
@@ -3687,7 +3751,7 @@ export class HttpClient<SecurityDataType = unknown> {
   private format?: ResponseType;
 
   constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || 'https://pixwayid.stg.pixway.io' });
+    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || 'https://pixwayid.stg.w3block.io' });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
@@ -3775,8 +3839,8 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.7
- * @baseUrl https://pixwayid.stg.pixway.io
+ * @version 0.9.8
+ * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
@@ -4496,6 +4560,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           | 'user_name'
           | 'simple_select'
           | 'dynamic_select'
+          | 'image'
         )[];
         /** Filter by document contextId */
         contextId?: string;
@@ -4817,6 +4882,45 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Authentication
+     * @name SignInWithCode
+     * @request POST:/auth/signin/code
+     * @response `201` `SignInResponseDto`
+     * @response `401` `UnauthorizedExceptionDto`
+     * @response `429` `TooManyRequestsExceptionDto`
+     */
+    signInWithCode: (data: LoginUserWithCodeDto, params: RequestParams = {}) =>
+      this.request<SignInResponseDto, UnauthorizedExceptionDto | TooManyRequestsExceptionDto>({
+        path: `/auth/signin/code`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name RequestCode
+     * @request POST:/auth/signin/request-code
+     * @response `200` `void`
+     * @response `401` `UnauthorizedExceptionDto`
+     * @response `429` `TooManyRequestsExceptionDto`
+     */
+    requestCode: (data: RequestCodeEmailDto, params: RequestParams = {}) =>
+      this.request<void, UnauthorizedExceptionDto | TooManyRequestsExceptionDto>({
+        path: `/auth/signin/request-code`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
      * @name RefreshToken
      * @request POST:/auth/refresh-token
      * @secure
@@ -5039,7 +5143,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/tenant/configurations/{tenantId}
      * @secure
      * @response `200` `TenantConfigurationsResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, integration, administrator
      */
     upsertConfigurations: (tenantId: string, data: TenantConfigurationsDto, params: RequestParams = {}) =>
       this.request<TenantConfigurationsResponseDto, HttpExceptionDto>({
@@ -5060,7 +5164,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant/configurations/{tenantId}
      * @secure
      * @response `200` `TenantConfigurationsResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, integration, administrator
      */
     getConfigurations: (tenantId: string, params: RequestParams = {}) =>
       this.request<TenantConfigurationsResponseDto, HttpExceptionDto>({
