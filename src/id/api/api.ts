@@ -1402,6 +1402,129 @@ export interface AttachDocumentsToUser {
   documents: DocumentDto[];
 }
 
+export interface CreateTenantContextDto {
+  contextId: string;
+  /** @example true */
+  active: boolean;
+  /** @example {} */
+  data?: object;
+}
+
+export interface TenantContextDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId: string;
+  contextId: string;
+  context?: ContextDto;
+  /** @example true */
+  active: boolean;
+  /** @example {} */
+  data: object;
+}
+
+export interface TenantContextPaginateResponseDto {
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+  items: TenantContextDto[];
+}
+
+export interface UpdateTenantContextDto {
+  /** @example true */
+  active: boolean;
+  /** @example {} */
+  data?: object;
+}
+
+export interface CreateContextsDto {
+  description: string;
+  slug: string;
+  tenantId?: string;
+}
+
+export interface UpdateContextsDto {
+  description: string;
+  slug: string;
+}
+
+export type DuplicatedContextException = object;
+
+export enum AssetTypeEnum {
+  Image = 'image',
+  Document = 'document',
+}
+
+export enum AssetTargetEnum {
+  UserDocument = 'userDocument',
+  Export = 'export',
+}
+
+export interface RequestAssetUploadDto {
+  /**
+   * @default "image"
+   * @example "image"
+   */
+  type: AssetTypeEnum;
+  /** @example "userDocument" */
+  target: AssetTargetEnum;
+}
+
+export interface CloudinaryQueryParamsDto {
+  /** @example false */
+  filename_override: boolean;
+  public_id: string;
+  /** @example 1666215568 */
+  timestamp: number;
+  /** @example true */
+  unique_filename: boolean;
+  /** @example "upload_preset" */
+  upload_preset?: string | null;
+}
+
+export interface CloudinaryProviderUploadParamsDto {
+  /** @example "000000000000" */
+  apiKey: string;
+  /** @example 1666215568 */
+  timestamp: number;
+  /** @example "directory/3fa85f64-5717-4562-b3fc-2c963f66afa6" */
+  publicId: string;
+  /** @example "bfd09f95f331f558cbd1320e67aa8d488770583e" */
+  signature: string;
+  /** @example "filename_override=false&public_id=directory/3fa85f64-5717-4562-b3fc-2c963f66afa6&timestamp=1666215568&unique_filename=true&upload_preset=upload_preset&api_key=000000000000&signature=bfd09f95f331f558cbd1320e67aa8d488770583e" */
+  signedParams: string;
+  queryParams: CloudinaryQueryParamsDto;
+  /** @example "upload_preset" */
+  uploadPreset?: string | null;
+}
+
+export interface AssetEntityWithProviderUploadParamsDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId: string;
+  /** @example "image" */
+  type: AssetType;
+  /** @example "associated" */
+  status: AssetStatus;
+  /** @example "cloudinary" */
+  provider: AssetProvider;
+  /** @example "https://dummyimage.com/200x200/fff/000" */
+  directLink?: string | null;
+  /** @example "userDocument" */
+  target: AssetTarget;
+  /** @example "public" */
+  access?: AssetAccess | null;
+  providerUploadParams: CloudinaryProviderUploadParamsDto;
+}
+
 export enum DataTypesEnum {
   File = 'file',
   Url = 'url',
@@ -1492,123 +1615,6 @@ export interface TenantInputPaginateResponseDto {
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
   items: TenantInputEntityDto[];
-}
-
-export enum AssetTypeEnum {
-  Image = 'image',
-  Document = 'document',
-}
-
-export enum AssetTargetEnum {
-  UserDocument = 'userDocument',
-  Export = 'export',
-}
-
-export interface RequestAssetUploadDto {
-  /**
-   * @default "image"
-   * @example "image"
-   */
-  type: AssetTypeEnum;
-  /** @example "userDocument" */
-  target: AssetTargetEnum;
-}
-
-export interface CloudinaryQueryParamsDto {
-  /** @example false */
-  filename_override: boolean;
-  public_id: string;
-  /** @example 1666215568 */
-  timestamp: number;
-  /** @example true */
-  unique_filename: boolean;
-  /** @example "upload_preset" */
-  upload_preset?: string | null;
-}
-
-export interface CloudinaryProviderUploadParamsDto {
-  /** @example "000000000000" */
-  apiKey: string;
-  /** @example 1666215568 */
-  timestamp: number;
-  /** @example "directory/3fa85f64-5717-4562-b3fc-2c963f66afa6" */
-  publicId: string;
-  /** @example "bfd09f95f331f558cbd1320e67aa8d488770583e" */
-  signature: string;
-  /** @example "filename_override=false&public_id=directory/3fa85f64-5717-4562-b3fc-2c963f66afa6&timestamp=1666215568&unique_filename=true&upload_preset=upload_preset&api_key=000000000000&signature=bfd09f95f331f558cbd1320e67aa8d488770583e" */
-  signedParams: string;
-  queryParams: CloudinaryQueryParamsDto;
-  /** @example "upload_preset" */
-  uploadPreset?: string | null;
-}
-
-export interface AssetEntityWithProviderUploadParamsDto {
-  /** @format uuid */
-  id: string;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  /** @format uuid */
-  tenantId: string;
-  /** @example "image" */
-  type: AssetType;
-  /** @example "associated" */
-  status: AssetStatus;
-  /** @example "cloudinary" */
-  provider: AssetProvider;
-  /** @example "https://dummyimage.com/200x200/fff/000" */
-  directLink?: string | null;
-  /** @example "userDocument" */
-  target: AssetTarget;
-  /** @example "public" */
-  access?: AssetAccess | null;
-  providerUploadParams: CloudinaryProviderUploadParamsDto;
-}
-
-export interface CreateContextsDto {
-  description: string;
-  slug: string;
-  tenantId?: string;
-}
-
-export interface UpdateContextsDto {
-  description: string;
-  slug: string;
-}
-
-export type DuplicatedContextException = object;
-
-export interface CreateTenantContextDto {
-  contextId: string;
-  /** @example true */
-  active: boolean;
-}
-
-export interface TenantContextDto {
-  /** @format uuid */
-  id: string;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  /** @format uuid */
-  tenantId: string;
-  contextId: string;
-  context?: ContextDto;
-  /** @example true */
-  active: boolean;
-}
-
-export interface TenantContextPaginateResponseDto {
-  meta: PaginationMetaDto;
-  links?: PaginationLinksDto;
-  items: TenantContextDto[];
-}
-
-export interface UpdateTenantContextDto {
-  /** @example true */
-  active: boolean;
 }
 
 export interface PublicDataDto {
@@ -3136,6 +3142,214 @@ export namespace TenantHosts {
   }
 }
 
+export namespace TenantContext {
+  /**
+   * No description
+   * @tags Tenant Context
+   * @name CreateTenantContext
+   * @request POST:/tenant-context/{tenantId}
+   * @secure
+   * @response `201` `TenantContextDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, integration
+   */
+  export namespace CreateTenantContext {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = CreateTenantContextDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantContextDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Context
+   * @name FindTenantContext
+   * @request GET:/tenant-context/{tenantId}
+   * @secure
+   * @response `200` `TenantContextPaginateResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+   */
+  export namespace FindTenantContext {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      /** @default 1 */
+      page?: number;
+      /** @default 10 */
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantContextPaginateResponseDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Context
+   * @name GetTenantContextBySlug
+   * @request GET:/tenant-context/{tenantId}/slug/{slug}
+   * @secure
+   * @response `200` `(TenantContextDto)[]`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+   */
+  export namespace GetTenantContextBySlug {
+    export type RequestParams = {
+      tenantId: string;
+      slug: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantContextDto[];
+  }
+  /**
+   * No description
+   * @tags Tenant Context
+   * @name FindOneByTenantContextId
+   * @request GET:/tenant-context/{tenantId}/{tenantContextId}
+   * @secure
+   * @response `200` `TenantContextDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+   */
+  export namespace FindOneByTenantContextId {
+    export type RequestParams = {
+      tenantId: string;
+      tenantContextId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantContextDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Context
+   * @name UpdateByTenantContextId
+   * @request PATCH:/tenant-context/{tenantId}/{tenantContextId}
+   * @secure
+   * @response `200` `TenantContextDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   */
+  export namespace UpdateByTenantContextId {
+    export type RequestParams = {
+      tenantId: string;
+      tenantContextId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateTenantContextDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantContextDto;
+  }
+}
+
+export namespace Contexts {
+  /**
+ * @description Create a new context
+ * @tags Contexts
+ * @name Create
+ * @request POST:/contexts
+ * @secure
+ * @response `201` `ContextDto` Context created successfully
+ * @response `401` `void` Unauthorized - Integration API key or JWT required
+ * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+ * @response `409` `{
+  \** @example 409 *\
+    statusCode: number,
+  \** @example "Context "slug" already exists for tenant "tenantId"." *\
+    message: string,
+  \** @example "Conflict" *\
+    error?: string,
+
+}`
+*/
+  export namespace Create {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = CreateContextsDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ContextDto;
+  }
+  /**
+   * @description Returns all contexts
+   * @tags Contexts
+   * @name ListAll
+   * @request GET:/contexts
+   * @secure
+   * @response `200` `(ContextDto)[]` Returns all contexts
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin
+   */
+  export namespace ListAll {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ContextDto[];
+  }
+  /**
+   * @description Update a context by id
+   * @tags Contexts
+   * @name Update
+   * @request PATCH:/contexts/{id}
+   * @secure
+   * @response `204` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+   * @response `404` `DuplicatedContextException` Not found context to update
+   */
+  export namespace Update {
+    export type RequestParams = {
+      id: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateContextsDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Delete a context by id
+   * @tags Contexts
+   * @name Delete
+   * @request DELETE:/contexts/{id}
+   * @secure
+   * @response `204` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+   */
+  export namespace Delete {
+    export type RequestParams = {
+      id: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+}
+
+export namespace Assets {
+  /**
+   * @description Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)
+   * @tags Assets
+   * @name RequestUpload
+   * @request POST:/assets/{tenantId}
+   * @response `201` `AssetEntityWithProviderUploadParamsDto` Asset upload request successfully created!
+   */
+  export namespace RequestUpload {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = RequestAssetUploadDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = AssetEntityWithProviderUploadParamsDto;
+  }
+}
+
 export namespace TenantInput {
   /**
    * No description
@@ -3242,195 +3456,6 @@ export namespace TenantInput {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = TenantInputEntityDto[];
-  }
-}
-
-export namespace Assets {
-  /**
-   * @description Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)
-   * @tags Assets
-   * @name RequestUpload
-   * @request POST:/assets/{tenantId}
-   * @response `201` `AssetEntityWithProviderUploadParamsDto` Asset upload request successfully created!
-   */
-  export namespace RequestUpload {
-    export type RequestParams = {
-      tenantId: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = RequestAssetUploadDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = AssetEntityWithProviderUploadParamsDto;
-  }
-}
-
-export namespace Contexts {
-  /**
- * @description Create a new context
- * @tags Contexts
- * @name Create
- * @request POST:/contexts
- * @secure
- * @response `201` `ContextDto` Context created successfully
- * @response `401` `void` Unauthorized - Integration API key or JWT required
- * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
- * @response `409` `{
-  \** @example 409 *\
-    statusCode: number,
-  \** @example "Context "slug" already exists for tenant "tenantId"." *\
-    message: string,
-  \** @example "Conflict" *\
-    error?: string,
-
-}`
-*/
-  export namespace Create {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = CreateContextsDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = ContextDto;
-  }
-  /**
-   * @description Returns all contexts
-   * @tags Contexts
-   * @name ListAll
-   * @request GET:/contexts
-   * @secure
-   * @response `200` `(ContextDto)[]` Returns all contexts
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin
-   */
-  export namespace ListAll {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = ContextDto[];
-  }
-  /**
-   * @description Update a context by id
-   * @tags Contexts
-   * @name Update
-   * @request PATCH:/contexts/{id}
-   * @secure
-   * @response `204` `void`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
-   * @response `404` `DuplicatedContextException` Not found context to update
-   */
-  export namespace Update {
-    export type RequestParams = {
-      id: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = UpdateContextsDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * @description Delete a context by id
-   * @tags Contexts
-   * @name Delete
-   * @request DELETE:/contexts/{id}
-   * @secure
-   * @response `204` `void`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
-   */
-  export namespace Delete {
-    export type RequestParams = {
-      id: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-}
-
-export namespace TenantContext {
-  /**
-   * No description
-   * @tags Tenant Context
-   * @name CreateTenantContext
-   * @request POST:/tenant-context/{tenantId}
-   * @secure
-   * @response `201` `TenantContextDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, integration
-   */
-  export namespace CreateTenantContext {
-    export type RequestParams = {
-      tenantId: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = CreateTenantContextDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = TenantContextDto;
-  }
-  /**
-   * No description
-   * @tags Tenant Context
-   * @name FindTenantContext
-   * @request GET:/tenant-context/{tenantId}
-   * @secure
-   * @response `200` `TenantContextPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
-   */
-  export namespace FindTenantContext {
-    export type RequestParams = {
-      tenantId: string;
-    };
-    export type RequestQuery = {
-      /** @default 1 */
-      page?: number;
-      /** @default 10 */
-      limit?: number;
-      search?: string;
-      sortBy?: string;
-      orderBy?: OrderByEnum;
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = TenantContextPaginateResponseDto;
-  }
-  /**
-   * No description
-   * @tags Tenant Context
-   * @name FindOneByTenantContextId
-   * @request GET:/tenant-context/{tenantId}/{tenantContextId}
-   * @secure
-   * @response `200` `TenantContextDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
-   */
-  export namespace FindOneByTenantContextId {
-    export type RequestParams = {
-      tenantId: string;
-      tenantContextId: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = TenantContextDto;
-  }
-  /**
-   * No description
-   * @tags Tenant Context
-   * @name UpdateByTenantContextId
-   * @request PATCH:/tenant-context/{tenantId}/{tenantContextId}
-   * @secure
-   * @response `200` `TenantContextDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
-   */
-  export namespace UpdateByTenantContextId {
-    export type RequestParams = {
-      tenantId: string;
-      tenantContextId: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = UpdateTenantContextDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = TenantContextDto;
   }
 }
 
@@ -5408,6 +5433,248 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
+  tenantContext = {
+    /**
+     * No description
+     *
+     * @tags Tenant Context
+     * @name CreateTenantContext
+     * @request POST:/tenant-context/{tenantId}
+     * @secure
+     * @response `201` `TenantContextDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, integration
+     */
+    createTenantContext: (tenantId: string, data: CreateTenantContextDto, params: RequestParams = {}) =>
+      this.request<TenantContextDto, HttpExceptionDto>({
+        path: `/tenant-context/${tenantId}`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Context
+     * @name FindTenantContext
+     * @request GET:/tenant-context/{tenantId}
+     * @secure
+     * @response `200` `TenantContextPaginateResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+     */
+    findTenantContext: (
+      tenantId: string,
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TenantContextPaginateResponseDto, HttpExceptionDto>({
+        path: `/tenant-context/${tenantId}`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Context
+     * @name GetTenantContextBySlug
+     * @request GET:/tenant-context/{tenantId}/slug/{slug}
+     * @secure
+     * @response `200` `(TenantContextDto)[]`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+     */
+    getTenantContextBySlug: (tenantId: string, slug: string, params: RequestParams = {}) =>
+      this.request<TenantContextDto[], HttpExceptionDto>({
+        path: `/tenant-context/${tenantId}/slug/${slug}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Context
+     * @name FindOneByTenantContextId
+     * @request GET:/tenant-context/{tenantId}/{tenantContextId}
+     * @secure
+     * @response `200` `TenantContextDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+     */
+    findOneByTenantContextId: (tenantId: string, tenantContextId: string, params: RequestParams = {}) =>
+      this.request<TenantContextDto, HttpExceptionDto>({
+        path: `/tenant-context/${tenantId}/${tenantContextId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Context
+     * @name UpdateByTenantContextId
+     * @request PATCH:/tenant-context/{tenantId}/{tenantContextId}
+     * @secure
+     * @response `200` `TenantContextDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     */
+    updateByTenantContextId: (
+      tenantId: string,
+      tenantContextId: string,
+      data: UpdateTenantContextDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<TenantContextDto, HttpExceptionDto>({
+        path: `/tenant-context/${tenantId}/${tenantContextId}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+  };
+  contexts = {
+    /**
+ * @description Create a new context
+ *
+ * @tags Contexts
+ * @name Create
+ * @request POST:/contexts
+ * @secure
+ * @response `201` `ContextDto` Context created successfully
+ * @response `401` `void` Unauthorized - Integration API key or JWT required
+ * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+ * @response `409` `{
+  \** @example 409 *\
+    statusCode: number,
+  \** @example "Context "slug" already exists for tenant "tenantId"." *\
+    message: string,
+  \** @example "Conflict" *\
+    error?: string,
+
+}`
+ */
+    create: (data: CreateContextsDto, params: RequestParams = {}) =>
+      this.request<
+        ContextDto,
+        | void
+        | HttpExceptionDto
+        | {
+            /** @example 409 */
+            statusCode: number;
+            /** @example "Context "slug" already exists for tenant "tenantId"." */
+            message: string;
+            /** @example "Conflict" */
+            error?: string;
+          }
+      >({
+        path: `/contexts`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Returns all contexts
+     *
+     * @tags Contexts
+     * @name ListAll
+     * @request GET:/contexts
+     * @secure
+     * @response `200` `(ContextDto)[]` Returns all contexts
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin
+     */
+    listAll: (params: RequestParams = {}) =>
+      this.request<ContextDto[], void | HttpExceptionDto>({
+        path: `/contexts`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Update a context by id
+     *
+     * @tags Contexts
+     * @name Update
+     * @request PATCH:/contexts/{id}
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+     * @response `404` `DuplicatedContextException` Not found context to update
+     */
+    update: (id: string, data: UpdateContextsDto, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto | DuplicatedContextException>({
+        path: `/contexts/${id}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * @description Delete a context by id
+     *
+     * @tags Contexts
+     * @name Delete
+     * @request DELETE:/contexts/{id}
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+     */
+    delete: (id: string, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/contexts/${id}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+  };
+  assets = {
+    /**
+     * @description Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)
+     *
+     * @tags Assets
+     * @name RequestUpload
+     * @request POST:/assets/{tenantId}
+     * @response `201` `AssetEntityWithProviderUploadParamsDto` Asset upload request successfully created!
+     */
+    requestUpload: (tenantId: string, data: RequestAssetUploadDto, params: RequestParams = {}) =>
+      this.request<AssetEntityWithProviderUploadParamsDto, any>({
+        path: `/assets/${tenantId}`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+  };
   tenantInput = {
     /**
      * No description
@@ -5531,229 +5798,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       >({
         path: `/tenant-input/${tenantId}/slug/${slug}`,
         method: 'GET',
-        format: 'json',
-        ...params,
-      }),
-  };
-  assets = {
-    /**
-     * @description Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)
-     *
-     * @tags Assets
-     * @name RequestUpload
-     * @request POST:/assets/{tenantId}
-     * @response `201` `AssetEntityWithProviderUploadParamsDto` Asset upload request successfully created!
-     */
-    requestUpload: (tenantId: string, data: RequestAssetUploadDto, params: RequestParams = {}) =>
-      this.request<AssetEntityWithProviderUploadParamsDto, any>({
-        path: `/assets/${tenantId}`,
-        method: 'POST',
-        body: data,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-  };
-  contexts = {
-    /**
- * @description Create a new context
- *
- * @tags Contexts
- * @name Create
- * @request POST:/contexts
- * @secure
- * @response `201` `ContextDto` Context created successfully
- * @response `401` `void` Unauthorized - Integration API key or JWT required
- * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
- * @response `409` `{
-  \** @example 409 *\
-    statusCode: number,
-  \** @example "Context "slug" already exists for tenant "tenantId"." *\
-    message: string,
-  \** @example "Conflict" *\
-    error?: string,
-
-}`
- */
-    create: (data: CreateContextsDto, params: RequestParams = {}) =>
-      this.request<
-        ContextDto,
-        | void
-        | HttpExceptionDto
-        | {
-            /** @example 409 */
-            statusCode: number;
-            /** @example "Context "slug" already exists for tenant "tenantId"." */
-            message: string;
-            /** @example "Conflict" */
-            error?: string;
-          }
-      >({
-        path: `/contexts`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * @description Returns all contexts
-     *
-     * @tags Contexts
-     * @name ListAll
-     * @request GET:/contexts
-     * @secure
-     * @response `200` `(ContextDto)[]` Returns all contexts
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin
-     */
-    listAll: (params: RequestParams = {}) =>
-      this.request<ContextDto[], void | HttpExceptionDto>({
-        path: `/contexts`,
-        method: 'GET',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * @description Update a context by id
-     *
-     * @tags Contexts
-     * @name Update
-     * @request PATCH:/contexts/{id}
-     * @secure
-     * @response `204` `void`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
-     * @response `404` `DuplicatedContextException` Not found context to update
-     */
-    update: (id: string, data: UpdateContextsDto, params: RequestParams = {}) =>
-      this.request<void, void | HttpExceptionDto | DuplicatedContextException>({
-        path: `/contexts/${id}`,
-        method: 'PATCH',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * @description Delete a context by id
-     *
-     * @tags Contexts
-     * @name Delete
-     * @request DELETE:/contexts/{id}
-     * @secure
-     * @response `204` `void`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
-     */
-    delete: (id: string, params: RequestParams = {}) =>
-      this.request<void, void | HttpExceptionDto>({
-        path: `/contexts/${id}`,
-        method: 'DELETE',
-        secure: true,
-        ...params,
-      }),
-  };
-  tenantContext = {
-    /**
-     * No description
-     *
-     * @tags Tenant Context
-     * @name CreateTenantContext
-     * @request POST:/tenant-context/{tenantId}
-     * @secure
-     * @response `201` `TenantContextDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, integration
-     */
-    createTenantContext: (tenantId: string, data: CreateTenantContextDto, params: RequestParams = {}) =>
-      this.request<TenantContextDto, HttpExceptionDto>({
-        path: `/tenant-context/${tenantId}`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Tenant Context
-     * @name FindTenantContext
-     * @request GET:/tenant-context/{tenantId}
-     * @secure
-     * @response `200` `TenantContextPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
-     */
-    findTenantContext: (
-      tenantId: string,
-      query?: {
-        /** @default 1 */
-        page?: number;
-        /** @default 10 */
-        limit?: number;
-        search?: string;
-        sortBy?: string;
-        orderBy?: OrderByEnum;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<TenantContextPaginateResponseDto, HttpExceptionDto>({
-        path: `/tenant-context/${tenantId}`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Tenant Context
-     * @name FindOneByTenantContextId
-     * @request GET:/tenant-context/{tenantId}/{tenantContextId}
-     * @secure
-     * @response `200` `TenantContextDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
-     */
-    findOneByTenantContextId: (tenantId: string, tenantContextId: string, params: RequestParams = {}) =>
-      this.request<TenantContextDto, HttpExceptionDto>({
-        path: `/tenant-context/${tenantId}/${tenantContextId}`,
-        method: 'GET',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Tenant Context
-     * @name UpdateByTenantContextId
-     * @request PATCH:/tenant-context/{tenantId}/{tenantContextId}
-     * @secure
-     * @response `200` `TenantContextDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
-     */
-    updateByTenantContextId: (
-      tenantId: string,
-      tenantContextId: string,
-      data: UpdateTenantContextDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<TenantContextDto, HttpExceptionDto>({
-        path: `/tenant-context/${tenantId}/${tenantContextId}`,
-        method: 'PATCH',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
         format: 'json',
         ...params,
       }),

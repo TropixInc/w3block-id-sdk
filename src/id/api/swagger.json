@@ -3736,6 +3736,593 @@
         ]
       }
     },
+    "/tenant-context/{tenantId}": {
+      "post": {
+        "operationId": "createTenantContext",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenantContextDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantContextDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Context"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findTenantContext",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantContextPaginateResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Context"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant-context/{tenantId}/slug/{slug}": {
+      "get": {
+        "operationId": "getTenantContextBySlug",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TenantContextDto"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Context"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant-context/{tenantId}/{tenantContextId}": {
+      "get": {
+        "operationId": "findOneByTenantContextId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantContextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantContextDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Context"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateByTenantContextId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantContextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTenantContextDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantContextDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Context"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/contexts": {
+      "post": {
+        "operationId": "create",
+        "summary": "",
+        "description": "Create a new context",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContextsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Context created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "DuplicatedContextException": {
+                    "description": "Context \"slug\" already exists for tenant \"tenantId\".",
+                    "value": {
+                      "statusCode": 409,
+                      "message": "Context \"slug\" already exists for tenant \"tenantId\".",
+                      "error": "Conflict"
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 409
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Context \"slug\" already exists for tenant \"tenantId\"."
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Conflict"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message"
+                  ]
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": [
+          "Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "listAll",
+        "summary": "",
+        "description": "Returns all contexts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns all contexts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContextDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/contexts/{id}": {
+      "patch": {
+        "operationId": "update",
+        "summary": "",
+        "description": "Update a context by id",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContextsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found context to update",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DuplicatedContextException"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "delete",
+        "summary": "",
+        "description": "Delete a context by id",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/assets/{tenantId}": {
+      "post": {
+        "operationId": "requestUpload",
+        "summary": "",
+        "description": "Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestAssetUploadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Asset upload request successfully created!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetEntityWithProviderUploadParamsDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Assets"
+        ]
+      }
+    },
     "/tenant-input/{tenantId}": {
       "post": {
         "operationId": "createTenantInput",
@@ -4074,537 +4661,6 @@
         },
         "tags": [
           "Tenant Input"
-        ]
-      }
-    },
-    "/assets/{tenantId}": {
-      "post": {
-        "operationId": "requestUpload",
-        "summary": "",
-        "description": "Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestAssetUploadDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Asset upload request successfully created!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AssetEntityWithProviderUploadParamsDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Assets"
-        ]
-      }
-    },
-    "/contexts": {
-      "post": {
-        "operationId": "create",
-        "summary": "",
-        "description": "Create a new context",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateContextsDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Context created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ContextDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          },
-          "409": {
-            "content": {
-              "application/json": {
-                "examples": {
-                  "DuplicatedContextException": {
-                    "description": "Context \"slug\" already exists for tenant \"tenantId\".",
-                    "value": {
-                      "statusCode": 409,
-                      "message": "Context \"slug\" already exists for tenant \"tenantId\".",
-                      "error": "Conflict"
-                    }
-                  }
-                },
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "statusCode": {
-                      "type": "number",
-                      "example": 409
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Context \"slug\" already exists for tenant \"tenantId\"."
-                    },
-                    "error": {
-                      "type": "string",
-                      "example": "Conflict"
-                    }
-                  },
-                  "required": [
-                    "statusCode",
-                    "message"
-                  ]
-                }
-              }
-            },
-            "description": ""
-          }
-        },
-        "tags": [
-          "Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "get": {
-        "operationId": "listAll",
-        "summary": "",
-        "description": "Returns all contexts",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Returns all contexts",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ContextDto"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/contexts/{id}": {
-      "patch": {
-        "operationId": "update",
-        "summary": "",
-        "description": "Update a context by id",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateContextsDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found context to update",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DuplicatedContextException"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "delete": {
-        "operationId": "delete",
-        "summary": "",
-        "description": "Delete a context by id",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/tenant-context/{tenantId}": {
-      "post": {
-        "operationId": "createTenantContext",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateTenantContextDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TenantContextDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, integration",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Tenant Context"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "get": {
-        "operationId": "findTenantContext",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TenantContextPaginateResponseDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Tenant Context"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/tenant-context/{tenantId}/{tenantContextId}": {
-      "get": {
-        "operationId": "findOneByTenantContextId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tenantContextId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TenantContextDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Tenant Context"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "patch": {
-        "operationId": "updateByTenantContextId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tenantContextId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTenantContextDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TenantContextDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Tenant Context"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
         ]
       }
     },
@@ -8311,6 +8367,309 @@
           "documents"
         ]
       },
+      "CreateTenantContextDto": {
+        "type": "object",
+        "properties": {
+          "contextId": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "example": {}
+          }
+        },
+        "required": [
+          "contextId",
+          "active"
+        ]
+      },
+      "TenantContextDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contextId": {
+            "type": "string"
+          },
+          "context": {
+            "$ref": "#/components/schemas/ContextDto"
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "example": {}
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "tenantId",
+          "contextId",
+          "active",
+          "data"
+        ]
+      },
+      "TenantContextPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantContextDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
+      "UpdateTenantContextDto": {
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "example": {}
+          }
+        },
+        "required": [
+          "active"
+        ]
+      },
+      "CreateContextsDto": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "description",
+          "slug"
+        ]
+      },
+      "UpdateContextsDto": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "description",
+          "slug"
+        ]
+      },
+      "DuplicatedContextException": {
+        "type": "object",
+        "properties": {}
+      },
+      "AssetTypeEnum": {
+        "type": "string",
+        "enum": [
+          "image",
+          "document"
+        ]
+      },
+      "AssetTargetEnum": {
+        "type": "string",
+        "enum": [
+          "userDocument",
+          "export"
+        ]
+      },
+      "RequestAssetUploadDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "default": "image",
+            "example": "image",
+            "$ref": "#/components/schemas/AssetTypeEnum"
+          },
+          "target": {
+            "example": "userDocument",
+            "$ref": "#/components/schemas/AssetTargetEnum"
+          }
+        },
+        "required": [
+          "type",
+          "target"
+        ]
+      },
+      "CloudinaryQueryParamsDto": {
+        "type": "object",
+        "properties": {
+          "filename_override": {
+            "type": "boolean",
+            "example": false
+          },
+          "public_id": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "number",
+            "example": 1666215568
+          },
+          "unique_filename": {
+            "type": "boolean",
+            "example": true
+          },
+          "upload_preset": {
+            "type": "string",
+            "example": "upload_preset",
+            "nullable": true
+          }
+        },
+        "required": [
+          "filename_override",
+          "public_id",
+          "timestamp",
+          "unique_filename"
+        ]
+      },
+      "CloudinaryProviderUploadParamsDto": {
+        "type": "object",
+        "properties": {
+          "apiKey": {
+            "type": "string",
+            "example": "000000000000"
+          },
+          "timestamp": {
+            "type": "number",
+            "example": 1666215568
+          },
+          "publicId": {
+            "type": "string",
+            "example": "directory/3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          },
+          "signature": {
+            "type": "string",
+            "example": "bfd09f95f331f558cbd1320e67aa8d488770583e"
+          },
+          "signedParams": {
+            "type": "string",
+            "example": "filename_override=false&public_id=directory/3fa85f64-5717-4562-b3fc-2c963f66afa6&timestamp=1666215568&unique_filename=true&upload_preset=upload_preset&api_key=000000000000&signature=bfd09f95f331f558cbd1320e67aa8d488770583e"
+          },
+          "queryParams": {
+            "$ref": "#/components/schemas/CloudinaryQueryParamsDto"
+          },
+          "uploadPreset": {
+            "type": "string",
+            "example": "upload_preset",
+            "nullable": true
+          }
+        },
+        "required": [
+          "apiKey",
+          "timestamp",
+          "publicId",
+          "signature",
+          "signedParams",
+          "queryParams"
+        ]
+      },
+      "AssetEntityWithProviderUploadParamsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "example": "image",
+            "$ref": "#/components/schemas/AssetType"
+          },
+          "status": {
+            "example": "associated",
+            "$ref": "#/components/schemas/AssetStatus"
+          },
+          "provider": {
+            "example": "cloudinary",
+            "$ref": "#/components/schemas/AssetProvider"
+          },
+          "directLink": {
+            "type": "string",
+            "example": "https://dummyimage.com/200x200/fff/000",
+            "nullable": true
+          },
+          "target": {
+            "example": "userDocument",
+            "$ref": "#/components/schemas/AssetTarget"
+          },
+          "access": {
+            "example": "public",
+            "nullable": true,
+            "$ref": "#/components/schemas/AssetAccess"
+          },
+          "providerUploadParams": {
+            "$ref": "#/components/schemas/CloudinaryProviderUploadParamsDto"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "tenantId",
+          "type",
+          "status",
+          "provider",
+          "target",
+          "providerUploadParams"
+        ]
+      },
       "DataTypesEnum": {
         "type": "string",
         "enum": [
@@ -8540,296 +8899,6 @@
         "required": [
           "meta",
           "items"
-        ]
-      },
-      "AssetTypeEnum": {
-        "type": "string",
-        "enum": [
-          "image",
-          "document"
-        ]
-      },
-      "AssetTargetEnum": {
-        "type": "string",
-        "enum": [
-          "userDocument",
-          "export"
-        ]
-      },
-      "RequestAssetUploadDto": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "default": "image",
-            "example": "image",
-            "$ref": "#/components/schemas/AssetTypeEnum"
-          },
-          "target": {
-            "example": "userDocument",
-            "$ref": "#/components/schemas/AssetTargetEnum"
-          }
-        },
-        "required": [
-          "type",
-          "target"
-        ]
-      },
-      "CloudinaryQueryParamsDto": {
-        "type": "object",
-        "properties": {
-          "filename_override": {
-            "type": "boolean",
-            "example": false
-          },
-          "public_id": {
-            "type": "string"
-          },
-          "timestamp": {
-            "type": "number",
-            "example": 1666215568
-          },
-          "unique_filename": {
-            "type": "boolean",
-            "example": true
-          },
-          "upload_preset": {
-            "type": "string",
-            "example": "upload_preset",
-            "nullable": true
-          }
-        },
-        "required": [
-          "filename_override",
-          "public_id",
-          "timestamp",
-          "unique_filename"
-        ]
-      },
-      "CloudinaryProviderUploadParamsDto": {
-        "type": "object",
-        "properties": {
-          "apiKey": {
-            "type": "string",
-            "example": "000000000000"
-          },
-          "timestamp": {
-            "type": "number",
-            "example": 1666215568
-          },
-          "publicId": {
-            "type": "string",
-            "example": "directory/3fa85f64-5717-4562-b3fc-2c963f66afa6"
-          },
-          "signature": {
-            "type": "string",
-            "example": "bfd09f95f331f558cbd1320e67aa8d488770583e"
-          },
-          "signedParams": {
-            "type": "string",
-            "example": "filename_override=false&public_id=directory/3fa85f64-5717-4562-b3fc-2c963f66afa6&timestamp=1666215568&unique_filename=true&upload_preset=upload_preset&api_key=000000000000&signature=bfd09f95f331f558cbd1320e67aa8d488770583e"
-          },
-          "queryParams": {
-            "$ref": "#/components/schemas/CloudinaryQueryParamsDto"
-          },
-          "uploadPreset": {
-            "type": "string",
-            "example": "upload_preset",
-            "nullable": true
-          }
-        },
-        "required": [
-          "apiKey",
-          "timestamp",
-          "publicId",
-          "signature",
-          "signedParams",
-          "queryParams"
-        ]
-      },
-      "AssetEntityWithProviderUploadParamsDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "type": {
-            "example": "image",
-            "$ref": "#/components/schemas/AssetType"
-          },
-          "status": {
-            "example": "associated",
-            "$ref": "#/components/schemas/AssetStatus"
-          },
-          "provider": {
-            "example": "cloudinary",
-            "$ref": "#/components/schemas/AssetProvider"
-          },
-          "directLink": {
-            "type": "string",
-            "example": "https://dummyimage.com/200x200/fff/000",
-            "nullable": true
-          },
-          "target": {
-            "example": "userDocument",
-            "$ref": "#/components/schemas/AssetTarget"
-          },
-          "access": {
-            "example": "public",
-            "nullable": true,
-            "$ref": "#/components/schemas/AssetAccess"
-          },
-          "providerUploadParams": {
-            "$ref": "#/components/schemas/CloudinaryProviderUploadParamsDto"
-          }
-        },
-        "required": [
-          "id",
-          "createdAt",
-          "updatedAt",
-          "tenantId",
-          "type",
-          "status",
-          "provider",
-          "target",
-          "providerUploadParams"
-        ]
-      },
-      "CreateContextsDto": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string"
-          },
-          "slug": {
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "description",
-          "slug"
-        ]
-      },
-      "UpdateContextsDto": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string"
-          },
-          "slug": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "description",
-          "slug"
-        ]
-      },
-      "DuplicatedContextException": {
-        "type": "object",
-        "properties": {}
-      },
-      "CreateTenantContextDto": {
-        "type": "object",
-        "properties": {
-          "contextId": {
-            "type": "string"
-          },
-          "active": {
-            "type": "boolean",
-            "example": true
-          }
-        },
-        "required": [
-          "contextId",
-          "active"
-        ]
-      },
-      "TenantContextDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "contextId": {
-            "type": "string"
-          },
-          "context": {
-            "$ref": "#/components/schemas/ContextDto"
-          },
-          "active": {
-            "type": "boolean",
-            "example": true
-          }
-        },
-        "required": [
-          "id",
-          "createdAt",
-          "updatedAt",
-          "tenantId",
-          "contextId",
-          "active"
-        ]
-      },
-      "TenantContextPaginateResponseDto": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMetaDto"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PaginationLinksDto"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TenantContextDto"
-            }
-          }
-        },
-        "required": [
-          "meta",
-          "items"
-        ]
-      },
-      "UpdateTenantContextDto": {
-        "type": "object",
-        "properties": {
-          "active": {
-            "type": "boolean",
-            "example": true
-          }
-        },
-        "required": [
-          "active"
         ]
       },
       "PublicDataDto": {
