@@ -5593,7 +5593,7 @@
             "example": true
           },
           "callbackUrl": {
-            "type": "object"
+            "type": "string"
           },
           "verificationType": {
             "default": "invisible",
@@ -5715,7 +5715,8 @@
           "approved",
           "denied",
           "requiredReview",
-          "created"
+          "created",
+          "draft"
         ]
       },
       "LogUserContextDto": {
@@ -7164,7 +7165,7 @@
             "$ref": "#/components/schemas/I18nLocaleEnum"
           },
           "callbackUrl": {
-            "type": "object"
+            "type": "string"
           },
           "verificationType": {
             "default": "invisible",
@@ -8361,6 +8362,9 @@
             "items": {
               "$ref": "#/components/schemas/DocumentDto"
             }
+          },
+          "currentStep": {
+            "type": "number"
           }
         },
         "required": [

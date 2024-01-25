@@ -70,7 +70,7 @@ export interface CreateUserDto {
   address?: CreateAddressDto;
   /** @example true */
   sendEmail?: object;
-  callbackUrl?: object;
+  callbackUrl?: string;
   /** @default "invisible" */
   verificationType?: VerificationType;
 }
@@ -129,6 +129,7 @@ export enum UserContextStatus {
   Denied = 'denied',
   RequiredReview = 'requiredReview',
   Created = 'created',
+  Draft = 'draft',
 }
 
 export interface LogUserContextDto {
@@ -770,7 +771,7 @@ export interface SignupUserDto {
    * @example "pt-br"
    */
   i18nLocale?: I18NLocaleEnum;
-  callbackUrl?: object;
+  callbackUrl?: string;
   /** @default "invisible" */
   verificationType?: VerificationType;
   phone?: string;
@@ -1400,6 +1401,7 @@ export interface DocumentDto {
 
 export interface AttachDocumentsToUser {
   documents: DocumentDto[];
+  currentStep?: number;
 }
 
 export interface CreateTenantContextDto {
