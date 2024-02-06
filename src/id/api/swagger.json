@@ -3554,7 +3554,9 @@
                   "user_name",
                   "simple_select",
                   "dynamic_select",
-                  "image"
+                  "image",
+                  "identification_document",
+                  "simple_location"
                 ]
               }
             }
@@ -5448,7 +5450,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.8",
+    "version": "0.9.9",
     "contact": {}
   },
   "tags": [],
@@ -8284,6 +8286,12 @@
           "value": {
             "type": "string"
           },
+          "simpleValue": {
+            "type": "string"
+          },
+          "complexValue": {
+            "type": "object"
+          },
           "assetId": {
             "type": "string",
             "format": "uuid",
@@ -8310,7 +8318,6 @@
           "userId",
           "inputId",
           "active",
-          "value",
           "assetId",
           "status"
         ]
@@ -8344,7 +8351,7 @@
             "format": "uuid"
           },
           "value": {
-            "type": "string"
+            "type": "object"
           },
           "assetId": {
             "type": "string"
@@ -8689,7 +8696,9 @@
           "user_name",
           "simple_select",
           "dynamic_select",
-          "image"
+          "image",
+          "identification_document",
+          "simple_location"
         ]
       },
       "TenantInputSelectOptionDto": {
@@ -8754,6 +8763,10 @@
           "step": {
             "type": "number",
             "example": 1
+          },
+          "attributeName": {
+            "type": "string",
+            "example": "email"
           }
         },
         "required": [
@@ -8820,6 +8833,10 @@
           "step": {
             "type": "number",
             "example": 1
+          },
+          "attributeName": {
+            "type": "string",
+            "example": "email"
           }
         },
         "required": [
@@ -8833,7 +8850,8 @@
           "type",
           "order",
           "mandatory",
-          "active"
+          "active",
+          "attributeName"
         ]
       },
       "UpdateTenantInputDto": {
@@ -8874,6 +8892,10 @@
           "step": {
             "type": "number",
             "example": 1
+          },
+          "attributeName": {
+            "type": "string",
+            "example": "email"
           }
         },
         "required": [

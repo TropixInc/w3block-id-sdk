@@ -1379,7 +1379,9 @@ export interface DocumentEntityDto {
   input?: TenantInputEntity;
   /** @example true */
   active: boolean;
-  value: string;
+  value?: string;
+  simpleValue?: string;
+  complexValue?: object;
   /** @format uuid */
   assetId: string | null;
   asset?: AssetEntityDto | null;
@@ -1395,7 +1397,7 @@ export interface DocumentPaginateResponseDto {
 export interface DocumentDto {
   /** @format uuid */
   inputId: string;
-  value?: string;
+  value?: object;
   assetId?: string;
 }
 
@@ -1541,6 +1543,8 @@ export enum DataTypesEnum {
   SimpleSelect = 'simple_select',
   DynamicSelect = 'dynamic_select',
   Image = 'image',
+  IdentificationDocument = 'identification_document',
+  SimpleLocation = 'simple_location',
 }
 
 export interface TenantInputSelectOptionDto {
@@ -1569,6 +1573,8 @@ export interface CreateTenantInputDto {
   data?: object;
   /** @example 1 */
   step?: number;
+  /** @example "email" */
+  attributeName?: string;
 }
 
 export interface TenantInputEntityDto {
@@ -1593,6 +1599,8 @@ export interface TenantInputEntityDto {
   data?: object;
   /** @example 1 */
   step?: number;
+  /** @example "email" */
+  attributeName: string;
 }
 
 export interface UpdateTenantInputDto {
@@ -1611,6 +1619,8 @@ export interface UpdateTenantInputDto {
   data?: object;
   /** @example 1 */
   step?: number;
+  /** @example "email" */
+  attributeName?: string;
 }
 
 export interface TenantInputPaginateResponseDto {
@@ -2399,6 +2409,8 @@ export namespace Users {
         | 'simple_select'
         | 'dynamic_select'
         | 'image'
+        | 'identification_document'
+        | 'simple_location'
       )[];
       /** Filter by document contextId */
       contextId?: string;
@@ -3866,7 +3878,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.8
+ * @version 0.9.9
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
@@ -4588,6 +4600,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           | 'simple_select'
           | 'dynamic_select'
           | 'image'
+          | 'identification_document'
+          | 'simple_location'
         )[];
         /** Filter by document contextId */
         contextId?: string;
