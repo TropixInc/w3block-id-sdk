@@ -1993,6 +1993,123 @@
         ]
       }
     },
+    "/auth/signin/magic-token": {
+      "post": {
+        "operationId": "signInWithMagicToken",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserWithMagicTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/signin/generate-magic-token": {
+      "post": {
+        "operationId": "generateSignInMagicToken",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestMagicSignInTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SigningMagicTokenResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/auth/refresh-token": {
       "post": {
         "operationId": "refreshToken",
@@ -5450,7 +5567,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.9",
+    "version": "0.9.11",
     "contact": {}
   },
   "tags": [],
@@ -7282,6 +7399,61 @@
         "required": [
           "email",
           "tenantId"
+        ]
+      },
+      "LoginUserWithMagicTokenDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "00000000-0000-0000-0000-000000000001"
+          }
+        },
+        "required": [
+          "token",
+          "tenantId"
+        ]
+      },
+      "RequestMagicSignInTokenDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "expirationInMinutes": {
+            "type": "number",
+            "example": 30
+          },
+          "tenantId": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          }
+        },
+        "required": [
+          "email",
+          "tenantId"
+        ]
+      },
+      "SigningMagicTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "expiresAt"
         ]
       },
       "RefreshTokenDto": {

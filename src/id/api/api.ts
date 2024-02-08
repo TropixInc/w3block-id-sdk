@@ -818,6 +818,31 @@ export interface RequestCodeEmailDto {
   tenantId: string;
 }
 
+export interface LoginUserWithMagicTokenDto {
+  /** @format uuid */
+  token: string;
+  /**
+   * @format uuid
+   * @example "00000000-0000-0000-0000-000000000001"
+   */
+  tenantId: string;
+}
+
+export interface RequestMagicSignInTokenDto {
+  email: string;
+  /** @example 30 */
+  expirationInMinutes?: number;
+  /** @example "00000000-0000-0000-0000-000000000001" */
+  tenantId: string;
+}
+
+export interface SigningMagicTokenResponseDto {
+  /** @format uuid */
+  token: string;
+  /** @format date-time */
+  expiresAt: string;
+}
+
 export interface RefreshTokenDto {
   /** @example "eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiI4NGViM2Q2NC01OTk4LTRjM2UtODliMS0yZTgyZmQ2NDRjMDciLCJpc3MiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJhdWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJjb21wYW55SWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJ0b2tlbkhhc2giOiI5NGFkMzFjMjcwMWI0NzQxNjk5ZjI1YTA4NWM0NmQyNDE4ZTk2MjNhYTcyYjM3MGZhZWZkNWJhYWYzYzM3YzgzIiwiaWF0IjoxNjU3MzEwMzQwLCJleHAiOjE2NTc0ODMxNDB9.epg4Grc6LkJMMxNlFbsdEc5Rq2nupXZTsFQeD-JgKZMWg4ey_ialD-mmSBehHD_xFF4Ho_BbWG1ld9aCuQBQcft4zxDfMdxogM5fMfdhAnAccM7a4J0NyKECzYHhIDe_jnrpT4QVHs4x78NIookQiKguANuSa7dNViFphpC9K5LRcxVwS6sEqT8" */
   refreshToken: string;
@@ -2724,6 +2749,40 @@ export namespace Auth {
   /**
    * No description
    * @tags Authentication
+   * @name SignInWithMagicToken
+   * @request POST:/auth/signin/magic-token
+   * @response `201` `SignInResponseDto`
+   * @response `401` `UnauthorizedExceptionDto`
+   * @response `429` `TooManyRequestsExceptionDto`
+   */
+  export namespace SignInWithMagicToken {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = LoginUserWithMagicTokenDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = SignInResponseDto;
+  }
+  /**
+   * No description
+   * @tags Authentication
+   * @name GenerateSignInMagicToken
+   * @request POST:/auth/signin/generate-magic-token
+   * @secure
+   * @response `200` `SigningMagicTokenResponseDto`
+   * @response `401` `UnauthorizedExceptionDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+   * @response `429` `TooManyRequestsExceptionDto`
+   */
+  export namespace GenerateSignInMagicToken {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = RequestMagicSignInTokenDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = SigningMagicTokenResponseDto;
+  }
+  /**
+   * No description
+   * @tags Authentication
    * @name RefreshToken
    * @request POST:/auth/refresh-token
    * @secure
@@ -3878,7 +3937,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.9
+ * @version 0.9.11
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
@@ -4955,6 +5014,52 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: 'POST',
         body: data,
         type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name SignInWithMagicToken
+     * @request POST:/auth/signin/magic-token
+     * @response `201` `SignInResponseDto`
+     * @response `401` `UnauthorizedExceptionDto`
+     * @response `429` `TooManyRequestsExceptionDto`
+     */
+    signInWithMagicToken: (data: LoginUserWithMagicTokenDto, params: RequestParams = {}) =>
+      this.request<SignInResponseDto, UnauthorizedExceptionDto | TooManyRequestsExceptionDto>({
+        path: `/auth/signin/magic-token`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name GenerateSignInMagicToken
+     * @request POST:/auth/signin/generate-magic-token
+     * @secure
+     * @response `200` `SigningMagicTokenResponseDto`
+     * @response `401` `UnauthorizedExceptionDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+     * @response `429` `TooManyRequestsExceptionDto`
+     */
+    generateSignInMagicToken: (data: RequestMagicSignInTokenDto, params: RequestParams = {}) =>
+      this.request<
+        SigningMagicTokenResponseDto,
+        UnauthorizedExceptionDto | HttpExceptionDto | TooManyRequestsExceptionDto
+      >({
+        path: `/auth/signin/generate-magic-token`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
         ...params,
       }),
 
