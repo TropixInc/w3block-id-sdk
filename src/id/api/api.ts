@@ -1570,6 +1570,7 @@ export enum DataTypesEnum {
   Image = 'image',
   IdentificationDocument = 'identification_document',
   SimpleLocation = 'simple_location',
+  Checkbox = 'checkbox',
 }
 
 export interface TenantInputSelectOptionDto {
@@ -1769,6 +1770,7 @@ export enum WhitelistEntryType {
   Email = 'email',
   WalletAddress = 'wallet_address',
   CollectionHolder = 'collection_holder',
+  KycApprovedContext = 'kyc_approved_context',
 }
 
 export interface WhitelistEntryResponseDto {
@@ -2436,6 +2438,7 @@ export namespace Users {
         | 'image'
         | 'identification_document'
         | 'simple_location'
+        | 'checkbox'
       )[];
       /** Filter by document contextId */
       contextId?: string;
@@ -2768,7 +2771,7 @@ export namespace Auth {
    * @name GenerateSignInMagicToken
    * @request POST:/auth/signin/generate-magic-token
    * @secure
-   * @response `200` `SigningMagicTokenResponseDto`
+   * @response `201` `SigningMagicTokenResponseDto`
    * @response `401` `UnauthorizedExceptionDto`
    * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
    * @response `429` `TooManyRequestsExceptionDto`
@@ -2785,7 +2788,6 @@ export namespace Auth {
    * @tags Authentication
    * @name RefreshToken
    * @request POST:/auth/refresh-token
-   * @secure
    * @response `201` `RefreshTokenResponseDto`
    * @response `403` `ForbiddenExceptionDto`
    */
@@ -3756,7 +3758,7 @@ export namespace Whitelists {
       sortBy?: WhitelistEntriesSortBy;
       orderBy?: OrderByEnum;
       /** @default [] */
-      type?: ('user_id' | 'email' | 'wallet_address' | 'collection_holder')[];
+      type?: ('user_id' | 'email' | 'wallet_address' | 'collection_holder' | 'kyc_approved_context')[];
       /** @example false */
       showWallets?: boolean;
     };
@@ -3937,7 +3939,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.11
+ * @version 0.9.15
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
@@ -4661,6 +4663,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           | 'image'
           | 'identification_document'
           | 'simple_location'
+          | 'checkbox'
         )[];
         /** Filter by document contextId */
         contextId?: string;
@@ -5044,7 +5047,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name GenerateSignInMagicToken
      * @request POST:/auth/signin/generate-magic-token
      * @secure
-     * @response `200` `SigningMagicTokenResponseDto`
+     * @response `201` `SigningMagicTokenResponseDto`
      * @response `401` `UnauthorizedExceptionDto`
      * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
      * @response `429` `TooManyRequestsExceptionDto`
@@ -5069,7 +5072,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Authentication
      * @name RefreshToken
      * @request POST:/auth/refresh-token
-     * @secure
      * @response `201` `RefreshTokenResponseDto`
      * @response `403` `ForbiddenExceptionDto`
      */
@@ -5078,7 +5080,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/auth/refresh-token`,
         method: 'POST',
         body: data,
-        secure: true,
         type: ContentType.Json,
         format: 'json',
         ...params,
@@ -6171,7 +6172,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         sortBy?: WhitelistEntriesSortBy;
         orderBy?: OrderByEnum;
         /** @default [] */
-        type?: ('user_id' | 'email' | 'wallet_address' | 'collection_holder')[];
+        type?: ('user_id' | 'email' | 'wallet_address' | 'collection_holder' | 'kyc_approved_context')[];
         /** @example false */
         showWallets?: boolean;
       },

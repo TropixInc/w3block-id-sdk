@@ -2059,7 +2059,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "",
             "content": {
               "application/json": {
@@ -2148,11 +2148,6 @@
         },
         "tags": [
           "Authentication"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
         ]
       }
     },
@@ -3673,7 +3668,8 @@
                   "dynamic_select",
                   "image",
                   "identification_document",
-                  "simple_location"
+                  "simple_location",
+                  "checkbox"
                 ]
               }
             }
@@ -5401,7 +5397,8 @@
                   "user_id",
                   "email",
                   "wallet_address",
-                  "collection_holder"
+                  "collection_holder",
+                  "kyc_approved_context"
                 ]
               }
             }
@@ -5567,7 +5564,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.11",
+    "version": "0.9.15",
     "contact": {}
   },
   "tags": [],
@@ -8870,7 +8867,8 @@
           "dynamic_select",
           "image",
           "identification_document",
-          "simple_location"
+          "simple_location",
+          "checkbox"
         ]
       },
       "TenantInputSelectOptionDto": {
@@ -9366,7 +9364,8 @@
           "user_id",
           "email",
           "wallet_address",
-          "collection_holder"
+          "collection_holder",
+          "kyc_approved_context"
         ]
       },
       "WhitelistEntryResponseDto": {
