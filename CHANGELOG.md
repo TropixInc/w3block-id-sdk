@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.73](https://github.com/TropixInc/w3block-sdk/compare/v0.1.72...v0.1.73) (2024-06-06)
+
+
+### Features
+
+* **api:** swagger new version generated ([1f007c4](https://github.com/TropixInc/w3block-sdk/commit/1f007c42c7e796994dbbd8424b4358e84ed210f3))
+
 ### [0.1.72](https://github.com/TropixInc/w3block-sdk/compare/v0.1.71...v0.1.72) (2024-04-05)
 
 
