@@ -264,6 +264,65 @@ export enum OrderByEnum {
   DESC = 'DESC',
 }
 
+export interface PaginationMetaDto {
+  /** @example 1 */
+  itemCount: number;
+  /** @example 1 */
+  totalItems?: number;
+  /** @example 1 */
+  itemsPerPage: number;
+  /** @example 1 */
+  totalPages?: number;
+  /** @example 1 */
+  currentPage: number;
+}
+
+export interface PaginationLinksDto {
+  /** @example "http://example.com?page=1" */
+  first?: string;
+  /** @example "http://example.com?page=1" */
+  prev?: string;
+  /** @example "http://example.com?page=2" */
+  next?: string;
+  /** @example "http://example.com?page=3" */
+  last?: string;
+}
+
+export interface AffiliationsResponseDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  name?: string;
+}
+
+export interface AffiliationsPaginatedResponseDto {
+  items: AffiliationsResponseDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface AffiliationsLevelReportDto {
+  /** @example 1 */
+  level: number;
+  /** @example 0 */
+  affiliations: number;
+}
+
+export interface AffiliationsGlobalReportDto {
+  /** @example 0 */
+  affiliations: number;
+  /** @example 0 */
+  rank: number;
+  /** @example 0 */
+  percentRank: number;
+}
+
+export interface AffiliationsReportResponseDto {
+  levelReport: AffiliationsLevelReportDto[];
+  globalReport: AffiliationsGlobalReportDto;
+}
+
 export enum AssetType {
   Image = 'image',
   Document = 'document',
@@ -352,30 +411,6 @@ export interface ExportEntityDto {
   params?: object;
 }
 
-export interface PaginationMetaDto {
-  /** @example 1 */
-  itemCount: number;
-  /** @example 1 */
-  totalItems?: number;
-  /** @example 1 */
-  itemsPerPage: number;
-  /** @example 1 */
-  totalPages?: number;
-  /** @example 1 */
-  currentPage: number;
-}
-
-export interface PaginationLinksDto {
-  /** @example "http://example.com?page=1" */
-  first?: string;
-  /** @example "http://example.com?page=1" */
-  prev?: string;
-  /** @example "http://example.com?page=2" */
-  next?: string;
-  /** @example "http://example.com?page=3" */
-  last?: string;
-}
-
 export interface UserPaginateResponseDto {
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
@@ -414,6 +449,14 @@ export interface ChangePasswordDto {
 
 export interface MainWalletDto {
   walletId: string;
+}
+
+export interface SetReferrerDto {
+  referrer: string;
+}
+
+export interface RequestAccountExclusionDto {
+  reason?: string;
 }
 
 export interface UpdateTokenDto {
@@ -480,6 +523,8 @@ export enum ChainId {
   Local = 1337,
   Mumbai = 80001,
   Polygon = 137,
+  undefined = 1284,
+  undefined = 1285,
 }
 
 export interface RequestMetamaskDto {
@@ -709,6 +754,10 @@ export interface SignInResponseDto {
   /** @example "eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJ0ZW5hbnRJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRva2VuSGFzaCI6ImJiMmFjMzE4M2EzZDZlMDljYTI2ZDkzNDEzNjQyNzU4MGY3Yjc5NWVlYWU3YTFlYzUzNDU2MjU5NThjMDZhYWQiLCJpYXQiOjE2NTg1MDgxNzksImV4cCI6MTY5MDA0NDE3OX0.au6dcpbcSmF134J335G4CymEUlwK39TT-4jXQwEUm0zRokFBiHpkXZzy23fTufyo_XzW_Tr_IUfO9b_y5e0thjIfvng4dS7akdeQAykcN7nRhwNBtqCVZxFHyZE39yzz38JLMwC00EtaKowM6lPykJYC5qZC0bBj4g4Yb1GG9IU5dQodibdXj00" */
   refreshToken: string;
   data: UserJwtPayloadDto | TenantJwtPayloadDto;
+  /** @example false */
+  isNewUser?: boolean;
+  /** @example false */
+  isPrivateEmail?: boolean;
 }
 
 export interface BadRequestExceptionDto {
@@ -853,6 +902,10 @@ export interface RefreshTokenResponseDto {
   token: string;
   /** @example "eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJ0ZW5hbnRJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRva2VuSGFzaCI6ImJiMmFjMzE4M2EzZDZlMDljYTI2ZDkzNDEzNjQyNzU4MGY3Yjc5NWVlYWU3YTFlYzUzNDU2MjU5NThjMDZhYWQiLCJpYXQiOjE2NTg1MDgxNzksImV4cCI6MTY5MDA0NDE3OX0.au6dcpbcSmF134J335G4CymEUlwK39TT-4jXQwEUm0zRokFBiHpkXZzy23fTufyo_XzW_Tr_IUfO9b_y5e0thjIfvng4dS7akdeQAykcN7nRhwNBtqCVZxFHyZE39yzz38JLMwC00EtaKowM6lPykJYC5qZC0bBj4g4Yb1GG9IU5dQodibdXj00" */
   refreshToken: string;
+  /** @example false */
+  isNewUser?: boolean;
+  /** @example false */
+  isPrivateEmail?: boolean;
 }
 
 export interface ForbiddenExceptionDto {
@@ -888,6 +941,31 @@ export interface JSONWebKeyDto {
 
 export interface JSONWebKeySetDto {
   keys: JSONWebKeyDto[];
+}
+
+export interface LoginUserWithGoogleDto {
+  credential: string;
+  referrer?: string;
+  /** @example "00000000-0000-0000-0000-000000000001" */
+  tenantId: string;
+}
+
+export interface LoginUserWithGoogleWithTenantParamDto {
+  credential: string;
+  referrer?: string;
+}
+
+export interface LoginUserWithAppleDto {
+  credential?: string;
+  id_token?: string;
+  /** @example "00000000-0000-0000-0000-000000000001" */
+  tenantId?: string;
+  referrer?: string;
+}
+
+export interface LoginUserWithAppleByCodeDto {
+  code: string;
+  referrer?: string;
 }
 
 export enum CountryCodeEnum {
@@ -1361,6 +1439,46 @@ export interface UpdateTenantHostDto {
   /** @example "example.com" */
   hostname: string;
   paths?: TenantHostPathsDto;
+}
+
+export enum WithdrawAccountTypeEnum {
+  Pix = 'pix',
+  Bank = 'bank',
+}
+
+export interface AddWithdrawAccountDto {
+  /**
+   * @default "pix"
+   * @example "pix"
+   */
+  type: WithdrawAccountTypeEnum;
+  /** @example {"key":"00000000000","ownerSsn":"00000000000","ownerName":"Test"} */
+  accountInfo: object;
+}
+
+export interface UserWithdrawAccountEntityDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+  /** @format date-time */
+  deletedAt?: string;
+  /** @format uuid */
+  tenantId: string;
+  /** @format uuid */
+  userId: string;
+  /** @example "pix" */
+  type: WithdrawAccountTypeEnum;
+  /** @example {"key":"00000000000","ownerSsn":"00000000000","ownerName":"Test"} */
+  accountInfo?: object;
+}
+
+export interface UserWithdrawAccountEntityPaginatedDto {
+  items: UserWithdrawAccountEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
 }
 
 export interface UsersContextsPaginateResponseDto {
@@ -1881,6 +1999,46 @@ export namespace Users {
   /**
    * No description
    * @tags Users
+   * @name GetUserDirectAffiliations
+   * @request GET:/users/affiliations
+   * @secure
+   * @response `200` `AffiliationsPaginatedResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+   */
+  export namespace GetUserDirectAffiliations {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      /** @default 1 */
+      page?: number;
+      /** @default 10 */
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = AffiliationsPaginatedResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name GetUserAffiliationsReport
+   * @request GET:/users/affiliations-report
+   * @secure
+   * @response `200` `AffiliationsReportResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+   */
+  export namespace GetUserAffiliationsReport {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = AffiliationsReportResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users
    * @name GetUsersReport
    * @request GET:/users/{tenantId}/report/{email}
    * @secure
@@ -1949,6 +2107,24 @@ export namespace Users {
     export type RequestParams = {
       tenantId: string;
       id: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserPublicResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name GetUserByReferralCode
+   * @request GET:/users/{tenantId}/by-referral-code/{referralCode}
+   * @secure
+   * @response `200` `UserPublicResponseDto`
+   */
+  export namespace GetUserByReferralCode {
+    export type RequestParams = {
+      tenantId: string;
+      referralCode: string;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -2040,6 +2216,38 @@ export namespace Users {
     export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = MainWalletDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name SetReferrer
+   * @request PATCH:/users/referrer
+   * @secure
+   * @response `204` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+   */
+  export namespace SetReferrer {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = SetReferrerDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name RequestAccountExclusion
+   * @request POST:/users/request-account-exclusion
+   * @secure
+   * @response `204` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+   */
+  export namespace RequestAccountExclusion {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = RequestAccountExclusionDto;
     export type RequestHeaders = {};
     export type ResponseBody = void;
   }
@@ -2281,6 +2489,88 @@ export namespace Users {
     export type RequestBody = ClaimMetamaskDto;
     export type RequestHeaders = {};
     export type ResponseBody = WalletResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users Withdraw Accounts
+   * @name AddUserWithdrawAccount
+   * @request POST:/users/{tenantId}/withdraw-accounts/{userId}
+   * @secure
+   * @response `201` `UserWithdrawAccountEntityDto`
+   */
+  export namespace AddUserWithdrawAccount {
+    export type RequestParams = {
+      tenantId: string;
+      userId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = AddWithdrawAccountDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserWithdrawAccountEntityDto;
+  }
+  /**
+   * No description
+   * @tags Users Withdraw Accounts
+   * @name ListUserWithdrawAccounts
+   * @request GET:/users/{tenantId}/withdraw-accounts/{userId}
+   * @secure
+   * @response `200` `UserWithdrawAccountEntityPaginatedDto`
+   */
+  export namespace ListUserWithdrawAccounts {
+    export type RequestParams = {
+      tenantId: string;
+      userId: string;
+    };
+    export type RequestQuery = {
+      /** @default 1 */
+      page?: number;
+      /** @default 10 */
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserWithdrawAccountEntityPaginatedDto;
+  }
+  /**
+   * No description
+   * @tags Users Withdraw Accounts
+   * @name GetUserWithdrawAccountById
+   * @request GET:/users/{tenantId}/withdraw-accounts/{userId}/{accountId}
+   * @secure
+   * @response `200` `UserWithdrawAccountEntityDto`
+   */
+  export namespace GetUserWithdrawAccountById {
+    export type RequestParams = {
+      tenantId: string;
+      userId: string;
+      accountId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserWithdrawAccountEntityDto;
+  }
+  /**
+   * No description
+   * @tags Users Withdraw Accounts
+   * @name DeleteUserWithdrawAccount
+   * @request DELETE:/users/{tenantId}/withdraw-accounts/{userId}/{accountId}
+   * @secure
+   * @response `204` `void`
+   */
+  export namespace DeleteUserWithdrawAccount {
+    export type RequestParams = {
+      tenantId: string;
+      userId: string;
+      accountId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
   }
   /**
    * No description
@@ -2842,6 +3132,129 @@ export namespace Auth {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = JSONWebKeySetDto;
+  }
+  /**
+   * No description
+   * @tags Authentication
+   * @name GoogleAuth
+   * @request POST:/auth/signin/google
+   * @response `201` `SignInResponseDto` Authenticates user using google credential
+   * @response `401` `UnauthorizedExceptionDto`
+   * @response `429` `TooManyRequestsExceptionDto`
+   */
+  export namespace GoogleAuth {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = LoginUserWithGoogleDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = SignInResponseDto;
+  }
+  /**
+   * No description
+   * @tags Authentication
+   * @name GoogleAuthWithTenantParam
+   * @request POST:/auth/{tenantId}/signin/google
+   * @response `201` `SignInResponseDto` Authenticates user using google credential
+   * @response `401` `UnauthorizedExceptionDto`
+   * @response `429` `TooManyRequestsExceptionDto`
+   */
+  export namespace GoogleAuthWithTenantParam {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = LoginUserWithGoogleWithTenantParamDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = SignInResponseDto;
+  }
+  /**
+   * No description
+   * @tags Authentication
+   * @name GoogleAuthByCodeRedirect
+   * @request GET:/auth/{tenantId}/signin/google
+   * @response `308` `void` Redirects user to make google login under tenant scope using token code strategy
+   * @response `400` `BadRequestExceptionDto`
+   */
+  export namespace GoogleAuthByCodeRedirect {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Authentication
+   * @name GoogleAuthByCode
+   * @request GET:/auth/{tenantId}/signin/google/code
+   * @response `201` `SignInResponseDto` Authenticates user using google token code
+   * @response `401` `UnauthorizedExceptionDto`
+   * @response `429` `TooManyRequestsExceptionDto`
+   */
+  export namespace GoogleAuthByCode {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      code: string;
+      referrer?: string;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = SignInResponseDto;
+  }
+  /**
+   * No description
+   * @tags Authentication
+   * @name AppleAuth
+   * @request POST:/auth/signin/apple
+   * @response `201` `SignInResponseDto` Authenticates user using apple credential
+   * @response `401` `UnauthorizedExceptionDto`
+   * @response `429` `TooManyRequestsExceptionDto`
+   */
+  export namespace AppleAuth {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = LoginUserWithAppleDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = SignInResponseDto;
+  }
+  /**
+   * No description
+   * @tags Authentication
+   * @name AppleAuthByCodeRedirect
+   * @request GET:/auth/{tenantId}/signin/apple
+   * @response `308` `void` Redirects user to make apple login under tenant scope using token code strategy
+   * @response `400` `BadRequestExceptionDto`
+   */
+  export namespace AppleAuthByCodeRedirect {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Authentication
+   * @name AppleAuthByCode
+   * @request POST:/auth/{tenantId}/signin/apple/code
+   * @response `201` `SignInResponseDto` Authenticates user using apple token code
+   * @response `401` `UnauthorizedExceptionDto`
+   * @response `429` `TooManyRequestsExceptionDto`
+   */
+  export namespace AppleAuthByCode {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = LoginUserWithAppleByCodeDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = SignInResponseDto;
   }
 }
 
@@ -3939,7 +4352,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.15
+ * @version 0.9.30
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
@@ -4038,6 +4451,56 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users
+     * @name GetUserDirectAffiliations
+     * @request GET:/users/affiliations
+     * @secure
+     * @response `200` `AffiliationsPaginatedResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+     */
+    getUserDirectAffiliations: (
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<AffiliationsPaginatedResponseDto, HttpExceptionDto>({
+        path: `/users/affiliations`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name GetUserAffiliationsReport
+     * @request GET:/users/affiliations-report
+     * @secure
+     * @response `200` `AffiliationsReportResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+     */
+    getUserAffiliationsReport: (params: RequestParams = {}) =>
+      this.request<AffiliationsReportResponseDto, HttpExceptionDto>({
+        path: `/users/affiliations-report`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
      * @name GetUsersReport
      * @request GET:/users/{tenantId}/report/{email}
      * @secure
@@ -4110,6 +4573,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getProfileUserById: (tenantId: string, id: string, params: RequestParams = {}) =>
       this.request<UserPublicResponseDto, HttpExceptionDto>({
         path: `/users/${tenantId}/${id}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name GetUserByReferralCode
+     * @request GET:/users/{tenantId}/by-referral-code/{referralCode}
+     * @secure
+     * @response `200` `UserPublicResponseDto`
+     */
+    getUserByReferralCode: (tenantId: string, referralCode: string, params: RequestParams = {}) =>
+      this.request<UserPublicResponseDto, any>({
+        path: `/users/${tenantId}/by-referral-code/${referralCode}`,
         method: 'GET',
         secure: true,
         format: 'json',
@@ -4215,6 +4696,46 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/users/main-wallet`,
         method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name SetReferrer
+     * @request PATCH:/users/referrer
+     * @secure
+     * @response `204` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+     */
+    setReferrer: (data: SetReferrerDto, params: RequestParams = {}) =>
+      this.request<void, HttpExceptionDto>({
+        path: `/users/referrer`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name RequestAccountExclusion
+     * @request POST:/users/request-account-exclusion
+     * @secure
+     * @response `204` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+     */
+    requestAccountExclusion: (data: RequestAccountExclusionDto, params: RequestParams = {}) =>
+      this.request<void, HttpExceptionDto>({
+        path: `/users/request-account-exclusion`,
+        method: 'POST',
         body: data,
         secure: true,
         type: ContentType.Json,
@@ -4475,6 +4996,98 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         secure: true,
         type: ContentType.Json,
         format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Withdraw Accounts
+     * @name AddUserWithdrawAccount
+     * @request POST:/users/{tenantId}/withdraw-accounts/{userId}
+     * @secure
+     * @response `201` `UserWithdrawAccountEntityDto`
+     */
+    addUserWithdrawAccount: (
+      tenantId: string,
+      userId: string,
+      data: AddWithdrawAccountDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserWithdrawAccountEntityDto, any>({
+        path: `/users/${tenantId}/withdraw-accounts/${userId}`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Withdraw Accounts
+     * @name ListUserWithdrawAccounts
+     * @request GET:/users/{tenantId}/withdraw-accounts/{userId}
+     * @secure
+     * @response `200` `UserWithdrawAccountEntityPaginatedDto`
+     */
+    listUserWithdrawAccounts: (
+      tenantId: string,
+      userId: string,
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UserWithdrawAccountEntityPaginatedDto, any>({
+        path: `/users/${tenantId}/withdraw-accounts/${userId}`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Withdraw Accounts
+     * @name GetUserWithdrawAccountById
+     * @request GET:/users/{tenantId}/withdraw-accounts/{userId}/{accountId}
+     * @secure
+     * @response `200` `UserWithdrawAccountEntityDto`
+     */
+    getUserWithdrawAccountById: (tenantId: string, userId: string, accountId: string, params: RequestParams = {}) =>
+      this.request<UserWithdrawAccountEntityDto, any>({
+        path: `/users/${tenantId}/withdraw-accounts/${userId}/${accountId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Withdraw Accounts
+     * @name DeleteUserWithdrawAccount
+     * @request DELETE:/users/{tenantId}/withdraw-accounts/{userId}/{accountId}
+     * @secure
+     * @response `204` `void`
+     */
+    deleteUserWithdrawAccount: (tenantId: string, userId: string, accountId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/users/${tenantId}/withdraw-accounts/${userId}/${accountId}`,
+        method: 'DELETE',
+        secure: true,
         ...params,
       }),
 
@@ -5134,6 +5747,148 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<JSONWebKeySetDto, any>({
         path: `/auth/jwks.json`,
         method: 'GET',
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name GoogleAuth
+     * @request POST:/auth/signin/google
+     * @response `201` `SignInResponseDto` Authenticates user using google credential
+     * @response `401` `UnauthorizedExceptionDto`
+     * @response `429` `TooManyRequestsExceptionDto`
+     */
+    googleAuth: (data: LoginUserWithGoogleDto, params: RequestParams = {}) =>
+      this.request<SignInResponseDto, UnauthorizedExceptionDto | TooManyRequestsExceptionDto>({
+        path: `/auth/signin/google`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name GoogleAuthWithTenantParam
+     * @request POST:/auth/{tenantId}/signin/google
+     * @response `201` `SignInResponseDto` Authenticates user using google credential
+     * @response `401` `UnauthorizedExceptionDto`
+     * @response `429` `TooManyRequestsExceptionDto`
+     */
+    googleAuthWithTenantParam: (
+      tenantId: string,
+      data: LoginUserWithGoogleWithTenantParamDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<SignInResponseDto, UnauthorizedExceptionDto | TooManyRequestsExceptionDto>({
+        path: `/auth/${tenantId}/signin/google`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name GoogleAuthByCodeRedirect
+     * @request GET:/auth/{tenantId}/signin/google
+     * @response `308` `void` Redirects user to make google login under tenant scope using token code strategy
+     * @response `400` `BadRequestExceptionDto`
+     */
+    googleAuthByCodeRedirect: (tenantId: string, params: RequestParams = {}) =>
+      this.request<any, void | BadRequestExceptionDto>({
+        path: `/auth/${tenantId}/signin/google`,
+        method: 'GET',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name GoogleAuthByCode
+     * @request GET:/auth/{tenantId}/signin/google/code
+     * @response `201` `SignInResponseDto` Authenticates user using google token code
+     * @response `401` `UnauthorizedExceptionDto`
+     * @response `429` `TooManyRequestsExceptionDto`
+     */
+    googleAuthByCode: (
+      tenantId: string,
+      query: {
+        code: string;
+        referrer?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<SignInResponseDto, UnauthorizedExceptionDto | TooManyRequestsExceptionDto>({
+        path: `/auth/${tenantId}/signin/google/code`,
+        method: 'GET',
+        query: query,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name AppleAuth
+     * @request POST:/auth/signin/apple
+     * @response `201` `SignInResponseDto` Authenticates user using apple credential
+     * @response `401` `UnauthorizedExceptionDto`
+     * @response `429` `TooManyRequestsExceptionDto`
+     */
+    appleAuth: (data: LoginUserWithAppleDto, params: RequestParams = {}) =>
+      this.request<SignInResponseDto, UnauthorizedExceptionDto | TooManyRequestsExceptionDto>({
+        path: `/auth/signin/apple`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name AppleAuthByCodeRedirect
+     * @request GET:/auth/{tenantId}/signin/apple
+     * @response `308` `void` Redirects user to make apple login under tenant scope using token code strategy
+     * @response `400` `BadRequestExceptionDto`
+     */
+    appleAuthByCodeRedirect: (tenantId: string, params: RequestParams = {}) =>
+      this.request<any, void | BadRequestExceptionDto>({
+        path: `/auth/${tenantId}/signin/apple`,
+        method: 'GET',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name AppleAuthByCode
+     * @request POST:/auth/{tenantId}/signin/apple/code
+     * @response `201` `SignInResponseDto` Authenticates user using apple token code
+     * @response `401` `UnauthorizedExceptionDto`
+     * @response `429` `TooManyRequestsExceptionDto`
+     */
+    appleAuthByCode: (tenantId: string, data: LoginUserWithAppleByCodeDto, params: RequestParams = {}) =>
+      this.request<SignInResponseDto, UnauthorizedExceptionDto | TooManyRequestsExceptionDto>({
+        path: `/auth/${tenantId}/signin/apple/code`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
         format: 'json',
         ...params,
       }),

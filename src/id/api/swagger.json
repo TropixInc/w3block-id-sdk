@@ -184,6 +184,121 @@
         ]
       }
     },
+    "/users/affiliations": {
+      "get": {
+        "operationId": "getUserDirectAffiliations",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AffiliationsPaginatedResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/affiliations-report": {
+      "get": {
+        "operationId": "getUserAffiliationsReport",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AffiliationsReportResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/users/{tenantId}/report/{email}": {
       "get": {
         "operationId": "getUsersReport",
@@ -426,6 +541,49 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/by-referral-code/{referralCode}": {
+      "get": {
+        "operationId": "getUserByReferralCode",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "referralCode",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublicResponseDto"
                 }
               }
             }
@@ -708,6 +866,84 @@
         "responses": {
           "204": {
             "description": ""
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/referrer": {
+      "patch": {
+        "operationId": "setReferrer",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetReferrerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/request-account-exclusion": {
+      "post": {
+        "operationId": "requestAccountExclusion",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestAccountExclusionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -2249,6 +2485,358 @@
         ]
       }
     },
+    "/auth/signin/google": {
+      "post": {
+        "operationId": "googleAuth",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserWithGoogleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Authenticates user using google credential",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/{tenantId}/signin/google": {
+      "post": {
+        "operationId": "googleAuthWithTenantParam",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserWithGoogleWithTenantParamDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Authenticates user using google credential",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      },
+      "get": {
+        "operationId": "googleAuthByCodeRedirect",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "308": {
+            "description": "Redirects user to make google login under tenant scope using token code strategy"
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/{tenantId}/signin/google/code": {
+      "get": {
+        "operationId": "googleAuthByCode",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "referrer",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Authenticates user using google token code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/signin/apple": {
+      "post": {
+        "operationId": "appleAuth",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserWithAppleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Authenticates user using apple credential",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/{tenantId}/signin/apple": {
+      "get": {
+        "operationId": "appleAuthByCodeRedirect",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "308": {
+            "description": "Redirects user to make apple login under tenant scope using token code strategy"
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/{tenantId}/signin/apple/code": {
+      "post": {
+        "operationId": "appleAuthByCode",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserWithAppleByCodeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Authenticates user using apple token code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
     "/tenant": {
       "post": {
         "operationId": "create",
@@ -3205,6 +3793,235 @@
         },
         "tags": [
           "Tenant Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/withdraw-accounts/{userId}": {
+      "post": {
+        "operationId": "addUserWithdrawAccount",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddWithdrawAccountDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserWithdrawAccountEntityDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Withdraw Accounts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "listUserWithdrawAccounts",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserWithdrawAccountEntityPaginatedDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Withdraw Accounts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/withdraw-accounts/{userId}/{accountId}": {
+      "get": {
+        "operationId": "getUserWithdrawAccountById",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accountId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserWithdrawAccountEntityDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Withdraw Accounts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteUserWithdrawAccount",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accountId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Users Withdraw Accounts"
         ],
         "security": [
           {
@@ -5564,7 +6381,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.15",
+    "version": "0.9.30",
     "contact": {}
   },
   "tags": [],
@@ -6170,6 +6987,155 @@
           "DESC"
         ]
       },
+      "PaginationMetaDto": {
+        "type": "object",
+        "properties": {
+          "itemCount": {
+            "type": "number",
+            "example": 1
+          },
+          "totalItems": {
+            "type": "number",
+            "example": 1
+          },
+          "itemsPerPage": {
+            "type": "number",
+            "example": 1
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 1
+          },
+          "currentPage": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "required": [
+          "itemCount",
+          "itemsPerPage",
+          "currentPage"
+        ]
+      },
+      "PaginationLinksDto": {
+        "type": "object",
+        "properties": {
+          "first": {
+            "type": "string",
+            "example": "http://example.com?page=1"
+          },
+          "prev": {
+            "type": "string",
+            "example": "http://example.com?page=1"
+          },
+          "next": {
+            "type": "string",
+            "example": "http://example.com?page=2"
+          },
+          "last": {
+            "type": "string",
+            "example": "http://example.com?page=3"
+          }
+        }
+      },
+      "AffiliationsResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt"
+        ]
+      },
+      "AffiliationsPaginatedResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AffiliationsResponseDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
+      "AffiliationsLevelReportDto": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "number",
+            "example": 1
+          },
+          "affiliations": {
+            "type": "number",
+            "example": 0
+          }
+        },
+        "required": [
+          "level",
+          "affiliations"
+        ]
+      },
+      "AffiliationsGlobalReportDto": {
+        "type": "object",
+        "properties": {
+          "affiliations": {
+            "type": "number",
+            "example": 0
+          },
+          "rank": {
+            "type": "number",
+            "example": 0
+          },
+          "percentRank": {
+            "type": "number",
+            "example": 0
+          }
+        },
+        "required": [
+          "affiliations",
+          "rank",
+          "percentRank"
+        ]
+      },
+      "AffiliationsReportResponseDto": {
+        "type": "object",
+        "properties": {
+          "levelReport": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AffiliationsLevelReportDto"
+            }
+          },
+          "globalReport": {
+            "$ref": "#/components/schemas/AffiliationsGlobalReportDto"
+          }
+        },
+        "required": [
+          "levelReport",
+          "globalReport"
+        ]
+      },
       "AssetType": {
         "type": "string",
         "enum": [
@@ -6340,57 +7306,6 @@
           "asset"
         ]
       },
-      "PaginationMetaDto": {
-        "type": "object",
-        "properties": {
-          "itemCount": {
-            "type": "number",
-            "example": 1
-          },
-          "totalItems": {
-            "type": "number",
-            "example": 1
-          },
-          "itemsPerPage": {
-            "type": "number",
-            "example": 1
-          },
-          "totalPages": {
-            "type": "number",
-            "example": 1
-          },
-          "currentPage": {
-            "type": "number",
-            "example": 1
-          }
-        },
-        "required": [
-          "itemCount",
-          "itemsPerPage",
-          "currentPage"
-        ]
-      },
-      "PaginationLinksDto": {
-        "type": "object",
-        "properties": {
-          "first": {
-            "type": "string",
-            "example": "http://example.com?page=1"
-          },
-          "prev": {
-            "type": "string",
-            "example": "http://example.com?page=1"
-          },
-          "next": {
-            "type": "string",
-            "example": "http://example.com?page=2"
-          },
-          "last": {
-            "type": "string",
-            "example": "http://example.com?page=3"
-          }
-        }
-      },
       "UserPaginateResponseDto": {
         "type": "object",
         "properties": {
@@ -6491,6 +7406,25 @@
         "required": [
           "walletId"
         ]
+      },
+      "SetReferrerDto": {
+        "type": "object",
+        "properties": {
+          "referrer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "referrer"
+        ]
+      },
+      "RequestAccountExclusionDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string"
+          }
+        }
       },
       "UpdateTokenDto": {
         "type": "object",
@@ -6638,7 +7572,9 @@
           "42",
           "1337",
           "80001",
-          "137"
+          "137",
+          "1284",
+          "1285"
         ]
       },
       "RequestMetamaskDto": {
@@ -7146,6 +8082,14 @@
                 "$ref": "#/components/schemas/TenantJwtPayloadDto"
               }
             ]
+          },
+          "isNewUser": {
+            "type": "boolean",
+            "example": false
+          },
+          "isPrivateEmail": {
+            "type": "boolean",
+            "example": false
           }
         },
         "required": [
@@ -7475,6 +8419,14 @@
           "refreshToken": {
             "type": "string",
             "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6InJlZnJlc2gifQ.eyJzdWIiOiJjOTFhZDIyOC05NTdhLTQxMDQtOWIxMy0xOGUyNzk5MDE4MDMiLCJpc3MiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJhdWQiOiI1YmQ5NmFhZi0xODg4LTQ5M2UtYjg0ZS03YzU0YTQ3MzE4NjgiLCJ0ZW5hbnRJZCI6IjViZDk2YWFmLTE4ODgtNDkzZS1iODRlLTdjNTRhNDczMTg2OCIsInRva2VuSGFzaCI6ImJiMmFjMzE4M2EzZDZlMDljYTI2ZDkzNDEzNjQyNzU4MGY3Yjc5NWVlYWU3YTFlYzUzNDU2MjU5NThjMDZhYWQiLCJpYXQiOjE2NTg1MDgxNzksImV4cCI6MTY5MDA0NDE3OX0.au6dcpbcSmF134J335G4CymEUlwK39TT-4jXQwEUm0zRokFBiHpkXZzy23fTufyo_XzW_Tr_IUfO9b_y5e0thjIfvng4dS7akdeQAykcN7nRhwNBtqCVZxFHyZE39yzz38JLMwC00EtaKowM6lPykJYC5qZC0bBj4g4Yb1GG9IU5dQodibdXj00"
+          },
+          "isNewUser": {
+            "type": "boolean",
+            "example": false
+          },
+          "isPrivateEmail": {
+            "type": "boolean",
+            "example": false
           }
         },
         "required": [
@@ -7575,6 +8527,71 @@
         },
         "required": [
           "keys"
+        ]
+      },
+      "LoginUserWithGoogleDto": {
+        "type": "object",
+        "properties": {
+          "credential": {
+            "type": "string"
+          },
+          "referrer": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          }
+        },
+        "required": [
+          "credential",
+          "tenantId"
+        ]
+      },
+      "LoginUserWithGoogleWithTenantParamDto": {
+        "type": "object",
+        "properties": {
+          "credential": {
+            "type": "string"
+          },
+          "referrer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "credential"
+        ]
+      },
+      "LoginUserWithAppleDto": {
+        "type": "object",
+        "properties": {
+          "credential": {
+            "type": "string"
+          },
+          "id_token": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000001"
+          },
+          "referrer": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginUserWithAppleByCodeDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "referrer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code"
         ]
       },
       "CountryCodeEnum": {
@@ -8352,6 +9369,103 @@
         },
         "required": [
           "hostname"
+        ]
+      },
+      "WithdrawAccountTypeEnum": {
+        "type": "string",
+        "enum": [
+          "pix",
+          "bank"
+        ]
+      },
+      "AddWithdrawAccountDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "default": "pix",
+            "example": "pix",
+            "$ref": "#/components/schemas/WithdrawAccountTypeEnum"
+          },
+          "accountInfo": {
+            "type": "object",
+            "example": {
+              "key": "00000000000",
+              "ownerSsn": "00000000000",
+              "ownerName": "Test"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "accountInfo"
+        ]
+      },
+      "UserWithdrawAccountEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "example": "pix",
+            "$ref": "#/components/schemas/WithdrawAccountTypeEnum"
+          },
+          "accountInfo": {
+            "type": "object",
+            "example": {
+              "key": "00000000000",
+              "ownerSsn": "00000000000",
+              "ownerName": "Test"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "userId",
+          "type"
+        ]
+      },
+      "UserWithdrawAccountEntityPaginatedDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserWithdrawAccountEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
         ]
       },
       "UsersContextsPaginateResponseDto": {
