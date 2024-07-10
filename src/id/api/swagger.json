@@ -432,7 +432,8 @@
                   "operator",
                   "user",
                   "loyaltyOperator",
-                  "commerce.orderReceiver"
+                  "commerce.orderReceiver",
+                  "kyc.approver"
                 ]
               }
             }
@@ -684,7 +685,8 @@
                   "operator",
                   "user",
                   "loyaltyOperator",
-                  "commerce.orderReceiver"
+                  "commerce.orderReceiver",
+                  "kyc.approver"
                 ]
               }
             }
@@ -4030,6 +4032,170 @@
         ]
       }
     },
+    "/users/{tenantId}/contexts/find": {
+      "get": {
+        "operationId": "findUsersContext",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "example": "2022-01-30T10:30:40-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "example": 1,
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "example": 10,
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "approved",
+                  "denied",
+                  "requiredReview",
+                  "created",
+                  "draft"
+                ]
+              }
+            }
+          },
+          {
+            "name": "contextId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "contextType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "user_properties",
+                  "form"
+                ]
+              }
+            }
+          },
+          {
+            "name": "preOrder",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserContextEntityDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/users/{tenantId}/contexts/{userId}": {
       "get": {
         "operationId": "findUsersContextByUserId",
@@ -4125,6 +4291,67 @@
           },
           "403": {
             "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/contexts/{userId}/{contextId}": {
+      "get": {
+        "operationId": "findUserContextById",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserContextEntityDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver",
             "content": {
               "application/json": {
                 "schema": {
@@ -4486,7 +4713,8 @@
                   "image",
                   "identification_document",
                   "simple_location",
-                  "checkbox"
+                  "checkbox",
+                  "commerce_product"
                 ]
               }
             }
@@ -6381,7 +6609,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.30",
+    "version": "0.9.34",
     "contact": {}
   },
   "tags": [],
@@ -6430,7 +6658,8 @@
           "operator",
           "user",
           "loyaltyOperator",
-          "commerce.orderReceiver"
+          "commerce.orderReceiver",
+          "kyc.approver"
         ]
       },
       "I18nLocaleEnum": {
@@ -6710,6 +6939,22 @@
             "type": "string",
             "format": "uuid",
             "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "user_properties",
+              "form"
+            ],
+            "example": "user_properties"
+          },
+          "maxSubmissions": {
+            "type": "number",
+            "example": 1
+          },
+          "isPreOrder": {
+            "type": "boolean",
+            "example": 1
           }
         },
         "required": [
@@ -6717,7 +6962,10 @@
           "createdAt",
           "updatedAt",
           "description",
-          "slug"
+          "slug",
+          "type",
+          "maxSubmissions",
+          "isPreOrder"
         ]
       },
       "UserContextEntityDto": {
@@ -6820,7 +7068,8 @@
                 "operator",
                 "user",
                 "loyaltyOperator",
-                "commerce.orderReceiver"
+                "commerce.orderReceiver",
+                "kyc.approver"
               ]
             }
           },
@@ -9087,13 +9336,43 @@
           "isMain"
         ]
       },
+      "OauthPublicDataDto": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": false
+          },
+          "requireReferrer": {
+            "type": "boolean",
+            "default": false
+          },
+          "callbackUri": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "enabled",
+          "callbackUri"
+        ]
+      },
       "TenantConfigurationResponseDto": {
         "type": "object",
         "properties": {
           "passwordless": {
             "$ref": "#/components/schemas/PasswordlessConfigurationsDto"
+          },
+          "googleSignIn": {
+            "$ref": "#/components/schemas/OauthPublicDataDto"
+          },
+          "appleSignIn": {
+            "$ref": "#/components/schemas/OauthPublicDataDto"
           }
-        }
+        },
+        "required": [
+          "googleSignIn",
+          "appleSignIn"
+        ]
       },
       "TenantPublicDto": {
         "type": "object",
@@ -9495,6 +9774,10 @@
           "reason": {
             "type": "string",
             "nullable": true
+          },
+          "userContextId": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -9502,6 +9785,10 @@
         "type": "object",
         "properties": {
           "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "userContextId": {
             "type": "string",
             "nullable": true
           },
@@ -9982,7 +10269,8 @@
           "image",
           "identification_document",
           "simple_location",
-          "checkbox"
+          "checkbox",
+          "commerce_product"
         ]
       },
       "TenantInputSelectOptionDto": {

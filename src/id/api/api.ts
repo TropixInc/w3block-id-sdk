@@ -25,6 +25,7 @@ export enum UserRoleEnum {
   User = 'user',
   LoyaltyOperator = 'loyaltyOperator',
   CommerceOrderReceiver = 'commerce.orderReceiver',
+  KycApprover = 'kyc.approver',
 }
 
 export enum I18NLocaleEnum {
@@ -154,6 +155,12 @@ export interface ContextDto {
   slug: string;
   /** @format uuid */
   tenantId?: string | null;
+  /** @example "user_properties" */
+  type: 'user_properties' | 'form';
+  /** @example 1 */
+  maxSubmissions: number;
+  /** @example 1 */
+  isPreOrder: boolean;
 }
 
 export interface UserContextEntityDto {
@@ -194,7 +201,15 @@ export interface UserPublicResponseDto {
    * @default ["user"]
    * @example ["user"]
    */
-  roles: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator' | 'commerce.orderReceiver')[];
+  roles: (
+    | 'superAdmin'
+    | 'admin'
+    | 'operator'
+    | 'user'
+    | 'loyaltyOperator'
+    | 'commerce.orderReceiver'
+    | 'kyc.approver'
+  )[];
   /** @example "pt-br" */
   i18nLocale: I18NLocaleEnum;
   /** @example "John Doe" */
@@ -1318,8 +1333,18 @@ export interface PublicHostDto {
   isMain: boolean;
 }
 
+export interface OauthPublicDataDto {
+  /** @default false */
+  enabled: boolean;
+  /** @default false */
+  requireReferrer?: boolean;
+  callbackUri: string;
+}
+
 export interface TenantConfigurationResponseDto {
   passwordless?: PasswordlessConfigurationsDto;
+  googleSignIn: OauthPublicDataDto;
+  appleSignIn: OauthPublicDataDto;
 }
 
 export interface TenantPublicDto {
@@ -1489,10 +1514,12 @@ export interface UsersContextsPaginateResponseDto {
 
 export interface UserContextStatusDto {
   reason?: string | null;
+  userContextId?: string | null;
 }
 
 export interface RequiredReviewContextStatusDto {
   reason?: string | null;
+  userContextId?: string | null;
   /** @example [] */
   inputIds: string[];
 }
@@ -1689,6 +1716,7 @@ export enum DataTypesEnum {
   IdentificationDocument = 'identification_document',
   SimpleLocation = 'simple_location',
   Checkbox = 'checkbox',
+  CommerceProduct = 'commerce_product',
 }
 
 export interface TenantInputSelectOptionDto {
@@ -2085,7 +2113,15 @@ export namespace Users {
       limit?: number;
       search?: string;
       /** @example ["user"] */
-      role?: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator' | 'commerce.orderReceiver')[];
+      role?: (
+        | 'superAdmin'
+        | 'admin'
+        | 'operator'
+        | 'user'
+        | 'loyaltyOperator'
+        | 'commerce.orderReceiver'
+        | 'kyc.approver'
+      )[];
       userId?: string[];
       contextIds?: string[];
       contextStatus?: UserContextStatus[];
@@ -2161,7 +2197,15 @@ export namespace Users {
       limit?: number;
       search?: string;
       /** @example ["user"] */
-      role?: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator' | 'commerce.orderReceiver')[];
+      role?: (
+        | 'superAdmin'
+        | 'admin'
+        | 'operator'
+        | 'user'
+        | 'loyaltyOperator'
+        | 'commerce.orderReceiver'
+        | 'kyc.approver'
+      )[];
       userId?: string[];
       contextIds?: string[];
       contextStatus?: UserContextStatus[];
@@ -2575,6 +2619,45 @@ export namespace Users {
   /**
    * No description
    * @tags Users Contexts
+   * @name FindUsersContext
+   * @request GET:/users/{tenantId}/contexts/find
+   * @secure
+   * @response `200` `UserContextEntityDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver
+   */
+  export namespace FindUsersContext {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      /** @example "2022-01-30T10:30:40-03:00" */
+      createdAt?: string;
+      sortBy?: string[];
+      orderBy?: OrderByEnum;
+      /**
+       * @default 1
+       * @example 1
+       */
+      page?: number;
+      /**
+       * @default 10
+       * @example 10
+       */
+      limit?: number;
+      search?: string;
+      userId?: string[];
+      status?: ('approved' | 'denied' | 'requiredReview' | 'created' | 'draft')[];
+      contextId?: string[];
+      contextType?: ('user_properties' | 'form')[];
+      preOrder?: boolean;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserContextEntityDto;
+  }
+  /**
+   * No description
+   * @tags Users Contexts
    * @name FindUsersContextByUserId
    * @request GET:/users/{tenantId}/contexts/{userId}
    * @secure
@@ -2605,6 +2688,26 @@ export namespace Users {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = UsersContextsPaginateResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users Contexts
+   * @name FindUserContextById
+   * @request GET:/users/{tenantId}/contexts/{userId}/{contextId}
+   * @secure
+   * @response `200` `UserContextEntityDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver
+   */
+  export namespace FindUserContextById {
+    export type RequestParams = {
+      tenantId: string;
+      userId: string;
+      contextId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserContextEntityDto;
   }
   /**
    * No description
@@ -2729,6 +2832,7 @@ export namespace Users {
         | 'identification_document'
         | 'simple_location'
         | 'checkbox'
+        | 'commerce_product'
       )[];
       /** Filter by document contextId */
       contextId?: string;
@@ -4352,7 +4456,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.30
+ * @version 0.9.34
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
@@ -4544,7 +4648,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         limit?: number;
         search?: string;
         /** @example ["user"] */
-        role?: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator' | 'commerce.orderReceiver')[];
+        role?: (
+          | 'superAdmin'
+          | 'admin'
+          | 'operator'
+          | 'user'
+          | 'loyaltyOperator'
+          | 'commerce.orderReceiver'
+          | 'kyc.approver'
+        )[];
         userId?: string[];
         contextIds?: string[];
         contextStatus?: UserContextStatus[];
@@ -4626,7 +4738,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         limit?: number;
         search?: string;
         /** @example ["user"] */
-        role?: ('superAdmin' | 'admin' | 'operator' | 'user' | 'loyaltyOperator' | 'commerce.orderReceiver')[];
+        role?: (
+          | 'superAdmin'
+          | 'admin'
+          | 'operator'
+          | 'user'
+          | 'loyaltyOperator'
+          | 'commerce.orderReceiver'
+          | 'kyc.approver'
+        )[];
         userId?: string[];
         contextIds?: string[];
         contextStatus?: UserContextStatus[];
@@ -5095,6 +5215,51 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users Contexts
+     * @name FindUsersContext
+     * @request GET:/users/{tenantId}/contexts/find
+     * @secure
+     * @response `200` `UserContextEntityDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver
+     */
+    findUsersContext: (
+      tenantId: string,
+      query?: {
+        /** @example "2022-01-30T10:30:40-03:00" */
+        createdAt?: string;
+        sortBy?: string[];
+        orderBy?: OrderByEnum;
+        /**
+         * @default 1
+         * @example 1
+         */
+        page?: number;
+        /**
+         * @default 10
+         * @example 10
+         */
+        limit?: number;
+        search?: string;
+        userId?: string[];
+        status?: ('approved' | 'denied' | 'requiredReview' | 'created' | 'draft')[];
+        contextId?: string[];
+        contextType?: ('user_properties' | 'form')[];
+        preOrder?: boolean;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UserContextEntityDto, HttpExceptionDto>({
+        path: `/users/${tenantId}/contexts/find`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Contexts
      * @name FindUsersContextByUserId
      * @request GET:/users/{tenantId}/contexts/{userId}
      * @secure
@@ -5126,6 +5291,25 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/users/${tenantId}/contexts/${userId}`,
         method: 'GET',
         query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users Contexts
+     * @name FindUserContextById
+     * @request GET:/users/{tenantId}/contexts/{userId}/{contextId}
+     * @secure
+     * @response `200` `UserContextEntityDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver
+     */
+    findUserContextById: (tenantId: string, userId: string, contextId: string, params: RequestParams = {}) =>
+      this.request<UserContextEntityDto, HttpExceptionDto>({
+        path: `/users/${tenantId}/contexts/${userId}/${contextId}`,
+        method: 'GET',
         secure: true,
         format: 'json',
         ...params,
@@ -5277,6 +5461,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           | 'identification_document'
           | 'simple_location'
           | 'checkbox'
+          | 'commerce_product'
         )[];
         /** Filter by document contextId */
         contextId?: string;
