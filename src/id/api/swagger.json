@@ -4032,870 +4032,6 @@
         ]
       }
     },
-    "/users/{tenantId}/contexts/find": {
-      "get": {
-        "operationId": "findUsersContext",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "createdAt",
-            "required": false,
-            "in": "query",
-            "example": "2022-01-30T10:30:40-03:00",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "example": 1,
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "example": 10,
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "status",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "approved",
-                  "denied",
-                  "requiredReview",
-                  "created",
-                  "draft"
-                ]
-              }
-            }
-          },
-          {
-            "name": "contextId",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "contextType",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "user_properties",
-                  "form"
-                ]
-              }
-            }
-          },
-          {
-            "name": "preOrder",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserContextEntityDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/contexts/{userId}": {
-      "get": {
-        "operationId": "findUsersContextByUserId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          },
-          {
-            "name": "status",
-            "required": false,
-            "in": "query",
-            "description": "Filter by status",
-            "example": null,
-            "schema": {
-              "$ref": "#/components/schemas/UserContextStatus"
-            }
-          },
-          {
-            "name": "contextId",
-            "required": false,
-            "in": "query",
-            "description": "Filter by document contextId",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UsersContextsPaginateResponseDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/contexts/{userId}/{contextId}": {
-      "get": {
-        "operationId": "findUserContextById",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contextId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserContextEntityDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/contexts/{userId}/{contextId}/approve": {
-      "patch": {
-        "operationId": "approveTenantContextByUserId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contextId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserContextStatusDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/contexts/{userId}/{contextId}/reject": {
-      "patch": {
-        "operationId": "rejectTenantContextByUserId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contextId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserContextStatusDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/contexts/{userId}/{contextId}/require-review": {
-      "patch": {
-        "operationId": "requireReviewTenantContextByUserId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contextId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequiredReviewContextStatusDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/documents/find-user-by-any": {
-      "get": {
-        "operationId": "findUserByAny",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          },
-          {
-            "name": "cpf",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "format": "xxxxxxxxxxx",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserPublicResponseDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, integration",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users Documents"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/documents/{userId}": {
-      "get": {
-        "operationId": "findUserDocumentsByUserId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          },
-          {
-            "name": "type",
-            "required": false,
-            "in": "query",
-            "description": "Filter by document type",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "file",
-                  "url",
-                  "cpf",
-                  "phone",
-                  "text",
-                  "email",
-                  "birthdate",
-                  "date",
-                  "multiface_selfie",
-                  "user_name",
-                  "simple_select",
-                  "dynamic_select",
-                  "image",
-                  "identification_document",
-                  "simple_location",
-                  "checkbox",
-                  "commerce_product"
-                ]
-              }
-            }
-          },
-          {
-            "name": "contextId",
-            "required": false,
-            "in": "query",
-            "description": "Filter by document contextId",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "inputId",
-            "required": false,
-            "in": "query",
-            "description": "Filter by document inputId",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DocumentPaginateResponseDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users Documents"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/documents/{userId}/context/{contextId}": {
-      "get": {
-        "operationId": "getAllByContextByUserIdAndContextId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contextId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DocumentEntityDto"
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users Documents"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      },
-      "post": {
-        "operationId": "attachDocumentsToUserByContextId",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contextId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AttachDocumentsToUser"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Users Documents"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
     "/tenant-context/{tenantId}": {
       "post": {
         "operationId": "createTenantContext",
@@ -4962,9 +4098,38 @@
             }
           },
           {
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "example": "2022-01-30T10:30:40-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
             "name": "page",
             "required": false,
             "in": "query",
+            "example": 1,
             "schema": {
               "default": 1,
               "type": "number"
@@ -4974,6 +4139,7 @@
             "name": "limit",
             "required": false,
             "in": "query",
+            "example": 10,
             "schema": {
               "default": 10,
               "type": "number"
@@ -4988,19 +4154,34 @@
             }
           },
           {
-            "name": "sortBy",
+            "name": "active",
             "required": false,
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "boolean"
             }
           },
           {
-            "name": "orderBy",
+            "name": "type",
             "required": false,
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "user_properties",
+                  "form"
+                ]
+              }
+            }
+          },
+          {
+            "name": "preOrder",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -5187,6 +4368,59 @@
           },
           "403": {
             "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Context"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant-context/{tenantId}/{tenantContextId}/approvers": {
+      "get": {
+        "operationId": "getTenantContextApprovers",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantContextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantContextApproversResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -5441,11 +4675,9 @@
         ]
       }
     },
-    "/assets/{tenantId}": {
-      "post": {
-        "operationId": "requestUpload",
-        "summary": "",
-        "description": "Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)",
+    "/users/{tenantId}/contexts/find": {
+      "get": {
+        "operationId": "findUsersContext",
         "parameters": [
           {
             "name": "tenantId",
@@ -5454,71 +4686,149 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestAssetUploadDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Asset upload request successfully created!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AssetEntityWithProviderUploadParamsDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Assets"
-        ]
-      }
-    },
-    "/tenant-input/{tenantId}": {
-      "post": {
-        "operationId": "createTenantInput",
-        "parameters": [
+          },
           {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "example": "2022-01-30T10:30:40-03:00",
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateTenantInputDto"
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "example": 1,
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "example": 10,
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "approved",
+                  "denied",
+                  "requiredReview",
+                  "created",
+                  "draft"
+                ]
+              }
+            }
+          },
+          {
+            "name": "contextId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "contextType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "user_properties",
+                  "form"
+                ]
+              }
+            }
+          },
+          {
+            "name": "preOrder",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "excludeSelfContexts",
+            "required": false,
+            "in": "query",
+            "description": "Applicable just for approver case",
+            "schema": {
+              "type": "boolean"
+            }
           }
-        },
+        ],
         "responses": {
-          "201": {
+          "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TenantInputEntityDto"
+                  "$ref": "#/components/schemas/UserContextEntityDto"
                 }
               }
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver",
             "content": {
               "application/json": {
                 "schema": {
@@ -5529,19 +4839,29 @@
           }
         },
         "tags": [
-          "Tenant Input"
+          "Users Contexts"
         ],
         "security": [
           {
             "bearer": []
           }
         ]
-      },
+      }
+    },
+    "/users/{tenantId}/contexts/{userId}": {
       "get": {
-        "operationId": "findTenantInput",
+        "operationId": "findUsersContextByUserId",
         "parameters": [
           {
             "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
             "required": true,
             "in": "path",
             "schema": {
@@ -5589,6 +4909,25 @@
             "schema": {
               "$ref": "#/components/schemas/OrderByEnum"
             }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Filter by status",
+            "example": null,
+            "schema": {
+              "$ref": "#/components/schemas/UserContextStatus"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by document contextId",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -5597,13 +4936,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TenantInputPaginateResponseDto"
+                  "$ref": "#/components/schemas/UsersContextsPaginateResponseDto"
                 }
               }
             }
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -5614,7 +4953,7 @@
           }
         },
         "tags": [
-          "Tenant Input"
+          "Users Contexts"
         ],
         "security": [
           {
@@ -5623,9 +4962,9 @@
         ]
       }
     },
-    "/tenant-input/{tenantId}/{inputId}": {
-      "patch": {
-        "operationId": "updateByInputId",
+    "/users/{tenantId}/contexts/{userId}/{userContextId}": {
+      "get": {
+        "operationId": "findUserContextById",
         "parameters": [
           {
             "name": "tenantId",
@@ -5636,7 +4975,76 @@
             }
           },
           {
-            "name": "inputId",
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userContextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserContextEntityDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/contexts/{userId}/{contextId}/approve": {
+      "patch": {
+        "operationId": "approveTenantContextByUserId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
             "required": true,
             "in": "path",
             "schema": {
@@ -5649,24 +5057,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateTenantInputDto"
+                "$ref": "#/components/schemas/UserContextStatusDto"
               }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TenantInputEntityDto"
-                }
-              }
-            }
+          "204": {
+            "description": ""
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, kyc.approver",
             "content": {
               "application/json": {
                 "schema": {
@@ -5677,7 +5078,407 @@
           }
         },
         "tags": [
-          "Tenant Input"
+          "Users Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/contexts/{userId}/{contextId}/reject": {
+      "patch": {
+        "operationId": "rejectTenantContextByUserId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserContextStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, kyc.approver",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/contexts/{userId}/{contextId}/require-review": {
+      "patch": {
+        "operationId": "requireReviewTenantContextByUserId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequiredReviewContextStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, kyc.approver",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Contexts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/documents/find-user-by-any": {
+      "get": {
+        "operationId": "findUserByAny",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cpf",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "xxxxxxxxxxx",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPublicResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Documents"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/documents/{userId}": {
+      "get": {
+        "operationId": "findUserDocumentsByUserId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "Filter by document type",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "separator",
+                  "file",
+                  "url",
+                  "cpf",
+                  "phone",
+                  "text",
+                  "email",
+                  "birthdate",
+                  "date",
+                  "multiface_selfie",
+                  "user_name",
+                  "simple_select",
+                  "dynamic_select",
+                  "image",
+                  "identification_document",
+                  "simple_location",
+                  "checkbox",
+                  "commerce_product"
+                ]
+              }
+            }
+          },
+          {
+            "name": "contextId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by document contextId",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "inputId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by document inputId",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentPaginateResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Documents"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/documents/{userId}/context/{contextId}": {
+      "get": {
+        "operationId": "getAllByContextByUserIdAndContextId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DocumentEntityDto"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users Documents"
         ],
         "security": [
           {
@@ -5685,8 +5486,8 @@
           }
         ]
       },
-      "get": {
-        "operationId": "findTenantInputById",
+      "post": {
+        "operationId": "attachDocumentsToUserByContextId",
         "parameters": [
           {
             "name": "tenantId",
@@ -5697,7 +5498,15 @@
             }
           },
           {
-            "name": "inputId",
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextId",
             "required": true,
             "in": "path",
             "schema": {
@@ -5705,9 +5514,22 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttachDocumentsToUser"
+              }
+            }
+          }
+        },
         "responses": {
+          "201": {
+            "description": ""
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver",
             "content": {
               "application/json": {
                 "schema": {
@@ -5718,133 +5540,7 @@
           }
         },
         "tags": [
-          "Tenant Input"
-        ],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/tenant-input/{tenantId}/slug/{slug}": {
-      "get": {
-        "operationId": "listBySlugContext",
-        "summary": "",
-        "description": "Get all tenant param by tenant and context",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "slug",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TenantInputEntityDto"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "examples": {
-                  "TenantContextDisabledException": {
-                    "description": "Tenant context 'slug' is disabled from 'tenant'",
-                    "value": {
-                      "statusCode": 404,
-                      "message": "Tenant context 'slug' is disabled from 'tenant'",
-                      "error": "Not Found"
-                    }
-                  },
-                  "ContextBySlugNotFoundException": {
-                    "description": "Context slug not exist from tenant or global.",
-                    "value": {
-                      "statusCode": 404,
-                      "message": "Context slug not exist from tenant or global.",
-                      "error": "Not Found"
-                    }
-                  },
-                  "TenantContextNotFoundException": {
-                    "description": "Tenant context 'slug' not found from 'tenant'",
-                    "value": {
-                      "statusCode": 404,
-                      "message": "Tenant context 'slug' not found from 'tenant'",
-                      "error": "Not Found"
-                    }
-                  }
-                },
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "statusCode": {
-                      "type": "number",
-                      "example": 404
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Tenant context 'slug' is disabled from 'tenant'"
-                    },
-                    "error": {
-                      "type": "string",
-                      "example": "Not Found"
-                    }
-                  },
-                  "required": [
-                    "statusCode",
-                    "message"
-                  ]
-                }
-              }
-            },
-            "description": ""
-          }
-        },
-        "tags": [
-          "Tenant Input"
-        ]
-      }
-    },
-    "/integrations": {
-      "get": {
-        "operationId": "list",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IntegrationResponseDto"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Integration"
+          "Users Documents"
         ],
         "security": [
           {
@@ -6604,12 +6300,424 @@
           }
         ]
       }
+    },
+    "/assets/{tenantId}": {
+      "post": {
+        "operationId": "requestUpload",
+        "summary": "",
+        "description": "Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestAssetUploadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Asset upload request successfully created!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetEntityWithProviderUploadParamsDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Assets"
+        ]
+      }
+    },
+    "/tenant-input/{tenantId}": {
+      "post": {
+        "operationId": "createTenantInput",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenantInputDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantInputEntityDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Input"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findTenantInput",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantInputPaginateResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Input"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant-input/{tenantId}/{inputId}": {
+      "patch": {
+        "operationId": "updateByInputId",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "inputId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTenantInputDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantInputEntityDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Input"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findTenantInputById",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "inputId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Input"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/tenant-input/{tenantId}/slug/{slug}": {
+      "get": {
+        "operationId": "listBySlugContext",
+        "summary": "",
+        "description": "Get all tenant param by tenant and context",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TenantInputEntityDto"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "TenantContextDisabledException": {
+                    "description": "Tenant context 'slug' is disabled from 'tenant'",
+                    "value": {
+                      "statusCode": 404,
+                      "message": "Tenant context 'slug' is disabled from 'tenant'",
+                      "error": "Not Found"
+                    }
+                  },
+                  "ContextBySlugNotFoundException": {
+                    "description": "Context slug not exist from tenant or global.",
+                    "value": {
+                      "statusCode": 404,
+                      "message": "Context slug not exist from tenant or global.",
+                      "error": "Not Found"
+                    }
+                  },
+                  "TenantContextNotFoundException": {
+                    "description": "Tenant context 'slug' not found from 'tenant'",
+                    "value": {
+                      "statusCode": 404,
+                      "message": "Tenant context 'slug' not found from 'tenant'",
+                      "error": "Not Found"
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Tenant context 'slug' is disabled from 'tenant'"
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "Not Found"
+                    }
+                  },
+                  "required": [
+                    "statusCode",
+                    "message"
+                  ]
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tenant Input"
+        ]
+      }
+    },
+    "/integrations": {
+      "get": {
+        "operationId": "list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IntegrationResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Integration"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
     }
   },
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.36",
+    "version": "0.9.41",
     "contact": {}
   },
   "tags": [],
@@ -7010,6 +7118,13 @@
             "items": {
               "$ref": "#/components/schemas/LogUserContextDto"
             }
+          },
+          "approverUserId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "default": null,
+            "example": null
           }
         },
         "required": [
@@ -9747,6 +9862,202 @@
           "meta"
         ]
       },
+      "CreateTenantContextDto": {
+        "type": "object",
+        "properties": {
+          "contextId": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "example": {}
+          }
+        },
+        "required": [
+          "contextId",
+          "active"
+        ]
+      },
+      "TenantContextDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contextId": {
+            "type": "string"
+          },
+          "context": {
+            "$ref": "#/components/schemas/ContextDto"
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "example": {}
+          },
+          "approverWhitelistIds": {
+            "nullable": true,
+            "example": null,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "requireSpecificApprover": {
+            "type": "boolean",
+            "example": false
+          },
+          "autoApprove": {
+            "type": "boolean",
+            "example": false
+          },
+          "blockCommerceDeliver": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "tenantId",
+          "contextId",
+          "active",
+          "data",
+          "requireSpecificApprover",
+          "autoApprove",
+          "blockCommerceDeliver"
+        ]
+      },
+      "TenantContextPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantContextDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
+      "UpdateTenantContextDto": {
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "example": {}
+          }
+        },
+        "required": [
+          "active"
+        ]
+      },
+      "TenantContextApproverDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "email"
+        ]
+      },
+      "TenantContextApproversResponseDto": {
+        "type": "object",
+        "properties": {
+          "approvers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantContextApproverDto"
+            }
+          }
+        },
+        "required": [
+          "approvers"
+        ]
+      },
+      "CreateContextsDto": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "description",
+          "slug"
+        ]
+      },
+      "UpdateContextsDto": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "description",
+          "slug"
+        ]
+      },
+      "DuplicatedContextException": {
+        "type": "object",
+        "properties": {}
+      },
       "UsersContextsPaginateResponseDto": {
         "type": "object",
         "properties": {
@@ -9942,38 +10253,80 @@
           },
           "currentStep": {
             "type": "number"
+          },
+          "approverUserId": {
+            "type": "string",
+            "nullable": true
+          },
+          "userContextId": {
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
           "documents"
         ]
       },
-      "CreateTenantContextDto": {
+      "CheckWhitelistUserResponseDto": {
         "type": "object",
         "properties": {
-          "contextId": {
-            "type": "string"
+          "whitelistId": {
+            "type": "string",
+            "format": "uuid"
           },
-          "active": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hasAccess": {
             "type": "boolean",
-            "example": true
-          },
-          "data": {
-            "type": "object",
-            "example": {}
+            "example": false
           }
         },
         "required": [
-          "contextId",
-          "active"
+          "whitelistId",
+          "userId",
+          "hasAccess"
         ]
       },
-      "TenantContextDto": {
+      "CheckUserInMultipleWhitelistsResponseDto": {
+        "type": "object",
+        "properties": {
+          "hasAccess": {
+            "type": "boolean",
+            "example": false
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckWhitelistUserResponseDto"
+            }
+          }
+        },
+        "required": [
+          "hasAccess",
+          "details"
+        ]
+      },
+      "WalletGroupStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "publishing",
+          "published"
+        ]
+      },
+      "WalletGroupResponseDto": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "contractAddress": {
+            "type": "string"
           },
           "createdAt": {
             "format": "date-time",
@@ -9983,36 +10336,78 @@
             "format": "date-time",
             "type": "string"
           },
-          "tenantId": {
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "actionId": {
             "type": "string",
             "format": "uuid"
           },
-          "contextId": {
+          "chainId": {
+            "default": 137,
+            "example": 137,
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WalletGroupStatus"
+          },
+          "whitelistId": {
             "type": "string"
           },
-          "context": {
-            "$ref": "#/components/schemas/ContextDto"
+          "lastSyncBlock": {
+            "type": "number"
           },
-          "active": {
-            "type": "boolean",
-            "example": true
-          },
-          "data": {
-            "type": "object",
-            "example": {}
+          "sync": {
+            "type": "boolean"
           }
         },
         "required": [
           "id",
-          "createdAt",
-          "updatedAt",
           "tenantId",
-          "contextId",
-          "active",
-          "data"
+          "contractAddress",
+          "chainId",
+          "status",
+          "sync"
         ]
       },
-      "TenantContextPaginateResponseDto": {
+      "WhitelistResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "W3Block Whitelist"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "walletGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WalletGroupResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "name"
+        ]
+      },
+      "WhitelistPaginateResponseDto": {
         "type": "object",
         "properties": {
           "meta": {
@@ -10024,7 +10419,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TenantContextDto"
+              "$ref": "#/components/schemas/WhitelistResponseDto"
             }
           }
         },
@@ -10033,58 +10428,136 @@
           "items"
         ]
       },
-      "UpdateTenantContextDto": {
+      "CreateOrUpdateWhitelistDto": {
         "type": "object",
         "properties": {
-          "active": {
-            "type": "boolean",
-            "example": true
+          "name": {
+            "type": "string",
+            "example": "W3Block Whitelist"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "WhitelistOnChainDto": {
+        "type": "object",
+        "properties": {
+          "chainId": {
+            "default": 137,
+            "example": 137,
+            "$ref": "#/components/schemas/ChainId"
+          }
+        },
+        "required": [
+          "chainId"
+        ]
+      },
+      "WhitelistEntriesSortBy": {
+        "type": "string",
+        "enum": [
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "WhitelistEntryType": {
+        "type": "string",
+        "enum": [
+          "user_id",
+          "email",
+          "wallet_address",
+          "collection_holder",
+          "kyc_approved_context"
+        ]
+      },
+      "WhitelistEntryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
           },
-          "data": {
+          "whitelistId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "type": {
+            "example": "collection_holder",
+            "$ref": "#/components/schemas/WhitelistEntryType"
+          },
+          "value": {
+            "type": "string",
+            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
+          },
+          "additionalData": {
+            "type": "object"
+          },
+          "wallets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WalletResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "whitelistId",
+          "type",
+          "value"
+        ]
+      },
+      "WhitelistEntryPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WhitelistEntryResponseDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
+      "CreateWhitelistEntryDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "example": "collection_holder",
+            "default": "collection_holder",
+            "$ref": "#/components/schemas/WhitelistEntryType"
+          },
+          "value": {
+            "type": "string",
+            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
+          },
+          "additionalData": {
             "type": "object",
-            "example": {}
+            "example": {
+              "chainId": 80001
+            }
           }
         },
         "required": [
-          "active"
+          "type",
+          "value"
         ]
-      },
-      "CreateContextsDto": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string"
-          },
-          "slug": {
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "description",
-          "slug"
-        ]
-      },
-      "UpdateContextsDto": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string"
-          },
-          "slug": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "description",
-          "slug"
-        ]
-      },
-      "DuplicatedContextException": {
-        "type": "object",
-        "properties": {}
       },
       "AssetTypeEnum": {
         "type": "string",
@@ -10254,6 +10727,7 @@
       "DataTypesEnum": {
         "type": "string",
         "enum": [
+          "separator",
           "file",
           "url",
           "cpf",
@@ -10565,298 +11039,6 @@
           "publicData",
           "userId",
           "active"
-        ]
-      },
-      "CheckWhitelistUserResponseDto": {
-        "type": "object",
-        "properties": {
-          "whitelistId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "hasAccess": {
-            "type": "boolean",
-            "example": false
-          }
-        },
-        "required": [
-          "whitelistId",
-          "userId",
-          "hasAccess"
-        ]
-      },
-      "CheckUserInMultipleWhitelistsResponseDto": {
-        "type": "object",
-        "properties": {
-          "hasAccess": {
-            "type": "boolean",
-            "example": false
-          },
-          "details": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CheckWhitelistUserResponseDto"
-            }
-          }
-        },
-        "required": [
-          "hasAccess",
-          "details"
-        ]
-      },
-      "WalletGroupStatus": {
-        "type": "string",
-        "enum": [
-          "draft",
-          "publishing",
-          "published"
-        ]
-      },
-      "WalletGroupResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "contractAddress": {
-            "type": "string"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "actionId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "chainId": {
-            "default": 137,
-            "example": 137,
-            "$ref": "#/components/schemas/ChainId"
-          },
-          "status": {
-            "$ref": "#/components/schemas/WalletGroupStatus"
-          },
-          "whitelistId": {
-            "type": "string"
-          },
-          "lastSyncBlock": {
-            "type": "number"
-          },
-          "sync": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "id",
-          "tenantId",
-          "contractAddress",
-          "chainId",
-          "status",
-          "sync"
-        ]
-      },
-      "WhitelistResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "tenantId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string",
-            "example": "W3Block Whitelist"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "walletGroups": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WalletGroupResponseDto"
-            }
-          }
-        },
-        "required": [
-          "id",
-          "tenantId",
-          "name"
-        ]
-      },
-      "WhitelistPaginateResponseDto": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMetaDto"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PaginationLinksDto"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WhitelistResponseDto"
-            }
-          }
-        },
-        "required": [
-          "meta",
-          "items"
-        ]
-      },
-      "CreateOrUpdateWhitelistDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "example": "W3Block Whitelist"
-          }
-        },
-        "required": [
-          "name"
-        ]
-      },
-      "WhitelistOnChainDto": {
-        "type": "object",
-        "properties": {
-          "chainId": {
-            "default": 137,
-            "example": 137,
-            "$ref": "#/components/schemas/ChainId"
-          }
-        },
-        "required": [
-          "chainId"
-        ]
-      },
-      "WhitelistEntriesSortBy": {
-        "type": "string",
-        "enum": [
-          "createdAt",
-          "updatedAt"
-        ]
-      },
-      "WhitelistEntryType": {
-        "type": "string",
-        "enum": [
-          "user_id",
-          "email",
-          "wallet_address",
-          "collection_holder",
-          "kyc_approved_context"
-        ]
-      },
-      "WhitelistEntryResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "whitelistId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "type": {
-            "example": "collection_holder",
-            "$ref": "#/components/schemas/WhitelistEntryType"
-          },
-          "value": {
-            "type": "string",
-            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
-          },
-          "additionalData": {
-            "type": "object"
-          },
-          "wallets": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WalletResponseDto"
-            }
-          }
-        },
-        "required": [
-          "id",
-          "whitelistId",
-          "type",
-          "value"
-        ]
-      },
-      "WhitelistEntryPaginateResponseDto": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMetaDto"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PaginationLinksDto"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WhitelistEntryResponseDto"
-            }
-          }
-        },
-        "required": [
-          "meta",
-          "items"
-        ]
-      },
-      "CreateWhitelistEntryDto": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "example": "collection_holder",
-            "default": "collection_holder",
-            "$ref": "#/components/schemas/WhitelistEntryType"
-          },
-          "value": {
-            "type": "string",
-            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
-          },
-          "additionalData": {
-            "type": "object",
-            "example": {
-              "chainId": 80001
-            }
-          }
-        },
-        "required": [
-          "type",
-          "value"
         ]
       }
     }
