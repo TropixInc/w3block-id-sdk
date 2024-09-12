@@ -1652,6 +1652,7 @@ export interface AttachDocumentsToUser {
   currentStep?: number;
   approverUserId?: string | null;
   userContextId?: string | null;
+  utmParams?: UTMParamsDto;
 }
 
 export interface CheckWhitelistUserResponseDto {
@@ -2680,6 +2681,10 @@ export namespace Users {
       preOrder?: boolean;
       /** Applicable just for approver case */
       excludeSelfContexts?: boolean;
+      /** @example "super_sales" */
+      utmCampaign?: string;
+      /** @example "google" */
+      utmSource?: string;
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -4517,7 +4522,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.43
+ * @version 0.9.56
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
@@ -5307,6 +5312,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         preOrder?: boolean;
         /** Applicable just for approver case */
         excludeSelfContexts?: boolean;
+        /** @example "super_sales" */
+        utmCampaign?: string;
+        /** @example "google" */
+        utmSource?: string;
       },
       params: RequestParams = {},
     ) =>

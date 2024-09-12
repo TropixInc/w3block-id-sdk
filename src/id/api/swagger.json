@@ -4814,6 +4814,24 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "utmCampaign",
+            "required": false,
+            "in": "query",
+            "example": "super_sales",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "utmSource",
+            "required": false,
+            "in": "query",
+            "example": "google",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -6717,7 +6735,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.43",
+    "version": "0.9.56",
     "contact": {}
   },
   "tags": [],
@@ -10261,6 +10279,9 @@
           "userContextId": {
             "type": "string",
             "nullable": true
+          },
+          "utmParams": {
+            "$ref": "#/components/schemas/UTMParamsDto"
           }
         },
         "required": [
