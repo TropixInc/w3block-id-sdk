@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.79 (2024-09-12)
+
 ### [0.1.78](https://github.com/TropixInc/w3block-sdk/compare/v0.1.77...v0.1.78) (2024-09-12)
 
 
