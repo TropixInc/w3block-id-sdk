@@ -6730,12 +6730,60 @@
           }
         ]
       }
+    },
+    "/notifications/{tenantId}/event": {
+      "post": {
+        "operationId": "dispatchNotificationEvent",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DispatchNotificationEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
     }
   },
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.56",
+    "version": "0.9.58",
     "contact": {}
   },
   "tags": [],
@@ -11060,6 +11108,39 @@
           "publicData",
           "userId",
           "active"
+        ]
+      },
+      "DispatchNotificationEventDto": {
+        "type": "object",
+        "properties": {
+          "event": {
+            "type": "string",
+            "example": "kyc-approved"
+          },
+          "metadata": {
+            "type": "object",
+            "example": null,
+            "nullable": true
+          },
+          "destinationUserId": {
+            "nullable": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "hiddenDestinationUserId": {
+            "nullable": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "required": [
+          "event"
         ]
       }
     }

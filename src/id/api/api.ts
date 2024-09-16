@@ -1983,6 +1983,15 @@ export interface IntegrationResponseDto {
   updatedAt?: string;
 }
 
+export interface DispatchNotificationEventDto {
+  /** @example "kyc-approved" */
+  event: string;
+  /** @example null */
+  metadata?: object | null;
+  destinationUserId?: string[];
+  hiddenDestinationUserId?: string[];
+}
+
 export namespace Users {
   /**
    * No description
@@ -4390,6 +4399,27 @@ export namespace Integrations {
   }
 }
 
+export namespace Notifications {
+  /**
+   * No description
+   * @tags Notifications
+   * @name DispatchNotificationEvent
+   * @request POST:/notifications/{tenantId}/event
+   * @secure
+   * @response `204` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+   */
+  export namespace DispatchNotificationEvent {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = DispatchNotificationEventDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+}
+
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from 'axios';
 
 export type QueryParamsType = Record<string | number, any>;
@@ -4522,7 +4552,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.56
+ * @version 0.9.58
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
@@ -7266,6 +7296,27 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: 'GET',
         secure: true,
         format: 'json',
+        ...params,
+      }),
+  };
+  notifications = {
+    /**
+     * No description
+     *
+     * @tags Notifications
+     * @name DispatchNotificationEvent
+     * @request POST:/notifications/{tenantId}/event
+     * @secure
+     * @response `204` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+     */
+    dispatchNotificationEvent: (tenantId: string, data: DispatchNotificationEventDto, params: RequestParams = {}) =>
+      this.request<void, HttpExceptionDto>({
+        path: `/notifications/${tenantId}/event`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
   };
