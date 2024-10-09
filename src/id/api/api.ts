@@ -123,6 +123,14 @@ export interface WalletResponseDto {
   type: WalletTypes;
   /** @example "ready" */
   status: WalletStatus;
+  owner?: object;
+}
+
+export interface ReferrerUserDto {
+  /** @format uuid */
+  id: string;
+  /** @example "email@example.com" */
+  email: string;
 }
 
 export enum UserContextStatus {
@@ -236,6 +244,7 @@ export interface UserPublicResponseDto {
   updatedAt?: string;
   kycStatus: KycStatus;
   avatarUrl?: string | null;
+  referrerUser?: ReferrerUserDto | null;
 }
 
 export interface HttpExceptionDto {
@@ -2163,6 +2172,7 @@ export namespace Users {
       userId?: string[];
       contextIds?: string[];
       contextStatus?: UserContextStatus[];
+      timezone?: string;
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -2477,7 +2487,9 @@ export namespace Users {
       tenantId: string;
       address: string;
     };
-    export type RequestQuery = {};
+    export type RequestQuery = {
+      includeOwnerInfo?: boolean;
+    };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = WalletResponseDto;
@@ -4552,7 +4564,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.58
+ * @version 0.9.64
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
@@ -4756,6 +4768,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         userId?: string[];
         contextIds?: string[];
         contextStatus?: UserContextStatus[];
+        timezone?: string;
       },
       params: RequestParams = {},
     ) =>
@@ -5111,10 +5124,18 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @response `200` `WalletResponseDto`
      * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, administrator, integration, admin
      */
-    findByAddress: (tenantId: string, address: string, params: RequestParams = {}) =>
+    findByAddress: (
+      tenantId: string,
+      address: string,
+      query?: {
+        includeOwnerInfo?: boolean;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<WalletResponseDto, HttpExceptionDto>({
         path: `/users/${tenantId}/wallets/by-address/${address}`,
         method: 'GET',
+        query: query,
         secure: true,
         format: 'json',
         ...params,

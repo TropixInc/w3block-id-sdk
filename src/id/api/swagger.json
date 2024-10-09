@@ -470,6 +470,14 @@
                 "$ref": "#/components/schemas/UserContextStatus"
               }
             }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1328,6 +1336,14 @@
             "in": "path",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "includeOwnerInfo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -6783,7 +6799,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.58",
+    "version": "0.9.64",
     "contact": {}
   },
   "tags": [],
@@ -7034,6 +7050,9 @@
           "status": {
             "example": "ready",
             "$ref": "#/components/schemas/WalletStatus"
+          },
+          "owner": {
+            "type": "object"
           }
         },
         "required": [
@@ -7043,6 +7062,23 @@
           "ownerId",
           "type",
           "status"
+        ]
+      },
+      "ReferrerUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "example": "email@example.com"
+          }
+        },
+        "required": [
+          "id",
+          "email"
         ]
       },
       "UserContextStatus": {
@@ -7307,6 +7343,14 @@
           "avatarUrl": {
             "type": "string",
             "nullable": true
+          },
+          "referrerUser": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReferrerUserDto"
+              }
+            ]
           }
         },
         "required": [
