@@ -26,8 +26,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -43,6 +46,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -72,8 +84,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -89,6 +104,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -127,8 +151,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -144,6 +171,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -163,8 +199,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user, operator, loyaltyOperator",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, user, operator, loyaltyOperator",
             "content": {
               "application/json": {
                 "schema": {
@@ -180,6 +219,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -242,8 +290,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, user",
+            "description": "Need user with one of these roles: superAdmin, integration, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -259,6 +310,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -278,8 +338,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, user",
+            "description": "Need user with one of these roles: superAdmin, integration, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -295,6 +358,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -324,8 +396,11 @@
           "204": {
             "description": ""
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -341,6 +416,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -491,8 +575,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -508,6 +595,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -544,8 +640,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -561,6 +660,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -596,6 +704,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -604,6 +715,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -744,8 +864,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -761,6 +884,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -799,8 +931,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -816,6 +951,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -838,8 +982,11 @@
           "204": {
             "description": ""
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -855,6 +1002,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -876,6 +1032,9 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -884,6 +1043,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -906,8 +1074,11 @@
           "204": {
             "description": ""
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, user",
+            "description": "Need user with one of these roles: superAdmin, integration, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -923,6 +1094,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -945,8 +1125,11 @@
           "204": {
             "description": ""
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, user",
+            "description": "Need user with one of these roles: superAdmin, integration, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -962,6 +1145,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1008,8 +1200,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -1025,6 +1220,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1071,8 +1275,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -1088,6 +1295,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1109,6 +1325,9 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -1117,6 +1336,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1146,8 +1374,11 @@
           "200": {
             "description": ""
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -1163,6 +1394,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1199,8 +1439,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, loyaltyOperator",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, superAdmin, loyaltyOperator",
             "content": {
               "application/json": {
                 "schema": {
@@ -1216,6 +1459,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1252,8 +1504,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user, loyaltyOperator",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, user, loyaltyOperator",
             "content": {
               "application/json": {
                 "schema": {
@@ -1269,6 +1524,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1306,6 +1570,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -1314,6 +1581,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1358,8 +1634,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, administrator, integration, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, application, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -1375,6 +1654,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1411,8 +1699,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -1428,6 +1719,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1466,6 +1766,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -1474,6 +1777,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1517,6 +1829,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -1525,6 +1840,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1562,6 +1886,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -1570,6 +1897,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1607,6 +1943,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -1615,6 +1954,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1772,8 +2120,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": ""
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -1782,6 +2130,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1810,6 +2167,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -1818,6 +2178,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -1839,6 +2208,9 @@
         "responses": {
           "200": {
             "description": ""
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -1847,6 +2219,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -2324,17 +2705,10 @@
             }
           },
           "401": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedExceptionDto"
-                }
-              }
-            }
+            "description": "Unauthorized - Integration API key or JWT required"
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -2360,6 +2734,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -2461,6 +2844,9 @@
         "operationId": "logOut",
         "parameters": [],
         "responses": {
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
             "description": "",
             "content": {
@@ -2478,6 +2864,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -2880,8 +3275,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -2897,6 +3295,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -2957,8 +3364,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -2974,6 +3384,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -2992,8 +3411,11 @@
           }
         ],
         "responses": {
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -3009,6 +3431,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -3035,8 +3466,11 @@
           }
         },
         "responses": {
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -3052,6 +3486,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -3068,8 +3511,11 @@
           }
         ],
         "responses": {
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -3085,6 +3531,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -3113,8 +3568,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -3130,6 +3588,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -3158,8 +3625,11 @@
           }
         },
         "responses": {
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -3175,6 +3645,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -3213,8 +3692,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, integration, administrator",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -3230,6 +3712,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -3256,8 +3747,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, integration, administrator",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -3273,6 +3767,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -3301,6 +3804,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -3309,6 +3815,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -3336,6 +3851,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -3344,6 +3862,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -3382,8 +3909,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -3399,6 +3929,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -3467,8 +4006,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -3484,6 +4026,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -3513,8 +4064,11 @@
           "200": {
             "description": ""
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -3530,6 +4084,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -3568,8 +4131,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -3585,6 +4151,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -3653,8 +4228,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -3670,6 +4248,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -3698,8 +4285,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -3715,6 +4305,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -3744,8 +4343,11 @@
           "200": {
             "description": ""
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -3761,6 +4363,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -3798,8 +4409,11 @@
           "200": {
             "description": ""
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -3815,6 +4429,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -3860,6 +4483,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -3868,6 +4494,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -3943,6 +4578,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -3951,6 +4589,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -3994,6 +4641,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -4002,6 +4652,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -4036,6 +4695,9 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -4044,6 +4706,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -4082,8 +4753,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -4099,6 +4773,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -4212,8 +4895,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -4229,6 +4915,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -4268,8 +4963,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -4285,6 +4983,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -4321,8 +5028,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -4338,6 +5048,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -4382,8 +5101,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -4399,6 +5121,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -4435,8 +5166,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -4452,6 +5186,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -4487,7 +5230,7 @@
             "description": "Unauthorized - Integration API key or JWT required"
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin",
             "content": {
               "application/json": {
                 "schema": {
@@ -4541,6 +5284,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -4567,7 +5319,7 @@
             "description": "Unauthorized - Integration API key or JWT required"
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -4583,6 +5335,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -4620,7 +5381,7 @@
             "description": "Unauthorized - Integration API key or JWT required"
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin",
             "content": {
               "application/json": {
                 "schema": {
@@ -4646,6 +5407,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -4671,7 +5441,7 @@
             "description": "Unauthorized - Integration API key or JWT required"
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin",
             "content": {
               "application/json": {
                 "schema": {
@@ -4687,6 +5457,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -4861,8 +5640,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver",
+            "description": "Need user with one of these roles: superAdmin, integration, user, admin, kyc.approver",
             "content": {
               "application/json": {
                 "schema": {
@@ -4878,6 +5660,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -4975,8 +5766,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -4992,6 +5786,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -5036,8 +5839,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver",
+            "description": "Need user with one of these roles: superAdmin, integration, user, admin, kyc.approver",
             "content": {
               "application/json": {
                 "schema": {
@@ -5053,6 +5859,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -5100,8 +5915,11 @@
           "204": {
             "description": ""
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, kyc.approver",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, kyc.approver",
             "content": {
               "application/json": {
                 "schema": {
@@ -5117,6 +5935,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -5164,8 +5991,11 @@
           "204": {
             "description": ""
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, kyc.approver",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, kyc.approver",
             "content": {
               "application/json": {
                 "schema": {
@@ -5181,6 +6011,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -5228,8 +6067,11 @@
           "204": {
             "description": ""
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, kyc.approver",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, kyc.approver",
             "content": {
               "application/json": {
                 "schema": {
@@ -5245,6 +6087,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -5291,8 +6142,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -5308,6 +6162,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -5436,8 +6299,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -5453,6 +6319,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -5500,8 +6375,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin, user",
+            "description": "Need user with one of these roles: superAdmin, integration, admin, user",
             "content": {
               "application/json": {
                 "schema": {
@@ -5517,6 +6395,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -5562,8 +6449,11 @@
           "201": {
             "description": ""
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver",
+            "description": "Need user with one of these roles: superAdmin, integration, user, admin, kyc.approver",
             "content": {
               "application/json": {
                 "schema": {
@@ -5579,6 +6469,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -5641,8 +6540,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -5658,6 +6560,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -5728,8 +6639,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -5745,6 +6659,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -5781,8 +6704,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -5798,6 +6724,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -5834,8 +6769,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -5851,6 +6789,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -5895,8 +6842,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -5912,6 +6862,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -5939,8 +6898,11 @@
           "204": {
             "description": ""
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -5956,6 +6918,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -6002,8 +6973,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -6019,6 +6993,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -6075,8 +7058,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -6092,6 +7078,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -6173,7 +7168,9 @@
                   "email",
                   "wallet_address",
                   "collection_holder",
-                  "kyc_approved_context"
+                  "kyc_approved_context",
+                  "key_collection_holder",
+                  "key_erc20_holder"
                 ]
               }
             }
@@ -6199,8 +7196,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -6216,6 +7216,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -6260,8 +7269,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -6277,6 +7289,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -6314,8 +7335,11 @@
           "204": {
             "description": ""
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, admin",
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -6331,6 +7355,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -6411,8 +7444,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -6428,6 +7464,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -6496,8 +7541,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -6513,6 +7561,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -6559,8 +7616,11 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -6576,6 +7636,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       },
@@ -6600,8 +7669,11 @@
           }
         ],
         "responses": {
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -6617,6 +7689,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -6735,6 +7816,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
           }
         },
         "tags": [
@@ -6743,6 +7827,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -6774,8 +7867,11 @@
           "204": {
             "description": ""
           },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, application, superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration",
             "content": {
               "application/json": {
                 "schema": {
@@ -6791,6 +7887,15 @@
         "security": [
           {
             "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
           }
         ]
       }
@@ -6799,7 +7904,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.64",
+    "version": "0.9.68",
     "contact": {}
   },
   "tags": [],
@@ -6819,6 +7924,24 @@
         "name": "JWT",
         "description": "Enter JWT token",
         "in": "header"
+      },
+      "x-w3block-api-key": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-w3block-api-key",
+        "description": "W3block API key"
+      },
+      "x-w3block-id": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-w3block-id",
+        "description": "W3block API ID"
+      },
+      "x-w3block-secret": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-w3block-secret",
+        "description": "W3block API Secret"
       }
     },
     "schemas": {
@@ -9522,6 +10645,15 @@
           "sendEmailWhenRegister"
         ]
       },
+      "SignUpConfigurationDto": {
+        "type": "object",
+        "properties": {
+          "requireReferrer": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
       "TenantConfigurationsDto": {
         "type": "object",
         "properties": {
@@ -9530,6 +10662,9 @@
           },
           "passwordless": {
             "$ref": "#/components/schemas/PasswordlessConfigurationsDto"
+          },
+          "signUp": {
+            "$ref": "#/components/schemas/SignUpConfigurationDto"
           }
         }
       },
@@ -10580,7 +11715,9 @@
           "email",
           "wallet_address",
           "collection_holder",
-          "kyc_approved_context"
+          "kyc_approved_context",
+          "key_collection_holder",
+          "key_erc20_holder"
         ]
       },
       "WhitelistEntryResponseDto": {

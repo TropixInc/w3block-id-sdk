@@ -1332,9 +1332,15 @@ export interface PasswordlessConfigurationsDto {
   sendEmailWhenRegister: boolean;
 }
 
+export interface SignUpConfigurationDto {
+  /** @example false */
+  requireReferrer?: boolean;
+}
+
 export interface TenantConfigurationsDto {
   kyc?: TenantConfigurationsKycDto;
   passwordless?: PasswordlessConfigurationsDto;
+  signUp?: SignUpConfigurationDto;
 }
 
 export interface TenantConfigurationsResponseDto {
@@ -1752,6 +1758,8 @@ export enum WhitelistEntryType {
   WalletAddress = 'wallet_address',
   CollectionHolder = 'collection_holder',
   KycApprovedContext = 'kyc_approved_context',
+  KeyCollectionHolder = 'key_collection_holder',
+  KeyErc20Holder = 'key_erc20_holder',
 }
 
 export interface WhitelistEntryResponseDto {
@@ -2009,7 +2017,8 @@ export namespace Users {
    * @request POST:/users
    * @secure
    * @response `201` `UserPublicResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace Create {
     export type RequestParams = {};
@@ -2025,7 +2034,8 @@ export namespace Users {
    * @request POST:/users/invite
    * @secure
    * @response `201` `UserPublicResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace Invite {
     export type RequestParams = {};
@@ -2041,7 +2051,8 @@ export namespace Users {
    * @request GET:/users/find-user-by-email
    * @secure
    * @response `200` `UserPublicResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace GetUserByEmail {
     export type RequestParams = {};
@@ -2062,7 +2073,8 @@ export namespace Users {
    * @request GET:/users/profile
    * @secure
    * @response `200` `UserPublicResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user, operator, loyaltyOperator
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user, operator, loyaltyOperator
    */
   export namespace GetProfileByUserLogged {
     export type RequestParams = {};
@@ -2078,7 +2090,8 @@ export namespace Users {
    * @request GET:/users/affiliations
    * @secure
    * @response `200` `AffiliationsPaginatedResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user
    */
   export namespace GetUserDirectAffiliations {
     export type RequestParams = {};
@@ -2102,7 +2115,8 @@ export namespace Users {
    * @request GET:/users/affiliations-report
    * @secure
    * @response `200` `AffiliationsReportResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user
    */
   export namespace GetUserAffiliationsReport {
     export type RequestParams = {};
@@ -2118,7 +2132,8 @@ export namespace Users {
    * @request GET:/users/{tenantId}/report/{email}
    * @secure
    * @response `204` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin
    */
   export namespace GetUsersReport {
     export type RequestParams = {
@@ -2137,7 +2152,8 @@ export namespace Users {
    * @request GET:/users/{tenantId}/xls
    * @secure
    * @response `201` `ExportEntityDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace RequestUsersExport {
     export type RequestParams = {
@@ -2185,7 +2201,8 @@ export namespace Users {
    * @request GET:/users/{tenantId}/{id}
    * @secure
    * @response `200` `UserPublicResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace GetProfileUserById {
     export type RequestParams = {
@@ -2204,6 +2221,7 @@ export namespace Users {
    * @request GET:/users/{tenantId}/by-referral-code/{referralCode}
    * @secure
    * @response `200` `UserPublicResponseDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace GetUserByReferralCode {
     export type RequestParams = {
@@ -2222,7 +2240,8 @@ export namespace Users {
    * @request GET:/users/{tenantId}
    * @secure
    * @response `200` `UserPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace GetUsersByTenantId {
     export type RequestParams = {
@@ -2269,7 +2288,8 @@ export namespace Users {
    * @request PATCH:/users/{tenantId}/profile
    * @secure
    * @response `200` `UserPublicResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
    */
   export namespace UpdateProfileByUserLogged {
     export type RequestParams = {
@@ -2287,7 +2307,8 @@ export namespace Users {
    * @request PATCH:/users/change-password
    * @secure
    * @response `204` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
    */
   export namespace ChangePassword {
     export type RequestParams = {};
@@ -2303,6 +2324,7 @@ export namespace Users {
    * @request PATCH:/users/main-wallet
    * @secure
    * @response `204` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace SetWalletDefault {
     export type RequestParams = {};
@@ -2318,7 +2340,8 @@ export namespace Users {
    * @request PATCH:/users/referrer
    * @secure
    * @response `204` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user
    */
   export namespace SetReferrer {
     export type RequestParams = {};
@@ -2334,7 +2357,8 @@ export namespace Users {
    * @request POST:/users/request-account-exclusion
    * @secure
    * @response `204` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user
    */
   export namespace RequestAccountExclusion {
     export type RequestParams = {};
@@ -2350,7 +2374,8 @@ export namespace Users {
    * @request PATCH:/users/{tenantId}/{id}/token
    * @secure
    * @response `200` `UserTokenResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace UpdateToken {
     export type RequestParams = {
@@ -2369,7 +2394,8 @@ export namespace Users {
    * @request PATCH:/users/{tenantId}/{id}/edit
    * @secure
    * @response `200` `UserPublicResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace Update {
     export type RequestParams = {
@@ -2388,6 +2414,7 @@ export namespace Users {
    * @request POST:/users/account-complete/retry
    * @secure
    * @response `204` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace AccountCompleteRetry {
     export type RequestParams = {};
@@ -2403,7 +2430,8 @@ export namespace Users {
    * @request POST:/users/{tenantId}/{userId}/toggle-operator-role
    * @secure
    * @response `200` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace ToggleOperatorRole {
     export type RequestParams = {
@@ -2422,7 +2450,8 @@ export namespace Users {
    * @request GET:/users/{tenantId}/code/{userCode}
    * @secure
    * @response `200` `UserByCodeResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, loyaltyOperator
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, superAdmin, loyaltyOperator
    */
   export namespace GetUserByCode {
     export type RequestParams = {
@@ -2441,7 +2470,8 @@ export namespace Users {
    * @request POST:/users/{tenantId}/code/{userId}
    * @secure
    * @response `200` `UserCodeResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user, loyaltyOperator
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user, loyaltyOperator
    */
   export namespace GetTemporaryCode {
     export type RequestParams = {
@@ -2460,6 +2490,7 @@ export namespace Users {
    * @request POST:/users/{tenantId}/wallets/vault/claim
    * @secure
    * @response `200` `WalletResponseDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace CreateVault {
     export type RequestParams = {
@@ -2480,7 +2511,8 @@ export namespace Users {
    * @request GET:/users/{tenantId}/wallets/by-address/{address}
    * @secure
    * @response `200` `WalletResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, administrator, integration, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, integration, admin
    */
   export namespace FindByAddress {
     export type RequestParams = {
@@ -2501,7 +2533,8 @@ export namespace Users {
    * @request GET:/users/{tenantId}/wallets/own-wallet-by-address/{address}
    * @secure
    * @response `200` `WalletResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
    */
   export namespace FindOwnWalletByAddress {
     export type RequestParams = {
@@ -2520,6 +2553,7 @@ export namespace Users {
    * @request GET:/users/{tenantId}/wallets/{userId}
    * @secure
    * @response `200` `(WalletResponseDto)[]`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace FindAllWalletByUserId {
     export type RequestParams = {
@@ -2538,6 +2572,7 @@ export namespace Users {
    * @request GET:/users/{tenantId}/wallets/{userId}/{walletId}
    * @secure
    * @response `200` `WalletResponseDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace FindWallet {
     export type RequestParams = {
@@ -2557,6 +2592,7 @@ export namespace Users {
    * @request POST:/users/{tenantId}/wallets/metamask/request
    * @secure
    * @response `201` `RequestMetamaskResponseDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace RequestMetamask {
     export type RequestParams = {
@@ -2574,6 +2610,7 @@ export namespace Users {
    * @request POST:/users/{tenantId}/wallets/metamask/claim
    * @secure
    * @response `201` `WalletResponseDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace ClaimMetamask {
     export type RequestParams = {
@@ -2591,6 +2628,7 @@ export namespace Users {
    * @request POST:/users/{tenantId}/withdraw-accounts/{userId}
    * @secure
    * @response `201` `UserWithdrawAccountEntityDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace AddUserWithdrawAccount {
     export type RequestParams = {
@@ -2609,6 +2647,7 @@ export namespace Users {
    * @request GET:/users/{tenantId}/withdraw-accounts/{userId}
    * @secure
    * @response `200` `UserWithdrawAccountEntityPaginatedDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace ListUserWithdrawAccounts {
     export type RequestParams = {
@@ -2635,6 +2674,7 @@ export namespace Users {
    * @request GET:/users/{tenantId}/withdraw-accounts/{userId}/{accountId}
    * @secure
    * @response `200` `UserWithdrawAccountEntityDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace GetUserWithdrawAccountById {
     export type RequestParams = {
@@ -2654,6 +2694,7 @@ export namespace Users {
    * @request DELETE:/users/{tenantId}/withdraw-accounts/{userId}/{accountId}
    * @secure
    * @response `204` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace DeleteUserWithdrawAccount {
     export type RequestParams = {
@@ -2673,7 +2714,8 @@ export namespace Users {
    * @request GET:/users/{tenantId}/contexts/find
    * @secure
    * @response `200` `UserContextEntityDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user, admin, kyc.approver
    */
   export namespace FindUsersContext {
     export type RequestParams = {
@@ -2718,7 +2760,8 @@ export namespace Users {
    * @request GET:/users/{tenantId}/contexts/{userId}
    * @secure
    * @response `200` `UsersContextsPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
    */
   export namespace FindUsersContextByUserId {
     export type RequestParams = {
@@ -2752,7 +2795,8 @@ export namespace Users {
    * @request GET:/users/{tenantId}/contexts/{userId}/{userContextId}
    * @secure
    * @response `200` `UserContextEntityDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user, admin, kyc.approver
    */
   export namespace FindUserContextById {
     export type RequestParams = {
@@ -2772,7 +2816,8 @@ export namespace Users {
    * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/approve
    * @secure
    * @response `204` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, kyc.approver
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, kyc.approver
    */
   export namespace ApproveTenantContextByUserId {
     export type RequestParams = {
@@ -2792,7 +2837,8 @@ export namespace Users {
    * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/reject
    * @secure
    * @response `204` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, kyc.approver
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, kyc.approver
    */
   export namespace RejectTenantContextByUserId {
     export type RequestParams = {
@@ -2812,7 +2858,8 @@ export namespace Users {
    * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/require-review
    * @secure
    * @response `204` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, kyc.approver
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, kyc.approver
    */
   export namespace RequireReviewTenantContextByUserId {
     export type RequestParams = {
@@ -2832,7 +2879,8 @@ export namespace Users {
    * @request GET:/users/{tenantId}/documents/find-user-by-any
    * @secure
    * @response `200` `UserPublicResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, integration
    */
   export namespace FindUserByAny {
     export type RequestParams = {
@@ -2855,7 +2903,8 @@ export namespace Users {
    * @request GET:/users/{tenantId}/documents/{userId}
    * @secure
    * @response `200` `DocumentPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
    */
   export namespace FindUserDocumentsByUserId {
     export type RequestParams = {
@@ -2907,7 +2956,8 @@ export namespace Users {
    * @request GET:/users/{tenantId}/documents/{userId}/context/{contextId}
    * @secure
    * @response `200` `(DocumentEntityDto)[]`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
    */
   export namespace GetAllByContextByUserIdAndContextId {
     export type RequestParams = {
@@ -2927,7 +2977,8 @@ export namespace Users {
    * @request POST:/users/{tenantId}/documents/{userId}/context/{contextId}
    * @secure
    * @response `201` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user, admin, kyc.approver
    */
   export namespace AttachDocumentsToUserByContextId {
     export type RequestParams = {
@@ -3007,7 +3058,7 @@ export namespace Blockchain {
    * @request GET:/blockchain/balance/{address}/{chainId}
    * @deprecated
    * @secure
-   * @response `200` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace GetBalance {
     export type RequestParams = {
@@ -3019,7 +3070,7 @@ export namespace Blockchain {
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = void;
+    export type ResponseBody = any;
   }
   /**
    * No description
@@ -3028,6 +3079,7 @@ export namespace Blockchain {
    * @request POST:/blockchain/request-session-wallet-connect
    * @secure
    * @response `201` `ResponseWalletConnectSessionDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace RequestSessionWalletConnect {
     export type RequestParams = {};
@@ -3043,6 +3095,7 @@ export namespace Blockchain {
    * @request DELETE:/blockchain/disconnect-session-wallet-connect
    * @secure
    * @response `200` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace DisconnectSessionWalletConnect {
     export type RequestParams = {};
@@ -3223,8 +3276,8 @@ export namespace Auth {
    * @request POST:/auth/signin/generate-magic-token
    * @secure
    * @response `201` `SigningMagicTokenResponseDto`
-   * @response `401` `UnauthorizedExceptionDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
    * @response `429` `TooManyRequestsExceptionDto`
    */
   export namespace GenerateSignInMagicToken {
@@ -3271,6 +3324,7 @@ export namespace Auth {
    * @name LogOut
    * @request POST:/auth/logout
    * @secure
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    * @response `403` `ForbiddenExceptionDto`
    */
   export namespace LogOut {
@@ -3427,7 +3481,8 @@ export namespace Tenant {
    * @request POST:/tenant
    * @secure
    * @response `201` `TenantEntityDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
    */
   export namespace Create {
     export type RequestParams = {};
@@ -3443,7 +3498,8 @@ export namespace Tenant {
    * @request GET:/tenant
    * @secure
    * @response `200` `TenantPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
    */
   export namespace FindAll {
     export type RequestParams = {};
@@ -3466,7 +3522,8 @@ export namespace Tenant {
    * @name FindOne
    * @request GET:/tenant/{tenantId}
    * @secure
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
    */
   export namespace FindOne {
     export type RequestParams = {
@@ -3483,7 +3540,8 @@ export namespace Tenant {
    * @name Update
    * @request PUT:/tenant/{tenantId}
    * @secure
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
    */
   export namespace Update {
     export type RequestParams = {
@@ -3500,7 +3558,8 @@ export namespace Tenant {
    * @name Remove
    * @request DELETE:/tenant/{tenantId}
    * @secure
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
    */
   export namespace Remove {
     export type RequestParams = {
@@ -3518,7 +3577,8 @@ export namespace Tenant {
    * @request GET:/tenant/client/{tenantId}
    * @secure
    * @response `200` `TenantClientResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, integration
    */
   export namespace GetTenantClientOrFail {
     export type RequestParams = {
@@ -3535,7 +3595,8 @@ export namespace Tenant {
    * @name UpdateProfile
    * @request PUT:/tenant/profile/{tenantId}
    * @secure
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
    */
   export namespace UpdateProfile {
     export type RequestParams = {
@@ -3553,7 +3614,8 @@ export namespace Tenant {
    * @request POST:/tenant/configurations/{tenantId}
    * @secure
    * @response `200` `TenantConfigurationsResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, integration, administrator
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, superAdmin, integration
    */
   export namespace UpsertConfigurations {
     export type RequestParams = {
@@ -3571,7 +3633,8 @@ export namespace Tenant {
    * @request GET:/tenant/configurations/{tenantId}
    * @secure
    * @response `200` `TenantConfigurationsResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, integration, administrator
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, superAdmin, integration
    */
   export namespace GetConfigurations {
     export type RequestParams = {
@@ -3592,6 +3655,7 @@ export namespace PublicTenant {
    * @request GET:/public-tenant/by-hostname
    * @secure
    * @response `200` `TenantPublicDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace GetTenantByHost {
     export type RequestParams = {};
@@ -3610,6 +3674,7 @@ export namespace PublicTenant {
    * @request GET:/public-tenant/by-id
    * @secure
    * @response `200` `TenantPublicDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace GetTenantById {
     export type RequestParams = {};
@@ -3630,7 +3695,8 @@ export namespace TenantAccess {
    * @request POST:/tenant-access/{tenantId}
    * @secure
    * @response `201` `TenantAccessEntityDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
    */
   export namespace Create {
     export type RequestParams = {
@@ -3648,7 +3714,8 @@ export namespace TenantAccess {
    * @request GET:/tenant-access/{tenantId}
    * @secure
    * @response `200` `TenantAccessPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
    */
   export namespace FindAll {
     export type RequestParams = {
@@ -3674,7 +3741,8 @@ export namespace TenantAccess {
    * @request GET:/tenant-access/{tenantId}/{id}
    * @secure
    * @response `200` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
    */
   export namespace FindOne {
     export type RequestParams = {
@@ -3696,7 +3764,8 @@ export namespace TenantHosts {
    * @request POST:/tenant-hosts/{tenantId}
    * @secure
    * @response `201` `TenantHostResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace Create {
     export type RequestParams = {
@@ -3714,7 +3783,8 @@ export namespace TenantHosts {
    * @request GET:/tenant-hosts/{tenantId}
    * @secure
    * @response `200` `TenantHostPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace FindAll {
     export type RequestParams = {
@@ -3740,7 +3810,8 @@ export namespace TenantHosts {
    * @request GET:/tenant-hosts/{tenantId}/main-host
    * @secure
    * @response `200` `TenantHostEntityDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace GetMainHostByTenantId {
     export type RequestParams = {
@@ -3758,7 +3829,8 @@ export namespace TenantHosts {
    * @request GET:/tenant-hosts/{tenantId}/{id}
    * @secure
    * @response `200` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace FindOne {
     export type RequestParams = {
@@ -3777,7 +3849,8 @@ export namespace TenantHosts {
    * @request PATCH:/tenant-hosts/{tenantId}/{id}
    * @secure
    * @response `200` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace Update {
     export type RequestParams = {
@@ -3799,7 +3872,8 @@ export namespace TenantContext {
    * @request POST:/tenant-context/{tenantId}
    * @secure
    * @response `201` `TenantContextDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, integration
    */
   export namespace CreateTenantContext {
     export type RequestParams = {
@@ -3817,7 +3891,8 @@ export namespace TenantContext {
    * @request GET:/tenant-context/{tenantId}
    * @secure
    * @response `200` `TenantContextPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
    */
   export namespace FindTenantContext {
     export type RequestParams = {
@@ -3854,7 +3929,8 @@ export namespace TenantContext {
    * @request GET:/tenant-context/{tenantId}/slug/{slug}
    * @secure
    * @response `200` `(TenantContextDto)[]`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
    */
   export namespace GetTenantContextBySlug {
     export type RequestParams = {
@@ -3873,7 +3949,8 @@ export namespace TenantContext {
    * @request GET:/tenant-context/{tenantId}/{tenantContextId}
    * @secure
    * @response `200` `TenantContextDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
    */
   export namespace FindOneByTenantContextId {
     export type RequestParams = {
@@ -3892,7 +3969,8 @@ export namespace TenantContext {
    * @request PATCH:/tenant-context/{tenantId}/{tenantContextId}
    * @secure
    * @response `200` `TenantContextDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace UpdateByTenantContextId {
     export type RequestParams = {
@@ -3911,7 +3989,8 @@ export namespace TenantContext {
    * @request GET:/tenant-context/{tenantId}/{tenantContextId}/approvers
    * @secure
    * @response `200` `TenantContextApproversResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
    */
   export namespace GetTenantContextApprovers {
     export type RequestParams = {
@@ -3934,7 +4013,7 @@ export namespace Contexts {
  * @secure
  * @response `201` `ContextDto` Context created successfully
  * @response `401` `void` Unauthorized - Integration API key or JWT required
- * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+ * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin
  * @response `409` `{
   \** @example 409 *\
     statusCode: number,
@@ -3960,7 +4039,7 @@ export namespace Contexts {
    * @secure
    * @response `200` `(ContextDto)[]` Returns all contexts
    * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin
    */
   export namespace ListAll {
     export type RequestParams = {};
@@ -3977,7 +4056,7 @@ export namespace Contexts {
    * @secure
    * @response `204` `void`
    * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin
    * @response `404` `DuplicatedContextException` Not found context to update
    */
   export namespace Update {
@@ -3997,7 +4076,7 @@ export namespace Contexts {
    * @secure
    * @response `204` `void`
    * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin
    */
   export namespace Delete {
     export type RequestParams = {
@@ -4018,7 +4097,8 @@ export namespace Whitelists {
    * @request GET:/whitelists/{tenantId}/check-user
    * @secure
    * @response `200` `CheckUserInMultipleWhitelistsResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace CheckUserInMultipleWhitelists {
     export type RequestParams = {
@@ -4049,7 +4129,8 @@ export namespace Whitelists {
    * @request GET:/whitelists/{tenantId}
    * @secure
    * @response `200` `WhitelistPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace FindWhitelists {
     export type RequestParams = {
@@ -4075,7 +4156,8 @@ export namespace Whitelists {
    * @request POST:/whitelists/{tenantId}
    * @secure
    * @response `201` `WhitelistResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace CreateWhitelist {
     export type RequestParams = {
@@ -4093,7 +4175,8 @@ export namespace Whitelists {
    * @request GET:/whitelists/{tenantId}/{id}
    * @secure
    * @response `200` `WhitelistResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace GetWhitelist {
     export type RequestParams = {
@@ -4112,7 +4195,8 @@ export namespace Whitelists {
    * @request PATCH:/whitelists/{tenantId}/{id}
    * @secure
    * @response `200` `WhitelistResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace UpdateWhitelist {
     export type RequestParams = {
@@ -4131,7 +4215,8 @@ export namespace Whitelists {
    * @request DELETE:/whitelists/{tenantId}/{id}
    * @secure
    * @response `204` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace DeleteWhitelist {
     export type RequestParams = {
@@ -4150,7 +4235,8 @@ export namespace Whitelists {
    * @request PATCH:/whitelists/{tenantId}/{id}/promote-on-chain
    * @secure
    * @response `200` `WalletGroupResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace PromoteWhitelistOnChain {
     export type RequestParams = {
@@ -4169,7 +4255,8 @@ export namespace Whitelists {
    * @request GET:/whitelists/{tenantId}/{id}/check-user
    * @secure
    * @response `200` `CheckWhitelistUserResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace CheckUserInWhitelist {
     export type RequestParams = {
@@ -4199,7 +4286,8 @@ export namespace Whitelists {
    * @request GET:/whitelists/{tenantId}/{id}/entries
    * @secure
    * @response `200` `WhitelistEntryPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace FindWhitelistEntries {
     export type RequestParams = {
@@ -4216,7 +4304,15 @@ export namespace Whitelists {
       sortBy?: WhitelistEntriesSortBy;
       orderBy?: OrderByEnum;
       /** @default [] */
-      type?: ('user_id' | 'email' | 'wallet_address' | 'collection_holder' | 'kyc_approved_context')[];
+      type?: (
+        | 'user_id'
+        | 'email'
+        | 'wallet_address'
+        | 'collection_holder'
+        | 'kyc_approved_context'
+        | 'key_collection_holder'
+        | 'key_erc20_holder'
+      )[];
       /** @example false */
       showWallets?: boolean;
     };
@@ -4231,7 +4327,8 @@ export namespace Whitelists {
    * @request POST:/whitelists/{tenantId}/{id}/entries
    * @secure
    * @response `201` `WhitelistEntryResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace CreateWhitelistEntry {
     export type RequestParams = {
@@ -4250,7 +4347,8 @@ export namespace Whitelists {
    * @request DELETE:/whitelists/{tenantId}/{id}/entries/{entryId}
    * @secure
    * @response `204` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
    */
   export namespace DeleteWhitelistEntry {
     export type RequestParams = {
@@ -4292,7 +4390,8 @@ export namespace TenantInput {
    * @request POST:/tenant-input/{tenantId}
    * @secure
    * @response `201` `TenantInputEntityDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
    */
   export namespace CreateTenantInput {
     export type RequestParams = {
@@ -4310,7 +4409,8 @@ export namespace TenantInput {
    * @request GET:/tenant-input/{tenantId}
    * @secure
    * @response `200` `TenantInputPaginateResponseDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
    */
   export namespace FindTenantInput {
     export type RequestParams = {
@@ -4336,7 +4436,8 @@ export namespace TenantInput {
    * @request PATCH:/tenant-input/{tenantId}/{inputId}
    * @secure
    * @response `201` `TenantInputEntityDto`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
    */
   export namespace UpdateByInputId {
     export type RequestParams = {
@@ -4354,7 +4455,8 @@ export namespace TenantInput {
    * @name FindTenantInputById
    * @request GET:/tenant-input/{tenantId}/{inputId}
    * @secure
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
    */
   export namespace FindTenantInputById {
     export type RequestParams = {
@@ -4401,6 +4503,7 @@ export namespace Integrations {
    * @request GET:/integrations
    * @secure
    * @response `200` `(IntegrationResponseDto)[]`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
    */
   export namespace List {
     export type RequestParams = {};
@@ -4419,7 +4522,8 @@ export namespace Notifications {
    * @request POST:/notifications/{tenantId}/event
    * @secure
    * @response `204` `void`
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
    */
   export namespace DispatchNotificationEvent {
     export type RequestParams = {
@@ -4564,7 +4668,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.64
+ * @version 0.9.68
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
@@ -4578,10 +4682,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/users
      * @secure
      * @response `201` `UserPublicResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     create: (data: CreateUserDto, params: RequestParams = {}) =>
-      this.request<UserPublicResponseDto, HttpExceptionDto>({
+      this.request<UserPublicResponseDto, void | HttpExceptionDto>({
         path: `/users`,
         method: 'POST',
         body: data,
@@ -4599,10 +4704,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/users/invite
      * @secure
      * @response `201` `UserPublicResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     invite: (data: InviteUserDto, params: RequestParams = {}) =>
-      this.request<UserPublicResponseDto, HttpExceptionDto>({
+      this.request<UserPublicResponseDto, void | HttpExceptionDto>({
         path: `/users/invite`,
         method: 'POST',
         body: data,
@@ -4620,7 +4726,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/find-user-by-email
      * @secure
      * @response `200` `UserPublicResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     getUserByEmail: (
       query: {
@@ -4631,7 +4738,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<UserPublicResponseDto, HttpExceptionDto>({
+      this.request<UserPublicResponseDto, void | HttpExceptionDto>({
         path: `/users/find-user-by-email`,
         method: 'GET',
         query: query,
@@ -4648,10 +4755,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/profile
      * @secure
      * @response `200` `UserPublicResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user, operator, loyaltyOperator
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user, operator, loyaltyOperator
      */
     getProfileByUserLogged: (params: RequestParams = {}) =>
-      this.request<UserPublicResponseDto, HttpExceptionDto>({
+      this.request<UserPublicResponseDto, void | HttpExceptionDto>({
         path: `/users/profile`,
         method: 'GET',
         secure: true,
@@ -4667,7 +4775,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/affiliations
      * @secure
      * @response `200` `AffiliationsPaginatedResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user
      */
     getUserDirectAffiliations: (
       query?: {
@@ -4681,7 +4790,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<AffiliationsPaginatedResponseDto, HttpExceptionDto>({
+      this.request<AffiliationsPaginatedResponseDto, void | HttpExceptionDto>({
         path: `/users/affiliations`,
         method: 'GET',
         query: query,
@@ -4698,10 +4807,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/affiliations-report
      * @secure
      * @response `200` `AffiliationsReportResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user
      */
     getUserAffiliationsReport: (params: RequestParams = {}) =>
-      this.request<AffiliationsReportResponseDto, HttpExceptionDto>({
+      this.request<AffiliationsReportResponseDto, void | HttpExceptionDto>({
         path: `/users/affiliations-report`,
         method: 'GET',
         secure: true,
@@ -4717,10 +4827,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/report/{email}
      * @secure
      * @response `204` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin
      */
     getUsersReport: (tenantId: string, email: string, params: RequestParams = {}) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, void | HttpExceptionDto>({
         path: `/users/${tenantId}/report/${email}`,
         method: 'GET',
         secure: true,
@@ -4735,7 +4846,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/xls
      * @secure
      * @response `201` `ExportEntityDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     requestUsersExport: (
       tenantId: string,
@@ -4772,7 +4884,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<ExportEntityDto, HttpExceptionDto>({
+      this.request<ExportEntityDto, void | HttpExceptionDto>({
         path: `/users/${tenantId}/xls`,
         method: 'GET',
         query: query,
@@ -4789,10 +4901,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/{id}
      * @secure
      * @response `200` `UserPublicResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     getProfileUserById: (tenantId: string, id: string, params: RequestParams = {}) =>
-      this.request<UserPublicResponseDto, HttpExceptionDto>({
+      this.request<UserPublicResponseDto, void | HttpExceptionDto>({
         path: `/users/${tenantId}/${id}`,
         method: 'GET',
         secure: true,
@@ -4808,9 +4921,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/by-referral-code/{referralCode}
      * @secure
      * @response `200` `UserPublicResponseDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     getUserByReferralCode: (tenantId: string, referralCode: string, params: RequestParams = {}) =>
-      this.request<UserPublicResponseDto, any>({
+      this.request<UserPublicResponseDto, void>({
         path: `/users/${tenantId}/by-referral-code/${referralCode}`,
         method: 'GET',
         secure: true,
@@ -4826,7 +4940,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}
      * @secure
      * @response `200` `UserPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     getUsersByTenantId: (
       tenantId: string,
@@ -4862,7 +4977,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<UserPaginateResponseDto, HttpExceptionDto>({
+      this.request<UserPaginateResponseDto, void | HttpExceptionDto>({
         path: `/users/${tenantId}`,
         method: 'GET',
         query: query,
@@ -4879,10 +4994,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/users/{tenantId}/profile
      * @secure
      * @response `200` `UserPublicResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
      */
     updateProfileByUserLogged: (tenantId: string, data: UpdateProfileUserDto, params: RequestParams = {}) =>
-      this.request<UserPublicResponseDto, HttpExceptionDto>({
+      this.request<UserPublicResponseDto, void | HttpExceptionDto>({
         path: `/users/${tenantId}/profile`,
         method: 'PATCH',
         body: data,
@@ -4900,10 +5016,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/users/change-password
      * @secure
      * @response `204` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
      */
     changePassword: (data: ChangePasswordDto, params: RequestParams = {}) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, void | HttpExceptionDto>({
         path: `/users/change-password`,
         method: 'PATCH',
         body: data,
@@ -4920,9 +5037,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/users/main-wallet
      * @secure
      * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     setWalletDefault: (data: MainWalletDto, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<void, void>({
         path: `/users/main-wallet`,
         method: 'PATCH',
         body: data,
@@ -4939,10 +5057,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/users/referrer
      * @secure
      * @response `204` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user
      */
     setReferrer: (data: SetReferrerDto, params: RequestParams = {}) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, void | HttpExceptionDto>({
         path: `/users/referrer`,
         method: 'PATCH',
         body: data,
@@ -4959,10 +5078,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/users/request-account-exclusion
      * @secure
      * @response `204` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user
      */
     requestAccountExclusion: (data: RequestAccountExclusionDto, params: RequestParams = {}) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, void | HttpExceptionDto>({
         path: `/users/request-account-exclusion`,
         method: 'POST',
         body: data,
@@ -4979,10 +5099,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/users/{tenantId}/{id}/token
      * @secure
      * @response `200` `UserTokenResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     updateToken: (tenantId: string, id: string, data: UpdateTokenDto, params: RequestParams = {}) =>
-      this.request<UserTokenResponseDto, HttpExceptionDto>({
+      this.request<UserTokenResponseDto, void | HttpExceptionDto>({
         path: `/users/${tenantId}/${id}/token`,
         method: 'PATCH',
         body: data,
@@ -5000,10 +5121,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/users/{tenantId}/{id}/edit
      * @secure
      * @response `200` `UserPublicResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     update: (tenantId: string, id: string, data: UpdateUserDto, params: RequestParams = {}) =>
-      this.request<UserPublicResponseDto, HttpExceptionDto>({
+      this.request<UserPublicResponseDto, void | HttpExceptionDto>({
         path: `/users/${tenantId}/${id}/edit`,
         method: 'PATCH',
         body: data,
@@ -5021,9 +5143,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/users/account-complete/retry
      * @secure
      * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     accountCompleteRetry: (data: AccountCompleteRetryDto, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<void, void>({
         path: `/users/account-complete/retry`,
         method: 'POST',
         body: data,
@@ -5040,10 +5163,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/users/{tenantId}/{userId}/toggle-operator-role
      * @secure
      * @response `200` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     toggleOperatorRole: (tenantId: string, userId: string, params: RequestParams = {}) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, void | HttpExceptionDto>({
         path: `/users/${tenantId}/${userId}/toggle-operator-role`,
         method: 'POST',
         secure: true,
@@ -5058,10 +5182,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/code/{userCode}
      * @secure
      * @response `200` `UserByCodeResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, loyaltyOperator
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, superAdmin, loyaltyOperator
      */
     getUserByCode: (tenantId: string, userCode: string, params: RequestParams = {}) =>
-      this.request<UserByCodeResponseDto, HttpExceptionDto>({
+      this.request<UserByCodeResponseDto, void | HttpExceptionDto>({
         path: `/users/${tenantId}/code/${userCode}`,
         method: 'GET',
         secure: true,
@@ -5077,10 +5202,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/users/{tenantId}/code/{userId}
      * @secure
      * @response `200` `UserCodeResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user, loyaltyOperator
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user, loyaltyOperator
      */
     getTemporaryCode: (tenantId: string, userId: string, params: RequestParams = {}) =>
-      this.request<UserCodeResponseDto, HttpExceptionDto>({
+      this.request<UserCodeResponseDto, void | HttpExceptionDto>({
         path: `/users/${tenantId}/code/${userId}`,
         method: 'POST',
         secure: true,
@@ -5096,6 +5222,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/users/{tenantId}/wallets/vault/claim
      * @secure
      * @response `200` `WalletResponseDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     createVault: (
       tenantId: string,
@@ -5105,7 +5232,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<WalletResponseDto, any>({
+      this.request<WalletResponseDto, void>({
         path: `/users/${tenantId}/wallets/vault/claim`,
         method: 'POST',
         query: query,
@@ -5122,7 +5249,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/wallets/by-address/{address}
      * @secure
      * @response `200` `WalletResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, administrator, integration, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, integration, admin
      */
     findByAddress: (
       tenantId: string,
@@ -5132,7 +5260,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<WalletResponseDto, HttpExceptionDto>({
+      this.request<WalletResponseDto, void | HttpExceptionDto>({
         path: `/users/${tenantId}/wallets/by-address/${address}`,
         method: 'GET',
         query: query,
@@ -5149,10 +5277,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/wallets/own-wallet-by-address/{address}
      * @secure
      * @response `200` `WalletResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
      */
     findOwnWalletByAddress: (tenantId: string, address: string, params: RequestParams = {}) =>
-      this.request<WalletResponseDto, HttpExceptionDto>({
+      this.request<WalletResponseDto, void | HttpExceptionDto>({
         path: `/users/${tenantId}/wallets/own-wallet-by-address/${address}`,
         method: 'GET',
         secure: true,
@@ -5168,9 +5297,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/wallets/{userId}
      * @secure
      * @response `200` `(WalletResponseDto)[]`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     findAllWalletByUserId: (userId: string, tenantId: string, params: RequestParams = {}) =>
-      this.request<WalletResponseDto[], any>({
+      this.request<WalletResponseDto[], void>({
         path: `/users/${tenantId}/wallets/${userId}`,
         method: 'GET',
         secure: true,
@@ -5186,9 +5316,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/wallets/{userId}/{walletId}
      * @secure
      * @response `200` `WalletResponseDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     findWallet: (walletId: string, userId: string, tenantId: string, params: RequestParams = {}) =>
-      this.request<WalletResponseDto, any>({
+      this.request<WalletResponseDto, void>({
         path: `/users/${tenantId}/wallets/${userId}/${walletId}`,
         method: 'GET',
         secure: true,
@@ -5204,9 +5335,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/users/{tenantId}/wallets/metamask/request
      * @secure
      * @response `201` `RequestMetamaskResponseDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     requestMetamask: (tenantId: string, data: RequestMetamaskDto, params: RequestParams = {}) =>
-      this.request<RequestMetamaskResponseDto, any>({
+      this.request<RequestMetamaskResponseDto, void>({
         path: `/users/${tenantId}/wallets/metamask/request`,
         method: 'POST',
         body: data,
@@ -5224,9 +5356,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/users/{tenantId}/wallets/metamask/claim
      * @secure
      * @response `201` `WalletResponseDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     claimMetamask: (tenantId: string, data: ClaimMetamaskDto, params: RequestParams = {}) =>
-      this.request<WalletResponseDto, any>({
+      this.request<WalletResponseDto, void>({
         path: `/users/${tenantId}/wallets/metamask/claim`,
         method: 'POST',
         body: data,
@@ -5244,6 +5377,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/users/{tenantId}/withdraw-accounts/{userId}
      * @secure
      * @response `201` `UserWithdrawAccountEntityDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     addUserWithdrawAccount: (
       tenantId: string,
@@ -5251,7 +5385,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       data: AddWithdrawAccountDto,
       params: RequestParams = {},
     ) =>
-      this.request<UserWithdrawAccountEntityDto, any>({
+      this.request<UserWithdrawAccountEntityDto, void>({
         path: `/users/${tenantId}/withdraw-accounts/${userId}`,
         method: 'POST',
         body: data,
@@ -5269,6 +5403,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/withdraw-accounts/{userId}
      * @secure
      * @response `200` `UserWithdrawAccountEntityPaginatedDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     listUserWithdrawAccounts: (
       tenantId: string,
@@ -5284,7 +5419,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<UserWithdrawAccountEntityPaginatedDto, any>({
+      this.request<UserWithdrawAccountEntityPaginatedDto, void>({
         path: `/users/${tenantId}/withdraw-accounts/${userId}`,
         method: 'GET',
         query: query,
@@ -5301,9 +5436,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/withdraw-accounts/{userId}/{accountId}
      * @secure
      * @response `200` `UserWithdrawAccountEntityDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     getUserWithdrawAccountById: (tenantId: string, userId: string, accountId: string, params: RequestParams = {}) =>
-      this.request<UserWithdrawAccountEntityDto, any>({
+      this.request<UserWithdrawAccountEntityDto, void>({
         path: `/users/${tenantId}/withdraw-accounts/${userId}/${accountId}`,
         method: 'GET',
         secure: true,
@@ -5319,9 +5455,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request DELETE:/users/{tenantId}/withdraw-accounts/{userId}/{accountId}
      * @secure
      * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     deleteUserWithdrawAccount: (tenantId: string, userId: string, accountId: string, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<void, void>({
         path: `/users/${tenantId}/withdraw-accounts/${userId}/${accountId}`,
         method: 'DELETE',
         secure: true,
@@ -5336,7 +5473,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/contexts/find
      * @secure
      * @response `200` `UserContextEntityDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user, admin, kyc.approver
      */
     findUsersContext: (
       tenantId: string,
@@ -5370,7 +5508,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<UserContextEntityDto, HttpExceptionDto>({
+      this.request<UserContextEntityDto, void | HttpExceptionDto>({
         path: `/users/${tenantId}/contexts/find`,
         method: 'GET',
         query: query,
@@ -5387,7 +5525,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/contexts/{userId}
      * @secure
      * @response `200` `UsersContextsPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
      */
     findUsersContextByUserId: (
       tenantId: string,
@@ -5410,7 +5549,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<UsersContextsPaginateResponseDto, HttpExceptionDto>({
+      this.request<UsersContextsPaginateResponseDto, void | HttpExceptionDto>({
         path: `/users/${tenantId}/contexts/${userId}`,
         method: 'GET',
         query: query,
@@ -5427,10 +5566,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/contexts/{userId}/{userContextId}
      * @secure
      * @response `200` `UserContextEntityDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user, admin, kyc.approver
      */
     findUserContextById: (tenantId: string, userId: string, userContextId: string, params: RequestParams = {}) =>
-      this.request<UserContextEntityDto, HttpExceptionDto>({
+      this.request<UserContextEntityDto, void | HttpExceptionDto>({
         path: `/users/${tenantId}/contexts/${userId}/${userContextId}`,
         method: 'GET',
         secure: true,
@@ -5446,7 +5586,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/approve
      * @secure
      * @response `204` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, kyc.approver
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, kyc.approver
      */
     approveTenantContextByUserId: (
       tenantId: string,
@@ -5455,7 +5596,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       data: UserContextStatusDto,
       params: RequestParams = {},
     ) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, void | HttpExceptionDto>({
         path: `/users/${tenantId}/contexts/${userId}/${contextId}/approve`,
         method: 'PATCH',
         body: data,
@@ -5472,7 +5613,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/reject
      * @secure
      * @response `204` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, kyc.approver
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, kyc.approver
      */
     rejectTenantContextByUserId: (
       tenantId: string,
@@ -5481,7 +5623,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       data: UserContextStatusDto,
       params: RequestParams = {},
     ) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, void | HttpExceptionDto>({
         path: `/users/${tenantId}/contexts/${userId}/${contextId}/reject`,
         method: 'PATCH',
         body: data,
@@ -5498,7 +5640,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/users/{tenantId}/contexts/{userId}/{contextId}/require-review
      * @secure
      * @response `204` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, kyc.approver
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, kyc.approver
      */
     requireReviewTenantContextByUserId: (
       tenantId: string,
@@ -5507,7 +5650,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       data: RequiredReviewContextStatusDto,
       params: RequestParams = {},
     ) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, void | HttpExceptionDto>({
         path: `/users/${tenantId}/contexts/${userId}/${contextId}/require-review`,
         method: 'PATCH',
         body: data,
@@ -5524,7 +5667,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/documents/find-user-by-any
      * @secure
      * @response `200` `UserPublicResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, integration
      */
     findUserByAny: (
       tenantId: string,
@@ -5536,7 +5680,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<UserPublicResponseDto, HttpExceptionDto>({
+      this.request<UserPublicResponseDto, void | HttpExceptionDto>({
         path: `/users/${tenantId}/documents/find-user-by-any`,
         method: 'GET',
         query: query,
@@ -5553,7 +5697,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/documents/{userId}
      * @secure
      * @response `200` `DocumentPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
      */
     findUserDocumentsByUserId: (
       tenantId: string,
@@ -5594,7 +5739,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<DocumentPaginateResponseDto, HttpExceptionDto>({
+      this.request<DocumentPaginateResponseDto, void | HttpExceptionDto>({
         path: `/users/${tenantId}/documents/${userId}`,
         method: 'GET',
         query: query,
@@ -5611,7 +5756,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/users/{tenantId}/documents/{userId}/context/{contextId}
      * @secure
      * @response `200` `(DocumentEntityDto)[]`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
      */
     getAllByContextByUserIdAndContextId: (
       tenantId: string,
@@ -5619,7 +5765,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       contextId: string,
       params: RequestParams = {},
     ) =>
-      this.request<DocumentEntityDto[], HttpExceptionDto>({
+      this.request<DocumentEntityDto[], void | HttpExceptionDto>({
         path: `/users/${tenantId}/documents/${userId}/context/${contextId}`,
         method: 'GET',
         secure: true,
@@ -5635,7 +5781,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/users/{tenantId}/documents/{userId}/context/{contextId}
      * @secure
      * @response `201` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, user, admin, kyc.approver
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user, admin, kyc.approver
      */
     attachDocumentsToUserByContextId: (
       tenantId: string,
@@ -5644,7 +5791,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       data: AttachDocumentsToUser,
       params: RequestParams = {},
     ) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, void | HttpExceptionDto>({
         path: `/users/${tenantId}/documents/${userId}/context/${contextId}`,
         method: 'POST',
         body: data,
@@ -5709,10 +5856,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/blockchain/balance/{address}/{chainId}
      * @deprecated
      * @secure
-     * @response `200` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     getBalance: (address: string, chainId: ChainId, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<any, void>({
         path: `/blockchain/balance/${address}/${chainId}`,
         method: 'GET',
         secure: true,
@@ -5727,9 +5874,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/blockchain/request-session-wallet-connect
      * @secure
      * @response `201` `ResponseWalletConnectSessionDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     requestSessionWalletConnect: (data: RequestWalletConnectSessionDto, params: RequestParams = {}) =>
-      this.request<ResponseWalletConnectSessionDto, any>({
+      this.request<ResponseWalletConnectSessionDto, void>({
         path: `/blockchain/request-session-wallet-connect`,
         method: 'POST',
         body: data,
@@ -5747,9 +5895,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request DELETE:/blockchain/disconnect-session-wallet-connect
      * @secure
      * @response `200` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     disconnectSessionWalletConnect: (data: RequestWalletConnectSessionDto, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<void, void>({
         path: `/blockchain/disconnect-session-wallet-connect`,
         method: 'DELETE',
         body: data,
@@ -5970,15 +6119,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/auth/signin/generate-magic-token
      * @secure
      * @response `201` `SigningMagicTokenResponseDto`
-     * @response `401` `UnauthorizedExceptionDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
      * @response `429` `TooManyRequestsExceptionDto`
      */
     generateSignInMagicToken: (data: RequestMagicSignInTokenDto, params: RequestParams = {}) =>
-      this.request<
-        SigningMagicTokenResponseDto,
-        UnauthorizedExceptionDto | HttpExceptionDto | TooManyRequestsExceptionDto
-      >({
+      this.request<SigningMagicTokenResponseDto, void | HttpExceptionDto | TooManyRequestsExceptionDto>({
         path: `/auth/signin/generate-magic-token`,
         method: 'POST',
         body: data,
@@ -6034,10 +6180,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name LogOut
      * @request POST:/auth/logout
      * @secure
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      * @response `403` `ForbiddenExceptionDto`
      */
     logOut: (params: RequestParams = {}) =>
-      this.request<any, ForbiddenExceptionDto>({
+      this.request<any, void | ForbiddenExceptionDto>({
         path: `/auth/logout`,
         method: 'POST',
         secure: true,
@@ -6211,10 +6358,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/tenant
      * @secure
      * @response `201` `TenantEntityDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration, administrator
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
      */
     create: (data: CreateTenantDto, params: RequestParams = {}) =>
-      this.request<TenantEntityDto, HttpExceptionDto>({
+      this.request<TenantEntityDto, void | HttpExceptionDto>({
         path: `/tenant`,
         method: 'POST',
         body: data,
@@ -6232,7 +6380,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant
      * @secure
      * @response `200` `TenantPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
      */
     findAll: (
       query?: {
@@ -6246,7 +6395,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<TenantPaginateResponseDto, HttpExceptionDto>({
+      this.request<TenantPaginateResponseDto, void | HttpExceptionDto>({
         path: `/tenant`,
         method: 'GET',
         query: query,
@@ -6262,10 +6411,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindOne
      * @request GET:/tenant/{tenantId}
      * @secure
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
      */
     findOne: (tenantId: string, params: RequestParams = {}) =>
-      this.request<any, HttpExceptionDto>({
+      this.request<any, void | HttpExceptionDto>({
         path: `/tenant/${tenantId}`,
         method: 'GET',
         secure: true,
@@ -6279,10 +6429,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name Update
      * @request PUT:/tenant/{tenantId}
      * @secure
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
      */
     update: (tenantId: string, data: UpdateTenantDto, params: RequestParams = {}) =>
-      this.request<any, HttpExceptionDto>({
+      this.request<any, void | HttpExceptionDto>({
         path: `/tenant/${tenantId}`,
         method: 'PUT',
         body: data,
@@ -6298,10 +6449,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name Remove
      * @request DELETE:/tenant/{tenantId}
      * @secure
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
      */
     remove: (tenantId: string, params: RequestParams = {}) =>
-      this.request<any, HttpExceptionDto>({
+      this.request<any, void | HttpExceptionDto>({
         path: `/tenant/${tenantId}`,
         method: 'DELETE',
         secure: true,
@@ -6316,10 +6468,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant/client/{tenantId}
      * @secure
      * @response `200` `TenantClientResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, integration
      */
     getTenantClientOrFail: (tenantId: string, params: RequestParams = {}) =>
-      this.request<TenantClientResponseDto, HttpExceptionDto>({
+      this.request<TenantClientResponseDto, void | HttpExceptionDto>({
         path: `/tenant/client/${tenantId}`,
         method: 'GET',
         secure: true,
@@ -6334,10 +6487,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name UpdateProfile
      * @request PUT:/tenant/profile/{tenantId}
      * @secure
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
      */
     updateProfile: (tenantId: string, data: UpdateTenantProfileDto, params: RequestParams = {}) =>
-      this.request<any, HttpExceptionDto>({
+      this.request<any, void | HttpExceptionDto>({
         path: `/tenant/profile/${tenantId}`,
         method: 'PUT',
         body: data,
@@ -6354,10 +6508,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/tenant/configurations/{tenantId}
      * @secure
      * @response `200` `TenantConfigurationsResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, integration, administrator
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, superAdmin, integration
      */
     upsertConfigurations: (tenantId: string, data: TenantConfigurationsDto, params: RequestParams = {}) =>
-      this.request<TenantConfigurationsResponseDto, HttpExceptionDto>({
+      this.request<TenantConfigurationsResponseDto, void | HttpExceptionDto>({
         path: `/tenant/configurations/${tenantId}`,
         method: 'POST',
         body: data,
@@ -6375,10 +6530,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant/configurations/{tenantId}
      * @secure
      * @response `200` `TenantConfigurationsResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, superAdmin, integration, administrator
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, superAdmin, integration
      */
     getConfigurations: (tenantId: string, params: RequestParams = {}) =>
-      this.request<TenantConfigurationsResponseDto, HttpExceptionDto>({
+      this.request<TenantConfigurationsResponseDto, void | HttpExceptionDto>({
         path: `/tenant/configurations/${tenantId}`,
         method: 'GET',
         secure: true,
@@ -6395,6 +6551,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/public-tenant/by-hostname
      * @secure
      * @response `200` `TenantPublicDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     getTenantByHost: (
       query: {
@@ -6403,7 +6560,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<TenantPublicDto, any>({
+      this.request<TenantPublicDto, void>({
         path: `/public-tenant/by-hostname`,
         method: 'GET',
         query: query,
@@ -6420,6 +6577,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/public-tenant/by-id
      * @secure
      * @response `200` `TenantPublicDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     getTenantById: (
       query: {
@@ -6427,7 +6585,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<TenantPublicDto, any>({
+      this.request<TenantPublicDto, void>({
         path: `/public-tenant/by-id`,
         method: 'GET',
         query: query,
@@ -6445,10 +6603,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/tenant-access/{tenantId}
      * @secure
      * @response `201` `TenantAccessEntityDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
      */
     create: (tenantId: string, data: CreateTenantAccessDto, params: RequestParams = {}) =>
-      this.request<TenantAccessEntityDto, HttpExceptionDto>({
+      this.request<TenantAccessEntityDto, void | HttpExceptionDto>({
         path: `/tenant-access/${tenantId}`,
         method: 'POST',
         body: data,
@@ -6466,7 +6625,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant-access/{tenantId}
      * @secure
      * @response `200` `TenantAccessPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
      */
     findAll: (
       tenantId: string,
@@ -6481,7 +6641,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<TenantAccessPaginateResponseDto, HttpExceptionDto>({
+      this.request<TenantAccessPaginateResponseDto, void | HttpExceptionDto>({
         path: `/tenant-access/${tenantId}`,
         method: 'GET',
         query: query,
@@ -6498,10 +6658,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant-access/{tenantId}/{id}
      * @secure
      * @response `200` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
      */
     findOne: (id: string, tenantId: string, params: RequestParams = {}) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, void | HttpExceptionDto>({
         path: `/tenant-access/${tenantId}/${id}`,
         method: 'GET',
         secure: true,
@@ -6517,10 +6678,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/tenant-hosts/{tenantId}
      * @secure
      * @response `201` `TenantHostResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     create: (tenantId: string, data: CreateTenantHostDto, params: RequestParams = {}) =>
-      this.request<TenantHostResponseDto, HttpExceptionDto>({
+      this.request<TenantHostResponseDto, void | HttpExceptionDto>({
         path: `/tenant-hosts/${tenantId}`,
         method: 'POST',
         body: data,
@@ -6538,7 +6700,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant-hosts/{tenantId}
      * @secure
      * @response `200` `TenantHostPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     findAll: (
       tenantId: string,
@@ -6553,7 +6716,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<TenantHostPaginateResponseDto, HttpExceptionDto>({
+      this.request<TenantHostPaginateResponseDto, void | HttpExceptionDto>({
         path: `/tenant-hosts/${tenantId}`,
         method: 'GET',
         query: query,
@@ -6570,10 +6733,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant-hosts/{tenantId}/main-host
      * @secure
      * @response `200` `TenantHostEntityDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     getMainHostByTenantId: (tenantId: string, params: RequestParams = {}) =>
-      this.request<TenantHostEntityDto, HttpExceptionDto>({
+      this.request<TenantHostEntityDto, void | HttpExceptionDto>({
         path: `/tenant-hosts/${tenantId}/main-host`,
         method: 'GET',
         secure: true,
@@ -6589,10 +6753,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant-hosts/{tenantId}/{id}
      * @secure
      * @response `200` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     findOne: (tenantId: string, id: string, params: RequestParams = {}) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, void | HttpExceptionDto>({
         path: `/tenant-hosts/${tenantId}/${id}`,
         method: 'GET',
         secure: true,
@@ -6607,10 +6772,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/tenant-hosts/{tenantId}/{id}
      * @secure
      * @response `200` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     update: (tenantId: string, id: string, data: UpdateTenantHostDto, params: RequestParams = {}) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, void | HttpExceptionDto>({
         path: `/tenant-hosts/${tenantId}/${id}`,
         method: 'PATCH',
         body: data,
@@ -6628,10 +6794,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/tenant-context/{tenantId}
      * @secure
      * @response `201` `TenantContextDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, integration
      */
     createTenantContext: (tenantId: string, data: CreateTenantContextDto, params: RequestParams = {}) =>
-      this.request<TenantContextDto, HttpExceptionDto>({
+      this.request<TenantContextDto, void | HttpExceptionDto>({
         path: `/tenant-context/${tenantId}`,
         method: 'POST',
         body: data,
@@ -6649,7 +6816,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant-context/{tenantId}
      * @secure
      * @response `200` `TenantContextPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
      */
     findTenantContext: (
       tenantId: string,
@@ -6675,7 +6843,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<TenantContextPaginateResponseDto, HttpExceptionDto>({
+      this.request<TenantContextPaginateResponseDto, void | HttpExceptionDto>({
         path: `/tenant-context/${tenantId}`,
         method: 'GET',
         query: query,
@@ -6692,10 +6860,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant-context/{tenantId}/slug/{slug}
      * @secure
      * @response `200` `(TenantContextDto)[]`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
      */
     getTenantContextBySlug: (tenantId: string, slug: string, params: RequestParams = {}) =>
-      this.request<TenantContextDto[], HttpExceptionDto>({
+      this.request<TenantContextDto[], void | HttpExceptionDto>({
         path: `/tenant-context/${tenantId}/slug/${slug}`,
         method: 'GET',
         secure: true,
@@ -6711,10 +6880,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant-context/{tenantId}/{tenantContextId}
      * @secure
      * @response `200` `TenantContextDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
      */
     findOneByTenantContextId: (tenantId: string, tenantContextId: string, params: RequestParams = {}) =>
-      this.request<TenantContextDto, HttpExceptionDto>({
+      this.request<TenantContextDto, void | HttpExceptionDto>({
         path: `/tenant-context/${tenantId}/${tenantContextId}`,
         method: 'GET',
         secure: true,
@@ -6730,7 +6900,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/tenant-context/{tenantId}/{tenantContextId}
      * @secure
      * @response `200` `TenantContextDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     updateByTenantContextId: (
       tenantId: string,
@@ -6738,7 +6909,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       data: UpdateTenantContextDto,
       params: RequestParams = {},
     ) =>
-      this.request<TenantContextDto, HttpExceptionDto>({
+      this.request<TenantContextDto, void | HttpExceptionDto>({
         path: `/tenant-context/${tenantId}/${tenantContextId}`,
         method: 'PATCH',
         body: data,
@@ -6756,10 +6927,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant-context/{tenantId}/{tenantContextId}/approvers
      * @secure
      * @response `200` `TenantContextApproversResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin, user
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
      */
     getTenantContextApprovers: (tenantId: string, tenantContextId: string, params: RequestParams = {}) =>
-      this.request<TenantContextApproversResponseDto, HttpExceptionDto>({
+      this.request<TenantContextApproversResponseDto, void | HttpExceptionDto>({
         path: `/tenant-context/${tenantId}/${tenantContextId}/approvers`,
         method: 'GET',
         secure: true,
@@ -6777,7 +6949,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
  * @secure
  * @response `201` `ContextDto` Context created successfully
  * @response `401` `void` Unauthorized - Integration API key or JWT required
- * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+ * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin
  * @response `409` `{
   \** @example 409 *\
     statusCode: number,
@@ -6820,7 +6992,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      * @response `200` `(ContextDto)[]` Returns all contexts
      * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin
      */
     listAll: (params: RequestParams = {}) =>
       this.request<ContextDto[], void | HttpExceptionDto>({
@@ -6840,7 +7012,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      * @response `204` `void`
      * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin
      * @response `404` `DuplicatedContextException` Not found context to update
      */
     update: (id: string, data: UpdateContextsDto, params: RequestParams = {}) =>
@@ -6862,7 +7034,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      * @response `204` `void`
      * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin
      */
     delete: (id: string, params: RequestParams = {}) =>
       this.request<void, void | HttpExceptionDto>({
@@ -6881,7 +7053,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/whitelists/{tenantId}/check-user
      * @secure
      * @response `200` `CheckUserInMultipleWhitelistsResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     checkUserInMultipleWhitelists: (
       tenantId: string,
@@ -6901,7 +7074,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<CheckUserInMultipleWhitelistsResponseDto, HttpExceptionDto>({
+      this.request<CheckUserInMultipleWhitelistsResponseDto, void | HttpExceptionDto>({
         path: `/whitelists/${tenantId}/check-user`,
         method: 'GET',
         query: query,
@@ -6918,7 +7091,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/whitelists/{tenantId}
      * @secure
      * @response `200` `WhitelistPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     findWhitelists: (
       tenantId: string,
@@ -6933,7 +7107,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<WhitelistPaginateResponseDto, HttpExceptionDto>({
+      this.request<WhitelistPaginateResponseDto, void | HttpExceptionDto>({
         path: `/whitelists/${tenantId}`,
         method: 'GET',
         query: query,
@@ -6950,10 +7124,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/whitelists/{tenantId}
      * @secure
      * @response `201` `WhitelistResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     createWhitelist: (tenantId: string, data: CreateOrUpdateWhitelistDto, params: RequestParams = {}) =>
-      this.request<WhitelistResponseDto, HttpExceptionDto>({
+      this.request<WhitelistResponseDto, void | HttpExceptionDto>({
         path: `/whitelists/${tenantId}`,
         method: 'POST',
         body: data,
@@ -6971,10 +7146,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/whitelists/{tenantId}/{id}
      * @secure
      * @response `200` `WhitelistResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     getWhitelist: (tenantId: string, id: string, params: RequestParams = {}) =>
-      this.request<WhitelistResponseDto, HttpExceptionDto>({
+      this.request<WhitelistResponseDto, void | HttpExceptionDto>({
         path: `/whitelists/${tenantId}/${id}`,
         method: 'GET',
         secure: true,
@@ -6990,10 +7166,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/whitelists/{tenantId}/{id}
      * @secure
      * @response `200` `WhitelistResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     updateWhitelist: (tenantId: string, id: string, data: CreateOrUpdateWhitelistDto, params: RequestParams = {}) =>
-      this.request<WhitelistResponseDto, HttpExceptionDto>({
+      this.request<WhitelistResponseDto, void | HttpExceptionDto>({
         path: `/whitelists/${tenantId}/${id}`,
         method: 'PATCH',
         body: data,
@@ -7011,10 +7188,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request DELETE:/whitelists/{tenantId}/{id}
      * @secure
      * @response `204` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     deleteWhitelist: (tenantId: string, id: string, params: RequestParams = {}) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, void | HttpExceptionDto>({
         path: `/whitelists/${tenantId}/${id}`,
         method: 'DELETE',
         secure: true,
@@ -7029,10 +7207,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/whitelists/{tenantId}/{id}/promote-on-chain
      * @secure
      * @response `200` `WalletGroupResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     promoteWhitelistOnChain: (tenantId: string, id: string, data: WhitelistOnChainDto, params: RequestParams = {}) =>
-      this.request<WalletGroupResponseDto, HttpExceptionDto>({
+      this.request<WalletGroupResponseDto, void | HttpExceptionDto>({
         path: `/whitelists/${tenantId}/${id}/promote-on-chain`,
         method: 'PATCH',
         body: data,
@@ -7050,7 +7229,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/whitelists/{tenantId}/{id}/check-user
      * @secure
      * @response `200` `CheckWhitelistUserResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     checkUserInWhitelist: (
       tenantId: string,
@@ -7069,7 +7249,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<CheckWhitelistUserResponseDto, HttpExceptionDto>({
+      this.request<CheckWhitelistUserResponseDto, void | HttpExceptionDto>({
         path: `/whitelists/${tenantId}/${id}/check-user`,
         method: 'GET',
         query: query,
@@ -7086,7 +7266,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/whitelists/{tenantId}/{id}/entries
      * @secure
      * @response `200` `WhitelistEntryPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     findWhitelistEntries: (
       tenantId: string,
@@ -7101,13 +7282,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         sortBy?: WhitelistEntriesSortBy;
         orderBy?: OrderByEnum;
         /** @default [] */
-        type?: ('user_id' | 'email' | 'wallet_address' | 'collection_holder' | 'kyc_approved_context')[];
+        type?: (
+          | 'user_id'
+          | 'email'
+          | 'wallet_address'
+          | 'collection_holder'
+          | 'kyc_approved_context'
+          | 'key_collection_holder'
+          | 'key_erc20_holder'
+        )[];
         /** @example false */
         showWallets?: boolean;
       },
       params: RequestParams = {},
     ) =>
-      this.request<WhitelistEntryPaginateResponseDto, HttpExceptionDto>({
+      this.request<WhitelistEntryPaginateResponseDto, void | HttpExceptionDto>({
         path: `/whitelists/${tenantId}/${id}/entries`,
         method: 'GET',
         query: query,
@@ -7124,10 +7313,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/whitelists/{tenantId}/{id}/entries
      * @secure
      * @response `201` `WhitelistEntryResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     createWhitelistEntry: (tenantId: string, id: string, data: CreateWhitelistEntryDto, params: RequestParams = {}) =>
-      this.request<WhitelistEntryResponseDto, HttpExceptionDto>({
+      this.request<WhitelistEntryResponseDto, void | HttpExceptionDto>({
         path: `/whitelists/${tenantId}/${id}/entries`,
         method: 'POST',
         body: data,
@@ -7145,10 +7335,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request DELETE:/whitelists/{tenantId}/{id}/entries/{entryId}
      * @secure
      * @response `204` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, admin
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
     deleteWhitelistEntry: (tenantId: string, id: string, entryId: string, params: RequestParams = {}) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, void | HttpExceptionDto>({
         path: `/whitelists/${tenantId}/${id}/entries/${entryId}`,
         method: 'DELETE',
         secure: true,
@@ -7183,10 +7374,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/tenant-input/{tenantId}
      * @secure
      * @response `201` `TenantInputEntityDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
      */
     createTenantInput: (tenantId: string, data: CreateTenantInputDto, params: RequestParams = {}) =>
-      this.request<TenantInputEntityDto, HttpExceptionDto>({
+      this.request<TenantInputEntityDto, void | HttpExceptionDto>({
         path: `/tenant-input/${tenantId}`,
         method: 'POST',
         body: data,
@@ -7204,7 +7396,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tenant-input/{tenantId}
      * @secure
      * @response `200` `TenantInputPaginateResponseDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
      */
     findTenantInput: (
       tenantId: string,
@@ -7219,7 +7412,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<TenantInputPaginateResponseDto, HttpExceptionDto>({
+      this.request<TenantInputPaginateResponseDto, void | HttpExceptionDto>({
         path: `/tenant-input/${tenantId}`,
         method: 'GET',
         query: query,
@@ -7236,10 +7429,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/tenant-input/{tenantId}/{inputId}
      * @secure
      * @response `201` `TenantInputEntityDto`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
      */
     updateByInputId: (tenantId: string, inputId: string, data: UpdateTenantInputDto, params: RequestParams = {}) =>
-      this.request<TenantInputEntityDto, HttpExceptionDto>({
+      this.request<TenantInputEntityDto, void | HttpExceptionDto>({
         path: `/tenant-input/${tenantId}/${inputId}`,
         method: 'PATCH',
         body: data,
@@ -7256,10 +7450,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name FindTenantInputById
      * @request GET:/tenant-input/{tenantId}/{inputId}
      * @secure
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, admin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
      */
     findTenantInputById: (tenantId: string, inputId: string, params: RequestParams = {}) =>
-      this.request<any, HttpExceptionDto>({
+      this.request<any, void | HttpExceptionDto>({
         path: `/tenant-input/${tenantId}/${inputId}`,
         method: 'GET',
         secure: true,
@@ -7310,9 +7505,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/integrations
      * @secure
      * @response `200` `(IntegrationResponseDto)[]`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
      */
     list: (params: RequestParams = {}) =>
-      this.request<IntegrationResponseDto[], any>({
+      this.request<IntegrationResponseDto[], void>({
         path: `/integrations`,
         method: 'GET',
         secure: true,
@@ -7329,10 +7525,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/notifications/{tenantId}/event
      * @secure
      * @response `204` `void`
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, application, superAdmin, integration
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
      */
     dispatchNotificationEvent: (tenantId: string, data: DispatchNotificationEventDto, params: RequestParams = {}) =>
-      this.request<void, HttpExceptionDto>({
+      this.request<void, void | HttpExceptionDto>({
         path: `/notifications/${tenantId}/event`,
         method: 'POST',
         body: data,
