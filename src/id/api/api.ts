@@ -26,6 +26,7 @@ export enum UserRoleEnum {
   LoyaltyOperator = 'loyaltyOperator',
   CommerceOrderReceiver = 'commerce.orderReceiver',
   KycApprover = 'kyc.approver',
+  KeyErc20Receiver = 'key.erc20Receiver',
 }
 
 export enum I18NLocaleEnum {
@@ -223,6 +224,7 @@ export interface UserPublicResponseDto {
     | 'loyaltyOperator'
     | 'commerce.orderReceiver'
     | 'kyc.approver'
+    | 'key.erc20Receiver'
   )[];
   /** @example "pt-br" */
   i18nLocale: I18NLocaleEnum;
@@ -2184,6 +2186,7 @@ export namespace Users {
         | 'loyaltyOperator'
         | 'commerce.orderReceiver'
         | 'kyc.approver'
+        | 'key.erc20Receiver'
       )[];
       userId?: string[];
       contextIds?: string[];
@@ -2272,6 +2275,7 @@ export namespace Users {
         | 'loyaltyOperator'
         | 'commerce.orderReceiver'
         | 'kyc.approver'
+        | 'key.erc20Receiver'
       )[];
       userId?: string[];
       contextIds?: string[];
@@ -4876,6 +4880,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           | 'loyaltyOperator'
           | 'commerce.orderReceiver'
           | 'kyc.approver'
+          | 'key.erc20Receiver'
         )[];
         userId?: string[];
         contextIds?: string[];
@@ -4970,6 +4975,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           | 'loyaltyOperator'
           | 'commerce.orderReceiver'
           | 'kyc.approver'
+          | 'key.erc20Receiver'
         )[];
         userId?: string[];
         contextIds?: string[];

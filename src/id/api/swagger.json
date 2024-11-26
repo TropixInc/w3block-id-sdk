@@ -517,7 +517,8 @@
                   "user",
                   "loyaltyOperator",
                   "commerce.orderReceiver",
-                  "kyc.approver"
+                  "kyc.approver",
+                  "key.erc20Receiver"
                 ]
               }
             }
@@ -814,7 +815,8 @@
                   "user",
                   "loyaltyOperator",
                   "commerce.orderReceiver",
-                  "kyc.approver"
+                  "kyc.approver",
+                  "key.erc20Receiver"
                 ]
               }
             }
@@ -7972,7 +7974,8 @@
           "user",
           "loyaltyOperator",
           "commerce.orderReceiver",
-          "kyc.approver"
+          "kyc.approver",
+          "key.erc20Receiver"
         ]
       },
       "I18nLocaleEnum": {
@@ -8409,7 +8412,8 @@
                 "user",
                 "loyaltyOperator",
                 "commerce.orderReceiver",
-                "kyc.approver"
+                "kyc.approver",
+                "key.erc20Receiver"
               ]
             }
           },
