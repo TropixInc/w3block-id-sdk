@@ -62,6 +62,8 @@ export const USER_JWT_PAYLOAD: UserJwtPayloadDto = {
   iss: USER_ID,
   aud: [USER_ID],
   verified: true,
+  emailVerified: true,
+  phoneVerified: true,
   type: JwtType.User,
   roles: [UserRoleEnum.User],
 };
