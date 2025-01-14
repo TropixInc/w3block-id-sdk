@@ -63,7 +63,7 @@ export interface CreateUserDto {
   tenantId: string;
   /** @example "user" */
   role: UserRoleEnum;
-  phone?: string;
+  phone?: object;
   name?: string;
   /** @example "user@example.com" */
   email: string;
@@ -212,6 +212,10 @@ export interface UserPublicResponseDto {
   phone?: string;
   /** @example true */
   verified: boolean;
+  /** @example true */
+  phoneVerified: boolean;
+  /** @example true */
+  emailVerified: boolean;
   /**
    * @default ["user"]
    * @example ["user"]
@@ -443,6 +447,12 @@ export interface ExportEntityDto {
   params?: object;
 }
 
+export interface AdminSetReferrerDto {
+  referrerCode?: string;
+  /** @format uuid */
+  referrerUserId: string;
+}
+
 export interface UserPaginateResponseDto {
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
@@ -477,6 +487,14 @@ export interface ChangePasswordDto {
   /** @example "P@ssw0rd" */
   confirmation: string;
   oldPassword: string;
+}
+
+export interface ChangePhoneDto {
+  phone: string;
+}
+
+export interface VerifyPhoneDto {
+  code: string;
 }
 
 export interface MainWalletDto {
@@ -515,7 +533,7 @@ export interface UpdateUserDto {
    * @example "P@ssw0rd"
    */
   password?: string;
-  phone?: string;
+  phone?: object;
   name?: string;
   /** @example "user@example.com" */
   email?: string;
@@ -524,6 +542,8 @@ export interface UpdateUserDto {
   address?: UpdateAddressDto;
   /** @example "user" */
   roles?: UserRoleEnum[] | null;
+  /** @example false */
+  forcePhoneValidation?: boolean;
 }
 
 export interface AccountCompleteRetryDto {
@@ -693,6 +713,10 @@ export interface UserJwtPayloadDto {
    * @example "user"
    */
   type: JwtType;
+  /** @example true */
+  emailVerified: boolean;
+  /** @example true */
+  phoneVerified: boolean;
 }
 
 export enum TenantRoleEnum {
@@ -732,6 +756,16 @@ export interface VerifySignupResponseDto {
    * @example true
    */
   verified: boolean;
+  /**
+   * @default true
+   * @example true
+   */
+  emailVerified: boolean;
+  /**
+   * @default true
+   * @example true
+   */
+  phoneVerified: boolean;
 }
 
 export interface TooManyRequestsExceptionDto {
@@ -790,6 +824,7 @@ export interface SignInResponseDto {
   isNewUser?: boolean;
   /** @example false */
   isPrivateEmail?: boolean;
+  profile?: UserPublicResponseDto;
 }
 
 export interface BadRequestExceptionDto {
@@ -938,6 +973,7 @@ export interface RefreshTokenResponseDto {
   isNewUser?: boolean;
   /** @example false */
   isPrivateEmail?: boolean;
+  profile?: UserPublicResponseDto;
 }
 
 export interface ForbiddenExceptionDto {
@@ -998,6 +1034,38 @@ export interface LoginUserWithAppleDto {
 export interface LoginUserWithAppleByCodeDto {
   code: string;
   referrer?: string;
+}
+
+export interface SignupToCreateTenantDto {
+  /**
+   * Password should include lowercase, uppercase and digits
+   * @example "P@ssw0rd"
+   */
+  password: string;
+  /** @example "P@ssw0rd" */
+  confirmation: string;
+  /** @example "email@example.com" */
+  email: string;
+  /** @example "Jon Doe" */
+  name?: string;
+  /**
+   * @default "pt-br"
+   * @example "pt-br"
+   */
+  i18nLocale?: I18NLocaleEnum;
+  /** @default "invisible" */
+  verificationType?: VerificationType;
+  phone?: string;
+  utmParams?: UTMParamsDto;
+  /** @example "referral-code" */
+  referrer?: string;
+}
+
+export interface FinishTenantSignUpDto {
+  tenantName: string;
+  ownerName: string;
+  /** @example "+5511999999999" */
+  phone: string;
 }
 
 export enum CountryCodeEnum {
@@ -1253,15 +1321,6 @@ export enum CountryCodeEnum {
   MOZ = 'MOZ',
 }
 
-export interface CreateTenantDto {
-  name: string;
-  document: string;
-  /** @example "BRA" */
-  countryCode: CountryCodeEnum;
-  /** @example "example.com" */
-  hostname: string;
-}
-
 export interface TenantInfoDto {
   emailLogoUrl?: string;
   headerLogoUrl?: string;
@@ -1293,6 +1352,20 @@ export interface TenantEntityDto {
   updatedAt?: string;
   /** @format date-time */
   deletedAt?: string;
+}
+
+export interface TenantSignUpResponseDto {
+  tenant: TenantEntityDto;
+  tenantSignIn: SignInResponseDto;
+}
+
+export interface CreateTenantDto {
+  name: string;
+  document: string;
+  /** @example "BRA" */
+  countryCode: CountryCodeEnum;
+  /** @example "example.com" */
+  hostname: string;
 }
 
 export interface TenantPaginateResponseDto {
@@ -1377,6 +1450,116 @@ export interface TenantPublicDto {
   info: TenantInfoDto;
   hosts: PublicHostDto[];
   configuration: TenantConfigurationResponseDto;
+}
+
+export interface CreateTenantContextDto {
+  contextId: string;
+  /** @example true */
+  active: boolean;
+  /** @example {} */
+  data?: object;
+}
+
+export interface TenantContextDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId: string;
+  contextId: string;
+  context?: ContextDto;
+  /** @example true */
+  active: boolean;
+  /** @example {} */
+  data: object;
+  /** @example null */
+  approverWhitelistIds?: string[] | null;
+  /** @example false */
+  requireSpecificApprover: boolean;
+  /** @example false */
+  autoApprove: boolean;
+  /** @example false */
+  blockCommerceDeliver: boolean;
+}
+
+export interface TenantContextPaginateResponseDto {
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+  items: TenantContextDto[];
+}
+
+export interface UpdateTenantContextDto {
+  /** @example true */
+  active: boolean;
+  /** @example {} */
+  data?: object;
+}
+
+export interface TenantContextApproverDto {
+  /** @format uuid */
+  id: string;
+  email: string;
+  name?: string | null;
+}
+
+export interface TenantContextApproversResponseDto {
+  approvers: TenantContextApproverDto[];
+}
+
+export interface CreateContextsDto {
+  description: string;
+  slug: string;
+  tenantId?: string;
+}
+
+export interface UpdateContextsDto {
+  description: string;
+  slug: string;
+}
+
+export type DuplicatedContextException = object;
+
+export enum WithdrawAccountTypeEnum {
+  Pix = 'pix',
+  Bank = 'bank',
+}
+
+export interface AddWithdrawAccountDto {
+  /**
+   * @default "pix"
+   * @example "pix"
+   */
+  type: WithdrawAccountTypeEnum;
+  /** @example {"key":"00000000000","ownerSsn":"00000000000","ownerName":"Test"} */
+  accountInfo: object;
+}
+
+export interface UserWithdrawAccountEntityDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+  /** @format date-time */
+  deletedAt?: string;
+  /** @format uuid */
+  tenantId: string;
+  /** @format uuid */
+  userId: string;
+  /** @example "pix" */
+  type: WithdrawAccountTypeEnum;
+  /** @example {"key":"00000000000","ownerSsn":"00000000000","ownerName":"Test"} */
+  accountInfo?: object;
+}
+
+export interface UserWithdrawAccountEntityPaginatedDto {
+  items: UserWithdrawAccountEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
 }
 
 export interface CreateTenantAccessDto {
@@ -1488,116 +1671,6 @@ export interface UpdateTenantHostDto {
   hostname: string;
   paths?: TenantHostPathsDto;
 }
-
-export enum WithdrawAccountTypeEnum {
-  Pix = 'pix',
-  Bank = 'bank',
-}
-
-export interface AddWithdrawAccountDto {
-  /**
-   * @default "pix"
-   * @example "pix"
-   */
-  type: WithdrawAccountTypeEnum;
-  /** @example {"key":"00000000000","ownerSsn":"00000000000","ownerName":"Test"} */
-  accountInfo: object;
-}
-
-export interface UserWithdrawAccountEntityDto {
-  /** @format uuid */
-  id: string;
-  /** @format date-time */
-  createdAt?: string;
-  /** @format date-time */
-  updatedAt?: string;
-  /** @format date-time */
-  deletedAt?: string;
-  /** @format uuid */
-  tenantId: string;
-  /** @format uuid */
-  userId: string;
-  /** @example "pix" */
-  type: WithdrawAccountTypeEnum;
-  /** @example {"key":"00000000000","ownerSsn":"00000000000","ownerName":"Test"} */
-  accountInfo?: object;
-}
-
-export interface UserWithdrawAccountEntityPaginatedDto {
-  items: UserWithdrawAccountEntityDto[];
-  meta: PaginationMetaDto;
-  links?: PaginationLinksDto;
-}
-
-export interface CreateTenantContextDto {
-  contextId: string;
-  /** @example true */
-  active: boolean;
-  /** @example {} */
-  data?: object;
-}
-
-export interface TenantContextDto {
-  /** @format uuid */
-  id: string;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  /** @format uuid */
-  tenantId: string;
-  contextId: string;
-  context?: ContextDto;
-  /** @example true */
-  active: boolean;
-  /** @example {} */
-  data: object;
-  /** @example null */
-  approverWhitelistIds?: string[] | null;
-  /** @example false */
-  requireSpecificApprover: boolean;
-  /** @example false */
-  autoApprove: boolean;
-  /** @example false */
-  blockCommerceDeliver: boolean;
-}
-
-export interface TenantContextPaginateResponseDto {
-  meta: PaginationMetaDto;
-  links?: PaginationLinksDto;
-  items: TenantContextDto[];
-}
-
-export interface UpdateTenantContextDto {
-  /** @example true */
-  active: boolean;
-  /** @example {} */
-  data?: object;
-}
-
-export interface TenantContextApproverDto {
-  /** @format uuid */
-  id: string;
-  email: string;
-  name?: string | null;
-}
-
-export interface TenantContextApproversResponseDto {
-  approvers: TenantContextApproverDto[];
-}
-
-export interface CreateContextsDto {
-  description: string;
-  slug: string;
-  tenantId?: string;
-}
-
-export interface UpdateContextsDto {
-  description: string;
-  slug: string;
-}
-
-export type DuplicatedContextException = object;
 
 export interface UsersContextsPaginateResponseDto {
   meta: PaginationMetaDto;
@@ -1871,6 +1944,43 @@ export interface AssetEntityWithProviderUploadParamsDto {
   providerUploadParams: CloudinaryProviderUploadParamsDto;
 }
 
+export interface DispatchNotificationEventDto {
+  /** @example "kyc-approved" */
+  event: string;
+  /** @example null */
+  metadata?: object | null;
+  destinationUserId?: string[];
+  hiddenDestinationUserId?: string[];
+}
+
+export interface PublicDataDto {
+  WALLET_CONNECT?: object;
+  METAMASK?: object;
+}
+
+export interface PrivateDataDto {
+  WALLET_CONNECT?: object;
+  METAMASK?: object;
+}
+
+export enum IntegrationType {
+  WALLET_CONNECT = 'WALLET_CONNECT',
+  METAMASK = 'METAMASK',
+}
+
+export interface IntegrationResponseDto {
+  id: string;
+  tenantId: string;
+  type: IntegrationType;
+  publicData: PublicDataDto;
+  userId: string;
+  active: boolean;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+}
+
 export enum DataTypesEnum {
   Separator = 'separator',
   File = 'file',
@@ -1974,41 +2084,276 @@ export interface TenantInputPaginateResponseDto {
   items: TenantInputEntityDto[];
 }
 
-export interface PublicDataDto {
-  WALLET_CONNECT?: object;
-  METAMASK?: object;
+export interface BillingPlanLimitDto {
+  daily: number | null;
+  lifetime: number | null;
+  monthly: number | null;
+  weekly: number | null;
 }
 
-export interface PrivateDataDto {
-  WALLET_CONNECT?: object;
-  METAMASK?: object;
+export interface UploadFileSizeLimitDto {
+  image: number | null;
+  video: number | null;
+  others: number | null;
 }
 
-export enum IntegrationType {
-  WALLET_CONNECT = 'WALLET_CONNECT',
-  METAMASK = 'METAMASK',
+export interface BillingFeesDto {
+  minValue: number;
+  percentage: number;
 }
 
-export interface IntegrationResponseDto {
+export interface BillingPlanEntityDto {
+  /** @format uuid */
   id: string;
-  tenantId: string;
-  type: IntegrationType;
-  publicData: PublicDataDto;
-  userId: string;
-  active: boolean;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @example "free" */
+  name: string;
+  /** @example 99.99 */
+  basePrice: number;
+  /**
+   * @format uuid
+   * @example null
+   */
+  unpaidPlanId: string | null;
+  /** @example false */
+  isDefault: boolean;
+  /** @example false */
+  isPublic: boolean;
+  erc721Contracts: BillingPlanLimitDto;
+  erc721Collections: BillingPlanLimitDto;
+  erc721Tokens: BillingPlanLimitDto;
+  erc721Mints: BillingPlanLimitDto;
+  erc20Contracts: BillingPlanLimitDto;
+  erc20Mints: BillingPlanLimitDto;
+  activeWallets: BillingPlanLimitDto;
+  bandwidth: BillingPlanLimitDto;
+  nftCollections: BillingPlanLimitDto;
+  nftContracts: BillingPlanLimitDto;
+  nftMints: BillingPlanLimitDto;
+  nftTokens: BillingPlanLimitDto;
+  onSaleProducts: BillingPlanLimitDto;
+  storage: BillingPlanLimitDto;
+  erc20SaleTransactionPrice: number;
+  erc20TransactionPrice: number;
+  extraNftMintPrice: number;
+  users?: number | null;
+  maxClients?: number | null;
+  maxLoyaltyPartners?: number | null;
+  nftSaleTransactionPrice: number;
+  nftTransactionPrice: number;
+  maxUploadFileSizes: UploadFileSizeLimitDto;
+  primarySaleFee: BillingFeesDto;
+  resaleFee: BillingFeesDto;
+  enabledFeatures: (
+    | 'mint_erc_721'
+    | 'mint_erc_20'
+    | 'mint_with_royalty'
+    | 'mint_with_variable_royalties'
+    | 'mint_permissioned_erc_20'
+    | 'mint_custodial_erc_20'
+    | 'batch_mint'
+    | 'custom_nft_templates'
+    | 'transfer_nft'
+    | 'white_label'
+    | 'external_ecommerce_integration'
+    | 'smart_contract_portability'
+    | 'custodial_wallet'
+    | 'custodial_wallet_portability'
+    | 'basic_token_pass'
+    | 'full_token_pass'
+    | 'loyalty'
+    | 'kyc'
+    | 'commerce'
+    | 'constructor'
+    | 'custom_domain'
+  )[];
+  /** @example 1 */
+  homeSortOrder: number;
+  /** @example {} */
+  homeContent: object;
+}
+
+export interface BillingPlanEntityPaginatedDto {
+  items: BillingPlanEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface BillingUsageItemDto {
+  /** @example "purchase" */
+  type: string;
+  /** @default false */
+  isLifeTime?: boolean;
+  value?: number | null;
+  metadata: object | null;
+}
+
+export interface RegisterBillingUsageDto {
+  /** @format date-time */
+  createdAt?: string | null;
+  usages: BillingUsageItemDto[];
+}
+
+export interface FeatureCheckResponseDto {
+  feature:
+    | 'mint_erc_721'
+    | 'mint_erc_20'
+    | 'mint_with_royalty'
+    | 'mint_with_variable_royalties'
+    | 'mint_permissioned_erc_20'
+    | 'mint_custodial_erc_20'
+    | 'batch_mint'
+    | 'custom_nft_templates'
+    | 'transfer_nft'
+    | 'white_label'
+    | 'external_ecommerce_integration'
+    | 'smart_contract_portability'
+    | 'custodial_wallet'
+    | 'custodial_wallet_portability'
+    | 'basic_token_pass'
+    | 'full_token_pass'
+    | 'loyalty'
+    | 'kyc'
+    | 'commerce'
+    | 'constructor'
+    | 'custom_domain';
+  /** @example true */
+  enabled: boolean;
+}
+
+export interface TenantBillingStateResponseDto {
+  enabledFeatures: (
+    | 'mint_erc_721'
+    | 'mint_erc_20'
+    | 'mint_with_royalty'
+    | 'mint_with_variable_royalties'
+    | 'mint_permissioned_erc_20'
+    | 'mint_custodial_erc_20'
+    | 'batch_mint'
+    | 'custom_nft_templates'
+    | 'transfer_nft'
+    | 'white_label'
+    | 'external_ecommerce_integration'
+    | 'smart_contract_portability'
+    | 'custodial_wallet'
+    | 'custodial_wallet_portability'
+    | 'basic_token_pass'
+    | 'full_token_pass'
+    | 'loyalty'
+    | 'kyc'
+    | 'commerce'
+    | 'constructor'
+    | 'custom_domain'
+  )[];
+  /** @example false */
+  isUnpaid: boolean;
+  /**
+   * @format uuid
+   * @example null
+   */
+  planId: string | null;
+  /** @example true */
+  setupDone: boolean;
+  /** @example true */
+  hasCreditCard: boolean;
+  /** @example null */
+  creditCard: object | null;
+  /** @example {"commerce.product_purchase":{"limit":null,"remaining":null,"unlimited":true}} */
+  limits: object;
+}
+
+export interface SetCreditCardDto {
+  tokenId: string;
+  cardId: string;
+  cardLastNumbers: string;
+  /** @example 1 */
+  expiryMonth: number;
+  /** @example 1 */
+  expiryYear: number;
+  brand?: string;
+}
+
+export interface PublicUserCreditCardEntityDto {
+  /** @format uuid */
+  id: string;
   /** @format date-time */
   createdAt?: string;
-  /** @format date-time */
-  updatedAt?: string;
+  brand?: string;
+  lastNumbers: string;
+  name?: string;
 }
 
-export interface DispatchNotificationEventDto {
-  /** @example "kyc-approved" */
-  event: string;
+export interface SetPlanDto {
+  /** @format uuid */
+  planId: string;
+}
+
+export interface BillingCycleResponseDto {
+  /** @format date-time */
+  startCycleDate: string;
+  /** @format date-time */
+  endCycleDate: string;
+}
+
+export interface BillingCycleListResponseDto {
+  items: BillingCycleResponseDto[];
+}
+
+export interface BillingSummaryItemByTypeDto {
+  type:
+    | 'commerce.product_purchase'
+    | 'commerce.product_published'
+    | 'key.nft_minted'
+    | 'key.erc20_minted'
+    | 'key.nft_collection_created'
+    | 'key.nft_contract_created'
+    | 'key.erc20_contract_created'
+    | 'nft_sale_transaction'
+    | 'erc20_sale_transaction'
+    | 'nft_transaction'
+    | 'erc20_transaction';
+  planPrepaidLimit: number;
+  planSingleItemPrice: number;
+  totalEvents: number;
+  totalPrice: number;
+}
+
+export interface BillingSummaryResponseDto {
+  /** @format uuid */
+  tenantId: string;
+  /** @format date-time */
+  startCycleDate: string;
+  /** @format date-time */
+  endCycleDate: string;
+  eventsSummary: BillingSummaryItemByTypeDto[];
+}
+
+export interface BillingUsageEntityDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId: string;
+  /** @example "commerce.product_purchase" */
+  type: string;
+  /** @example false */
+  isLifeTime: boolean;
+  /** @example 100 */
+  value?: number | null;
   /** @example null */
   metadata?: object | null;
-  destinationUserId?: string[];
-  hiddenDestinationUserId?: string[];
+}
+
+export interface BillingUsageEntityPaginatedDto {
+  items: BillingUsageEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
 }
 
 export namespace Users {
@@ -2239,6 +2584,26 @@ export namespace Users {
   /**
    * No description
    * @tags Users
+   * @name SetUserReferrer
+   * @request PATCH:/users/{tenantId}/{id}/referrer
+   * @secure
+   * @response `204` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace SetUserReferrer {
+    export type RequestParams = {
+      tenantId: string;
+      id: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = AdminSetReferrerDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users
    * @name GetUsersByTenantId
    * @request GET:/users/{tenantId}
    * @secure
@@ -2318,6 +2683,57 @@ export namespace Users {
     export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = ChangePasswordDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name ChangeUserPhone
+   * @request PATCH:/users/phone
+   * @secure
+   * @response `204` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
+   */
+  export namespace ChangeUserPhone {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = ChangePhoneDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name VerifyUserPhone
+   * @request PATCH:/users/phone/verify
+   * @secure
+   * @response `204` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
+   */
+  export namespace VerifyUserPhone {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = VerifyPhoneDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name ResendPhoneVerificationCode
+   * @request PATCH:/users/phone/resend-verification-code
+   * @secure
+   * @response `204` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
+   */
+  export namespace ResendPhoneVerificationCode {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = void;
   }
@@ -3475,6 +3891,41 @@ export namespace Auth {
     export type RequestHeaders = {};
     export type ResponseBody = SignInResponseDto;
   }
+  /**
+   * No description
+   * @tags Authentication
+   * @name TenantSignUp
+   * @request POST:/auth/signup/tenant
+   * @response `201` `SignInResponseDto`
+   * @response `400` `BadRequestExceptionDto`
+   * @response `401` `UnauthorizedExceptionDto`
+   * @response `429` `TooManyRequestsExceptionDto`
+   */
+  export namespace TenantSignUp {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = SignupToCreateTenantDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = SignInResponseDto;
+  }
+  /**
+   * No description
+   * @tags Authentication
+   * @name FinishTenantSignUp
+   * @request PATCH:/auth/signup/tenant/finish
+   * @secure
+   * @response `201` `TenantSignUpResponseDto`
+   * @response `400` `BadRequestExceptionDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user
+   */
+  export namespace FinishTenantSignUp {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = FinishTenantSignUpDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantSignUpResponseDto;
+  }
 }
 
 export namespace Tenant {
@@ -3688,183 +4139,6 @@ export namespace PublicTenant {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = TenantPublicDto;
-  }
-}
-
-export namespace TenantAccess {
-  /**
-   * No description
-   * @tags Tenant Access
-   * @name Create
-   * @request POST:/tenant-access/{tenantId}
-   * @secure
-   * @response `201` `TenantAccessEntityDto`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
-   */
-  export namespace Create {
-    export type RequestParams = {
-      tenantId: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = CreateTenantAccessDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = TenantAccessEntityDto;
-  }
-  /**
-   * No description
-   * @tags Tenant Access
-   * @name FindAll
-   * @request GET:/tenant-access/{tenantId}
-   * @secure
-   * @response `200` `TenantAccessPaginateResponseDto`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
-   */
-  export namespace FindAll {
-    export type RequestParams = {
-      tenantId: string;
-    };
-    export type RequestQuery = {
-      /** @default 1 */
-      page?: number;
-      /** @default 10 */
-      limit?: number;
-      search?: string;
-      sortBy?: string;
-      orderBy?: OrderByEnum;
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = TenantAccessPaginateResponseDto;
-  }
-  /**
-   * No description
-   * @tags Tenant Access
-   * @name FindOne
-   * @request GET:/tenant-access/{tenantId}/{id}
-   * @secure
-   * @response `200` `void`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
-   */
-  export namespace FindOne {
-    export type RequestParams = {
-      id: string;
-      tenantId: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-}
-
-export namespace TenantHosts {
-  /**
-   * No description
-   * @tags Tenant Hosts
-   * @name Create
-   * @request POST:/tenant-hosts/{tenantId}
-   * @secure
-   * @response `201` `TenantHostResponseDto`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
-   */
-  export namespace Create {
-    export type RequestParams = {
-      tenantId: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = CreateTenantHostDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = TenantHostResponseDto;
-  }
-  /**
-   * No description
-   * @tags Tenant Hosts
-   * @name FindAll
-   * @request GET:/tenant-hosts/{tenantId}
-   * @secure
-   * @response `200` `TenantHostPaginateResponseDto`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
-   */
-  export namespace FindAll {
-    export type RequestParams = {
-      tenantId: string;
-    };
-    export type RequestQuery = {
-      /** @default 1 */
-      page?: number;
-      /** @default 10 */
-      limit?: number;
-      search?: string;
-      sortBy?: string;
-      orderBy?: OrderByEnum;
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = TenantHostPaginateResponseDto;
-  }
-  /**
-   * No description
-   * @tags Tenant Hosts
-   * @name GetMainHostByTenantId
-   * @request GET:/tenant-hosts/{tenantId}/main-host
-   * @secure
-   * @response `200` `TenantHostEntityDto`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
-   */
-  export namespace GetMainHostByTenantId {
-    export type RequestParams = {
-      tenantId: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = TenantHostEntityDto;
-  }
-  /**
-   * No description
-   * @tags Tenant Hosts
-   * @name FindOne
-   * @request GET:/tenant-hosts/{tenantId}/{id}
-   * @secure
-   * @response `200` `void`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
-   */
-  export namespace FindOne {
-    export type RequestParams = {
-      tenantId: string;
-      id: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags Tenant Hosts
-   * @name Update
-   * @request PATCH:/tenant-hosts/{tenantId}/{id}
-   * @secure
-   * @response `200` `void`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
-   */
-  export namespace Update {
-    export type RequestParams = {
-      tenantId: string;
-      id: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = UpdateTenantHostDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
   }
 }
 
@@ -4088,6 +4362,183 @@ export namespace Contexts {
     };
     export type RequestQuery = {};
     export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+}
+
+export namespace TenantAccess {
+  /**
+   * No description
+   * @tags Tenant Access
+   * @name Create
+   * @request POST:/tenant-access/{tenantId}
+   * @secure
+   * @response `201` `TenantAccessEntityDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+   */
+  export namespace Create {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = CreateTenantAccessDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantAccessEntityDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Access
+   * @name FindAll
+   * @request GET:/tenant-access/{tenantId}
+   * @secure
+   * @response `200` `TenantAccessPaginateResponseDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+   */
+  export namespace FindAll {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      /** @default 1 */
+      page?: number;
+      /** @default 10 */
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantAccessPaginateResponseDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Access
+   * @name FindOne
+   * @request GET:/tenant-access/{tenantId}/{id}
+   * @secure
+   * @response `200` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+   */
+  export namespace FindOne {
+    export type RequestParams = {
+      id: string;
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+}
+
+export namespace TenantHosts {
+  /**
+   * No description
+   * @tags Tenant Hosts
+   * @name Create
+   * @request POST:/tenant-hosts/{tenantId}
+   * @secure
+   * @response `201` `TenantHostResponseDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace Create {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = CreateTenantHostDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantHostResponseDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Hosts
+   * @name FindAll
+   * @request GET:/tenant-hosts/{tenantId}
+   * @secure
+   * @response `200` `TenantHostPaginateResponseDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace FindAll {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      /** @default 1 */
+      page?: number;
+      /** @default 10 */
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantHostPaginateResponseDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Hosts
+   * @name GetMainHostByTenantId
+   * @request GET:/tenant-hosts/{tenantId}/main-host
+   * @secure
+   * @response `200` `TenantHostEntityDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace GetMainHostByTenantId {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantHostEntityDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Hosts
+   * @name FindOne
+   * @request GET:/tenant-hosts/{tenantId}/{id}
+   * @secure
+   * @response `200` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace FindOne {
+    export type RequestParams = {
+      tenantId: string;
+      id: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Tenant Hosts
+   * @name Update
+   * @request PATCH:/tenant-hosts/{tenantId}/{id}
+   * @secure
+   * @response `200` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace Update {
+    export type RequestParams = {
+      tenantId: string;
+      id: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateTenantHostDto;
     export type RequestHeaders = {};
     export type ResponseBody = void;
   }
@@ -4386,6 +4837,47 @@ export namespace Assets {
   }
 }
 
+export namespace Notifications {
+  /**
+   * No description
+   * @tags Notifications
+   * @name DispatchNotificationEvent
+   * @request POST:/notifications/{tenantId}/event
+   * @secure
+   * @response `204` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+   */
+  export namespace DispatchNotificationEvent {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = DispatchNotificationEventDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+}
+
+export namespace Integrations {
+  /**
+   * No description
+   * @tags Integration
+   * @name List
+   * @request GET:/integrations
+   * @secure
+   * @response `200` `(IntegrationResponseDto)[]`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   */
+  export namespace List {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = IntegrationResponseDto[];
+  }
+}
+
 export namespace TenantInput {
   /**
    * No description
@@ -4499,44 +4991,233 @@ export namespace TenantInput {
   }
 }
 
-export namespace Integrations {
+export namespace Billing {
   /**
    * No description
-   * @tags Integration
-   * @name List
-   * @request GET:/integrations
+   * @tags Billing
+   * @name ListPlans
+   * @request GET:/billing/plans
    * @secure
-   * @response `200` `(IntegrationResponseDto)[]`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `200` `BillingPlanEntityPaginatedDto`
    */
-  export namespace List {
+  export namespace ListPlans {
     export type RequestParams = {};
-    export type RequestQuery = {};
+    export type RequestQuery = {
+      /** @example "2022-01-30T10:30:40-03:00" */
+      createdAt?: string;
+      sortBy?: string[];
+      orderBy?: OrderByEnum;
+      /**
+       * @default 1
+       * @example 1
+       */
+      page?: number;
+      /**
+       * @default 10
+       * @example 10
+       */
+      limit?: number;
+      search?: string;
+    };
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = IntegrationResponseDto[];
+    export type ResponseBody = BillingPlanEntityPaginatedDto;
   }
-}
-
-export namespace Notifications {
   /**
    * No description
-   * @tags Notifications
-   * @name DispatchNotificationEvent
-   * @request POST:/notifications/{tenantId}/event
+   * @tags Billing
+   * @name RegisterBillingUsage
+   * @request POST:/billing/{tenantId}/register-billing-usage
    * @secure
    * @response `204` `void`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
    * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
    */
-  export namespace DispatchNotificationEvent {
+  export namespace RegisterBillingUsage {
     export type RequestParams = {
       tenantId: string;
     };
     export type RequestQuery = {};
-    export type RequestBody = DispatchNotificationEventDto;
+    export type RequestBody = RegisterBillingUsageDto;
     export type RequestHeaders = {};
     export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Billing
+   * @name CheckFeatureEnabled
+   * @request GET:/billing/{tenantId}/is-feature-enabled/{feature}
+   * @secure
+   * @response `200` `FeatureCheckResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user, operator
+   */
+  export namespace CheckFeatureEnabled {
+    export type RequestParams = {
+      tenantId: string;
+      feature: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = FeatureCheckResponseDto;
+  }
+  /**
+   * No description
+   * @tags Billing
+   * @name GetState
+   * @request GET:/billing/{tenantId}/state
+   * @secure
+   * @response `200` `TenantBillingStateResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace GetState {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantBillingStateResponseDto;
+  }
+  /**
+   * No description
+   * @tags Billing
+   * @name SetCreditCard
+   * @request PATCH:/billing/{tenantId}/credit-card
+   * @secure
+   * @response `200` `PublicUserCreditCardEntityDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace SetCreditCard {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = SetCreditCardDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = PublicUserCreditCardEntityDto;
+  }
+  /**
+   * No description
+   * @tags Billing
+   * @name SetPlan
+   * @request PATCH:/billing/{tenantId}/plan
+   * @secure
+   * @response `200` `BillingPlanEntityDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace SetPlan {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = SetPlanDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = BillingPlanEntityDto;
+  }
+  /**
+   * No description
+   * @tags Billing
+   * @name CancelPlan
+   * @request PATCH:/billing/{tenantId}/cancel
+   * @secure
+   * @response `204` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace CancelPlan {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Billing
+   * @name GetCycles
+   * @request GET:/billing/{tenantId}/cycles
+   * @secure
+   * @response `200` `BillingCycleListResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace GetCycles {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = BillingCycleListResponseDto;
+  }
+  /**
+   * No description
+   * @tags Billing
+   * @name GetBillingSummary
+   * @request GET:/billing/{tenantId}/billing-summary
+   * @secure
+   * @response `200` `BillingSummaryResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace GetBillingSummary {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      /** @format date-time */
+      startCycleDate?: string;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = BillingSummaryResponseDto;
+  }
+  /**
+   * No description
+   * @tags Billing
+   * @name ListBillingUsage
+   * @request GET:/billing/{tenantId}/billing-usages
+   * @secure
+   * @response `200` `BillingUsageEntityPaginatedDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace ListBillingUsage {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      /** @example "2022-01-30T10:30:40-03:00" */
+      createdAt?: string;
+      sortBy?: string[];
+      orderBy?: OrderByEnum;
+      /**
+       * @default 1
+       * @example 1
+       */
+      page?: number;
+      /**
+       * @default 10
+       * @example 10
+       */
+      limit?: number;
+      search?: string;
+      /** @example ["key.nft_minted"] */
+      type?: (
+        | 'commerce.product_purchase'
+        | 'commerce.product_published'
+        | 'key.nft_minted'
+        | 'key.erc20_minted'
+        | 'key.nft_collection_created'
+        | 'key.nft_contract_created'
+        | 'key.erc20_contract_created'
+        | 'nft_sale_transaction'
+        | 'erc20_sale_transaction'
+        | 'nft_transaction'
+        | 'erc20_transaction'
+      )[];
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = BillingUsageEntityPaginatedDto;
   }
 }
 
@@ -4672,7 +5353,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.68
+ * @version 0.9.83
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
@@ -4941,6 +5622,27 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Users
+     * @name SetUserReferrer
+     * @request PATCH:/users/{tenantId}/{id}/referrer
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    setUserReferrer: (tenantId: string, id: string, data: AdminSetReferrerDto, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/users/${tenantId}/${id}/referrer`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
      * @name GetUsersByTenantId
      * @request GET:/users/{tenantId}
      * @secure
@@ -5032,6 +5734,67 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name ChangeUserPhone
+     * @request PATCH:/users/phone
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
+     */
+    changeUserPhone: (data: ChangePhoneDto, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/users/phone`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name VerifyUserPhone
+     * @request PATCH:/users/phone/verify
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
+     */
+    verifyUserPhone: (data: VerifyPhoneDto, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/users/phone/verify`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name ResendPhoneVerificationCode
+     * @request PATCH:/users/phone/resend-verification-code
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user
+     */
+    resendPhoneVerificationCode: (params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/users/phone/resend-verification-code`,
+        method: 'PATCH',
+        secure: true,
         ...params,
       }),
 
@@ -6354,6 +7117,50 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         format: 'json',
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name TenantSignUp
+     * @request POST:/auth/signup/tenant
+     * @response `201` `SignInResponseDto`
+     * @response `400` `BadRequestExceptionDto`
+     * @response `401` `UnauthorizedExceptionDto`
+     * @response `429` `TooManyRequestsExceptionDto`
+     */
+    tenantSignUp: (data: SignupToCreateTenantDto, params: RequestParams = {}) =>
+      this.request<SignInResponseDto, BadRequestExceptionDto | UnauthorizedExceptionDto | TooManyRequestsExceptionDto>({
+        path: `/auth/signup/tenant`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name FinishTenantSignUp
+     * @request PATCH:/auth/signup/tenant/finish
+     * @secure
+     * @response `201` `TenantSignUpResponseDto`
+     * @response `400` `BadRequestExceptionDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, user
+     */
+    finishTenantSignUp: (data: FinishTenantSignUpDto, params: RequestParams = {}) =>
+      this.request<TenantSignUpResponseDto, BadRequestExceptionDto | void | HttpExceptionDto>({
+        path: `/auth/signup/tenant/finish`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
   };
   tenant = {
     /**
@@ -6597,197 +7404,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         query: query,
         secure: true,
         format: 'json',
-        ...params,
-      }),
-  };
-  tenantAccess = {
-    /**
-     * No description
-     *
-     * @tags Tenant Access
-     * @name Create
-     * @request POST:/tenant-access/{tenantId}
-     * @secure
-     * @response `201` `TenantAccessEntityDto`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
-     */
-    create: (tenantId: string, data: CreateTenantAccessDto, params: RequestParams = {}) =>
-      this.request<TenantAccessEntityDto, void | HttpExceptionDto>({
-        path: `/tenant-access/${tenantId}`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Tenant Access
-     * @name FindAll
-     * @request GET:/tenant-access/{tenantId}
-     * @secure
-     * @response `200` `TenantAccessPaginateResponseDto`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
-     */
-    findAll: (
-      tenantId: string,
-      query?: {
-        /** @default 1 */
-        page?: number;
-        /** @default 10 */
-        limit?: number;
-        search?: string;
-        sortBy?: string;
-        orderBy?: OrderByEnum;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<TenantAccessPaginateResponseDto, void | HttpExceptionDto>({
-        path: `/tenant-access/${tenantId}`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Tenant Access
-     * @name FindOne
-     * @request GET:/tenant-access/{tenantId}/{id}
-     * @secure
-     * @response `200` `void`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
-     */
-    findOne: (id: string, tenantId: string, params: RequestParams = {}) =>
-      this.request<void, void | HttpExceptionDto>({
-        path: `/tenant-access/${tenantId}/${id}`,
-        method: 'GET',
-        secure: true,
-        ...params,
-      }),
-  };
-  tenantHosts = {
-    /**
-     * No description
-     *
-     * @tags Tenant Hosts
-     * @name Create
-     * @request POST:/tenant-hosts/{tenantId}
-     * @secure
-     * @response `201` `TenantHostResponseDto`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
-     */
-    create: (tenantId: string, data: CreateTenantHostDto, params: RequestParams = {}) =>
-      this.request<TenantHostResponseDto, void | HttpExceptionDto>({
-        path: `/tenant-hosts/${tenantId}`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Tenant Hosts
-     * @name FindAll
-     * @request GET:/tenant-hosts/{tenantId}
-     * @secure
-     * @response `200` `TenantHostPaginateResponseDto`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
-     */
-    findAll: (
-      tenantId: string,
-      query?: {
-        /** @default 1 */
-        page?: number;
-        /** @default 10 */
-        limit?: number;
-        search?: string;
-        sortBy?: string;
-        orderBy?: OrderByEnum;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<TenantHostPaginateResponseDto, void | HttpExceptionDto>({
-        path: `/tenant-hosts/${tenantId}`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Tenant Hosts
-     * @name GetMainHostByTenantId
-     * @request GET:/tenant-hosts/{tenantId}/main-host
-     * @secure
-     * @response `200` `TenantHostEntityDto`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
-     */
-    getMainHostByTenantId: (tenantId: string, params: RequestParams = {}) =>
-      this.request<TenantHostEntityDto, void | HttpExceptionDto>({
-        path: `/tenant-hosts/${tenantId}/main-host`,
-        method: 'GET',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Tenant Hosts
-     * @name FindOne
-     * @request GET:/tenant-hosts/{tenantId}/{id}
-     * @secure
-     * @response `200` `void`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
-     */
-    findOne: (tenantId: string, id: string, params: RequestParams = {}) =>
-      this.request<void, void | HttpExceptionDto>({
-        path: `/tenant-hosts/${tenantId}/${id}`,
-        method: 'GET',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Tenant Hosts
-     * @name Update
-     * @request PATCH:/tenant-hosts/{tenantId}/{id}
-     * @secure
-     * @response `200` `void`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
-     */
-    update: (tenantId: string, id: string, data: UpdateTenantHostDto, params: RequestParams = {}) =>
-      this.request<void, void | HttpExceptionDto>({
-        path: `/tenant-hosts/${tenantId}/${id}`,
-        method: 'PATCH',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
         ...params,
       }),
   };
@@ -7047,6 +7663,197 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/contexts/${id}`,
         method: 'DELETE',
         secure: true,
+        ...params,
+      }),
+  };
+  tenantAccess = {
+    /**
+     * No description
+     *
+     * @tags Tenant Access
+     * @name Create
+     * @request POST:/tenant-access/{tenantId}
+     * @secure
+     * @response `201` `TenantAccessEntityDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+     */
+    create: (tenantId: string, data: CreateTenantAccessDto, params: RequestParams = {}) =>
+      this.request<TenantAccessEntityDto, void | HttpExceptionDto>({
+        path: `/tenant-access/${tenantId}`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Access
+     * @name FindAll
+     * @request GET:/tenant-access/{tenantId}
+     * @secure
+     * @response `200` `TenantAccessPaginateResponseDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+     */
+    findAll: (
+      tenantId: string,
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TenantAccessPaginateResponseDto, void | HttpExceptionDto>({
+        path: `/tenant-access/${tenantId}`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Access
+     * @name FindOne
+     * @request GET:/tenant-access/{tenantId}/{id}
+     * @secure
+     * @response `200` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+     */
+    findOne: (id: string, tenantId: string, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/tenant-access/${tenantId}/${id}`,
+        method: 'GET',
+        secure: true,
+        ...params,
+      }),
+  };
+  tenantHosts = {
+    /**
+     * No description
+     *
+     * @tags Tenant Hosts
+     * @name Create
+     * @request POST:/tenant-hosts/{tenantId}
+     * @secure
+     * @response `201` `TenantHostResponseDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    create: (tenantId: string, data: CreateTenantHostDto, params: RequestParams = {}) =>
+      this.request<TenantHostResponseDto, void | HttpExceptionDto>({
+        path: `/tenant-hosts/${tenantId}`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Hosts
+     * @name FindAll
+     * @request GET:/tenant-hosts/{tenantId}
+     * @secure
+     * @response `200` `TenantHostPaginateResponseDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    findAll: (
+      tenantId: string,
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TenantHostPaginateResponseDto, void | HttpExceptionDto>({
+        path: `/tenant-hosts/${tenantId}`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Hosts
+     * @name GetMainHostByTenantId
+     * @request GET:/tenant-hosts/{tenantId}/main-host
+     * @secure
+     * @response `200` `TenantHostEntityDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    getMainHostByTenantId: (tenantId: string, params: RequestParams = {}) =>
+      this.request<TenantHostEntityDto, void | HttpExceptionDto>({
+        path: `/tenant-hosts/${tenantId}/main-host`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Hosts
+     * @name FindOne
+     * @request GET:/tenant-hosts/{tenantId}/{id}
+     * @secure
+     * @response `200` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    findOne: (tenantId: string, id: string, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/tenant-hosts/${tenantId}/${id}`,
+        method: 'GET',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Hosts
+     * @name Update
+     * @request PATCH:/tenant-hosts/{tenantId}/{id}
+     * @secure
+     * @response `200` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    update: (tenantId: string, id: string, data: UpdateTenantHostDto, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/tenant-hosts/${tenantId}/${id}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
   };
@@ -7371,6 +8178,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
+  notifications = {
+    /**
+     * No description
+     *
+     * @tags Notifications
+     * @name DispatchNotificationEvent
+     * @request POST:/notifications/{tenantId}/event
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+     */
+    dispatchNotificationEvent: (tenantId: string, data: DispatchNotificationEventDto, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/notifications/${tenantId}/event`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+  };
+  integrations = {
+    /**
+     * No description
+     *
+     * @tags Integration
+     * @name List
+     * @request GET:/integrations
+     * @secure
+     * @response `200` `(IntegrationResponseDto)[]`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     */
+    list: (params: RequestParams = {}) =>
+      this.request<IntegrationResponseDto[], void>({
+        path: `/integrations`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+  };
   tenantInput = {
     /**
      * No description
@@ -7502,45 +8351,260 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
-  integrations = {
+  billing = {
     /**
      * No description
      *
-     * @tags Integration
-     * @name List
-     * @request GET:/integrations
+     * @tags Billing
+     * @name ListPlans
+     * @request GET:/billing/plans
      * @secure
-     * @response `200` `(IntegrationResponseDto)[]`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `200` `BillingPlanEntityPaginatedDto`
      */
-    list: (params: RequestParams = {}) =>
-      this.request<IntegrationResponseDto[], void>({
-        path: `/integrations`,
+    listPlans: (
+      query?: {
+        /** @example "2022-01-30T10:30:40-03:00" */
+        createdAt?: string;
+        sortBy?: string[];
+        orderBy?: OrderByEnum;
+        /**
+         * @default 1
+         * @example 1
+         */
+        page?: number;
+        /**
+         * @default 10
+         * @example 10
+         */
+        limit?: number;
+        search?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<BillingPlanEntityPaginatedDto, any>({
+        path: `/billing/plans`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Billing
+     * @name RegisterBillingUsage
+     * @request POST:/billing/{tenantId}/register-billing-usage
+     * @secure
+     * @response `204` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+     */
+    registerBillingUsage: (tenantId: string, data: RegisterBillingUsageDto, params: RequestParams = {}) =>
+      this.request<void, HttpExceptionDto>({
+        path: `/billing/${tenantId}/register-billing-usage`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Billing
+     * @name CheckFeatureEnabled
+     * @request GET:/billing/{tenantId}/is-feature-enabled/{feature}
+     * @secure
+     * @response `200` `FeatureCheckResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, user, operator
+     */
+    checkFeatureEnabled: (tenantId: string, feature: string, params: RequestParams = {}) =>
+      this.request<FeatureCheckResponseDto, HttpExceptionDto>({
+        path: `/billing/${tenantId}/is-feature-enabled/${feature}`,
         method: 'GET',
         secure: true,
         format: 'json',
         ...params,
       }),
-  };
-  notifications = {
+
     /**
      * No description
      *
-     * @tags Notifications
-     * @name DispatchNotificationEvent
-     * @request POST:/notifications/{tenantId}/event
+     * @tags Billing
+     * @name GetState
+     * @request GET:/billing/{tenantId}/state
      * @secure
-     * @response `204` `void`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+     * @response `200` `TenantBillingStateResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
      */
-    dispatchNotificationEvent: (tenantId: string, data: DispatchNotificationEventDto, params: RequestParams = {}) =>
-      this.request<void, void | HttpExceptionDto>({
-        path: `/notifications/${tenantId}/event`,
-        method: 'POST',
+    getState: (tenantId: string, params: RequestParams = {}) =>
+      this.request<TenantBillingStateResponseDto, HttpExceptionDto>({
+        path: `/billing/${tenantId}/state`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Billing
+     * @name SetCreditCard
+     * @request PATCH:/billing/{tenantId}/credit-card
+     * @secure
+     * @response `200` `PublicUserCreditCardEntityDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    setCreditCard: (tenantId: string, data: SetCreditCardDto, params: RequestParams = {}) =>
+      this.request<PublicUserCreditCardEntityDto, HttpExceptionDto>({
+        path: `/billing/${tenantId}/credit-card`,
+        method: 'PATCH',
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Billing
+     * @name SetPlan
+     * @request PATCH:/billing/{tenantId}/plan
+     * @secure
+     * @response `200` `BillingPlanEntityDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    setPlan: (tenantId: string, data: SetPlanDto, params: RequestParams = {}) =>
+      this.request<BillingPlanEntityDto, HttpExceptionDto>({
+        path: `/billing/${tenantId}/plan`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Billing
+     * @name CancelPlan
+     * @request PATCH:/billing/{tenantId}/cancel
+     * @secure
+     * @response `204` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    cancelPlan: (tenantId: string, params: RequestParams = {}) =>
+      this.request<void, HttpExceptionDto>({
+        path: `/billing/${tenantId}/cancel`,
+        method: 'PATCH',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Billing
+     * @name GetCycles
+     * @request GET:/billing/{tenantId}/cycles
+     * @secure
+     * @response `200` `BillingCycleListResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    getCycles: (tenantId: string, params: RequestParams = {}) =>
+      this.request<BillingCycleListResponseDto, HttpExceptionDto>({
+        path: `/billing/${tenantId}/cycles`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Billing
+     * @name GetBillingSummary
+     * @request GET:/billing/{tenantId}/billing-summary
+     * @secure
+     * @response `200` `BillingSummaryResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    getBillingSummary: (
+      tenantId: string,
+      query?: {
+        /** @format date-time */
+        startCycleDate?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<BillingSummaryResponseDto, HttpExceptionDto>({
+        path: `/billing/${tenantId}/billing-summary`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Billing
+     * @name ListBillingUsage
+     * @request GET:/billing/{tenantId}/billing-usages
+     * @secure
+     * @response `200` `BillingUsageEntityPaginatedDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    listBillingUsage: (
+      tenantId: string,
+      query?: {
+        /** @example "2022-01-30T10:30:40-03:00" */
+        createdAt?: string;
+        sortBy?: string[];
+        orderBy?: OrderByEnum;
+        /**
+         * @default 1
+         * @example 1
+         */
+        page?: number;
+        /**
+         * @default 10
+         * @example 10
+         */
+        limit?: number;
+        search?: string;
+        /** @example ["key.nft_minted"] */
+        type?: (
+          | 'commerce.product_purchase'
+          | 'commerce.product_published'
+          | 'key.nft_minted'
+          | 'key.erc20_minted'
+          | 'key.nft_collection_created'
+          | 'key.nft_contract_created'
+          | 'key.erc20_contract_created'
+          | 'nft_sale_transaction'
+          | 'erc20_sale_transaction'
+          | 'nft_transaction'
+          | 'erc20_transaction'
+        )[];
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<BillingUsageEntityPaginatedDto, HttpExceptionDto>({
+        path: `/billing/${tenantId}/billing-usages`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
         ...params,
       }),
   };
