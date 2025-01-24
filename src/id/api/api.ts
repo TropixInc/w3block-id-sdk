@@ -63,7 +63,7 @@ export interface CreateUserDto {
   tenantId: string;
   /** @example "user" */
   role: UserRoleEnum;
-  phone?: object;
+  phone?: string;
   name?: string;
   /** @example "user@example.com" */
   email: string;
@@ -533,7 +533,7 @@ export interface UpdateUserDto {
    * @example "P@ssw0rd"
    */
   password?: string;
-  phone?: object;
+  phone?: string;
   name?: string;
   /** @example "user@example.com" */
   email?: string;
@@ -1412,10 +1412,18 @@ export interface SignUpConfigurationDto {
   requireReferrer?: boolean;
 }
 
+export interface ClearSaleConfigurationDto {
+  /** @example "username" */
+  password: string;
+  /** @example "******" */
+  username: string;
+}
+
 export interface TenantConfigurationsDto {
   kyc?: TenantConfigurationsKycDto;
   passwordless?: PasswordlessConfigurationsDto;
   signUp?: SignUpConfigurationDto;
+  clearSale?: ClearSaleConfigurationDto;
 }
 
 export interface TenantConfigurationsResponseDto {
@@ -2084,6 +2092,15 @@ export interface TenantInputPaginateResponseDto {
   items: TenantInputEntityDto[];
 }
 
+export interface RequestClearSaleInfoDto {
+  /** @format uuid */
+  userId: string;
+  /** @example "+5511999999999" */
+  phone?: string;
+  /** @format xxxxxxxxxxx */
+  cpf?: string;
+}
+
 export interface BillingPlanLimitDto {
   daily: number | null;
   lifetime: number | null;
@@ -2134,6 +2151,7 @@ export interface BillingPlanEntityDto {
   nftContracts: BillingPlanLimitDto;
   nftMints: BillingPlanLimitDto;
   nftTokens: BillingPlanLimitDto;
+  tokensPerCollection: BillingPlanLimitDto;
   onSaleProducts: BillingPlanLimitDto;
   storage: BillingPlanLimitDto;
   erc20SaleTransactionPrice: number;
@@ -2263,6 +2281,7 @@ export interface TenantBillingStateResponseDto {
   creditCard: object | null;
   /** @example {"commerce.product_purchase":{"limit":null,"remaining":null,"unlimited":true}} */
   limits: object;
+  hardLimits: object;
 }
 
 export interface SetCreditCardDto {
@@ -2289,6 +2308,11 @@ export interface PublicUserCreditCardEntityDto {
 export interface SetPlanDto {
   /** @format uuid */
   planId: string;
+  /**
+   * Note: It only works for new tenants on its first plan selection
+   * @example "coupon-code"
+   */
+  couponCode?: string;
 }
 
 export interface BillingCycleResponseDto {
@@ -4991,6 +5015,28 @@ export namespace TenantInput {
   }
 }
 
+export namespace TenantBadgesProviders {
+  /**
+   * No description
+   * @tags Tenant Badge Providers
+   * @name RequestTransactionInfo
+   * @request POST:/tenant-badges-providers/{tenantId}/clear-sale/transaction-info
+   * @secure
+   * @response `200` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+   */
+  export namespace RequestTransactionInfo {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = RequestClearSaleInfoDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+}
+
 export namespace Billing {
   /**
    * No description
@@ -5219,6 +5265,24 @@ export namespace Billing {
     export type RequestHeaders = {};
     export type ResponseBody = BillingUsageEntityPaginatedDto;
   }
+  /**
+   * No description
+   * @tags Billing
+   * @name DispatchProcessInvoice
+   * @request PATCH:/billing/{tenantId}/invoice-and-charge
+   * @secure
+   * @response `204` `void`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin
+   */
+  export namespace DispatchProcessInvoice {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
 }
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from 'axios';
@@ -5353,7 +5417,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.83
+ * @version 0.9.85
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
@@ -8351,6 +8415,28 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
+  tenantBadgesProviders = {
+    /**
+     * No description
+     *
+     * @tags Tenant Badge Providers
+     * @name RequestTransactionInfo
+     * @request POST:/tenant-badges-providers/{tenantId}/clear-sale/transaction-info
+     * @secure
+     * @response `200` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+     */
+    requestTransactionInfo: (tenantId: string, data: RequestClearSaleInfoDto, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/tenant-badges-providers/${tenantId}/clear-sale/transaction-info`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+  };
   billing = {
     /**
      * No description
@@ -8605,6 +8691,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         query: query,
         secure: true,
         format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Billing
+     * @name DispatchProcessInvoice
+     * @request PATCH:/billing/{tenantId}/invoice-and-charge
+     * @secure
+     * @response `204` `void`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin
+     */
+    dispatchProcessInvoice: (tenantId: string, params: RequestParams = {}) =>
+      this.request<void, HttpExceptionDto>({
+        path: `/billing/${tenantId}/invoice-and-charge`,
+        method: 'PATCH',
+        secure: true,
         ...params,
       }),
   };

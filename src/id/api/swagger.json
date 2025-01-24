@@ -8242,6 +8242,66 @@
         ]
       }
     },
+    "/tenant-badges-providers/{tenantId}/clear-sale/transaction-info": {
+      "post": {
+        "operationId": "requestTransactionInfo",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestClearSaleInfoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Badge Providers"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
     "/billing/plans": {
       "get": {
         "operationId": "listPlans",
@@ -8845,12 +8905,50 @@
           }
         ]
       }
+    },
+    "/billing/{tenantId}/invoice-and-charge": {
+      "patch": {
+        "operationId": "dispatchProcessInvoice",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Billing"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
     }
   },
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.83",
+    "version": "0.9.85",
     "contact": {}
   },
   "tags": [],
@@ -8994,7 +9092,7 @@
             "$ref": "#/components/schemas/UserRoleEnum"
           },
           "phone": {
-            "type": "object"
+            "type": "string"
           },
           "name": {
             "type": "string"
@@ -10071,7 +10169,7 @@
             "description": "Password should include lowercase, uppercase and digits"
           },
           "phone": {
-            "type": "object"
+            "type": "string"
           },
           "name": {
             "type": "string"
@@ -11762,6 +11860,23 @@
           }
         }
       },
+      "ClearSaleConfigurationDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "example": "username"
+          },
+          "username": {
+            "type": "string",
+            "example": "******"
+          }
+        },
+        "required": [
+          "password",
+          "username"
+        ]
+      },
       "TenantConfigurationsDto": {
         "type": "object",
         "properties": {
@@ -11773,6 +11888,9 @@
           },
           "signUp": {
             "$ref": "#/components/schemas/SignUpConfigurationDto"
+          },
+          "clearSale": {
+            "$ref": "#/components/schemas/ClearSaleConfigurationDto"
           }
         }
       },
@@ -13432,6 +13550,26 @@
           "items"
         ]
       },
+      "RequestClearSaleInfoDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+5511999999999"
+          },
+          "cpf": {
+            "type": "string",
+            "format": "xxxxxxxxxxx"
+          }
+        },
+        "required": [
+          "userId"
+        ]
+      },
       "BillingPlanLimitDto": {
         "type": "object",
         "properties": {
@@ -13575,6 +13713,9 @@
           "nftTokens": {
             "$ref": "#/components/schemas/BillingPlanLimitDto"
           },
+          "tokensPerCollection": {
+            "$ref": "#/components/schemas/BillingPlanLimitDto"
+          },
           "onSaleProducts": {
             "$ref": "#/components/schemas/BillingPlanLimitDto"
           },
@@ -13676,6 +13817,7 @@
           "nftContracts",
           "nftMints",
           "nftTokens",
+          "tokensPerCollection",
           "onSaleProducts",
           "storage",
           "erc20SaleTransactionPrice",
@@ -13859,6 +14001,9 @@
                 "unlimited": true
               }
             }
+          },
+          "hardLimits": {
+            "type": "object"
           }
         },
         "required": [
@@ -13868,7 +14013,8 @@
           "setupDone",
           "hasCreditCard",
           "creditCard",
-          "limits"
+          "limits",
+          "hardLimits"
         ]
       },
       "SetCreditCardDto": {
@@ -13935,6 +14081,11 @@
           "planId": {
             "type": "string",
             "format": "uuid"
+          },
+          "couponCode": {
+            "type": "string",
+            "example": "coupon-code",
+            "description": "Note: It only works for new tenants on its first plan selection"
           }
         },
         "required": [
