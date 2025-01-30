@@ -8948,7 +8948,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.85",
+    "version": "0.9.87",
     "contact": {}
   },
   "tags": [],
@@ -13550,6 +13550,33 @@
           "items"
         ]
       },
+      "ClearSaleTransactionCardDto": {
+        "type": "object",
+        "properties": {
+          "bin": {
+            "type": "string",
+            "example": "123456"
+          },
+          "last4": {
+            "type": "string",
+            "example": "1234"
+          },
+          "ownerName": {
+            "type": "string",
+            "example": "João Santos Silva"
+          },
+          "ownerDocument": {
+            "type": "string",
+            "format": "xxxxxxxxxxx"
+          }
+        },
+        "required": [
+          "bin",
+          "last4",
+          "ownerName",
+          "ownerDocument"
+        ]
+      },
       "RequestClearSaleInfoDto": {
         "type": "object",
         "properties": {
@@ -13564,6 +13591,9 @@
           "cpf": {
             "type": "string",
             "format": "xxxxxxxxxxx"
+          },
+          "card": {
+            "$ref": "#/components/schemas/ClearSaleTransactionCardDto"
           }
         },
         "required": [

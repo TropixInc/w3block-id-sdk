@@ -2092,6 +2092,17 @@ export interface TenantInputPaginateResponseDto {
   items: TenantInputEntityDto[];
 }
 
+export interface ClearSaleTransactionCardDto {
+  /** @example "123456" */
+  bin: string;
+  /** @example "1234" */
+  last4: string;
+  /** @example "João Santos Silva" */
+  ownerName: string;
+  /** @format xxxxxxxxxxx */
+  ownerDocument: string;
+}
+
 export interface RequestClearSaleInfoDto {
   /** @format uuid */
   userId: string;
@@ -2099,6 +2110,7 @@ export interface RequestClearSaleInfoDto {
   phone?: string;
   /** @format xxxxxxxxxxx */
   cpf?: string;
+  card?: ClearSaleTransactionCardDto;
 }
 
 export interface BillingPlanLimitDto {
@@ -5417,7 +5429,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.85
+ * @version 0.9.87
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
