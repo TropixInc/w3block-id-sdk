@@ -1517,15 +1517,137 @@ export interface TenantContextApproversResponseDto {
   approvers: TenantContextApproverDto[];
 }
 
+export interface CreateFullTenantContextDto {
+  /** @example true */
+  active: boolean;
+  /** @example {} */
+  data?: object;
+  slug: string;
+  description: string;
+  /**
+   * @default "user_properties"
+   * @example "user_properties"
+   */
+  type: 'user_properties' | 'form';
+  /**
+   * @default 1
+   * @example 1
+   */
+  maxSubmissions: number;
+  /**
+   * @default false
+   * @example 1
+   */
+  isPreOrder: boolean;
+}
+
+export interface UpdateFullTenantContextDto {
+  /** @example true */
+  active: boolean;
+  /** @example {} */
+  data?: object;
+  slug: string;
+  description: string;
+  /**
+   * @default 1
+   * @example 1
+   */
+  maxSubmissions: number;
+  /**
+   * @default false
+   * @example 1
+   */
+  isPreOrder: boolean;
+}
+
+export enum DataTypesEnum {
+  Separator = 'separator',
+  File = 'file',
+  Url = 'url',
+  Cpf = 'cpf',
+  Phone = 'phone',
+  Text = 'text',
+  Email = 'email',
+  Birthdate = 'birthdate',
+  Date = 'date',
+  MultifaceSelfie = 'multiface_selfie',
+  UserName = 'user_name',
+  SimpleSelect = 'simple_select',
+  DynamicSelect = 'dynamic_select',
+  Image = 'image',
+  IdentificationDocument = 'identification_document',
+  SimpleLocation = 'simple_location',
+  Checkbox = 'checkbox',
+  CommerceProduct = 'commerce_product',
+}
+
+export interface TenantInputSelectOptionDto {
+  /** @example "Option label" */
+  label: string;
+  /** @example "Option value" */
+  value: string;
+}
+
+export interface TenantInputEntityDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId: string;
+  contextId: string;
+  label: string;
+  description: string;
+  /** @example "cpf" */
+  type: DataTypesEnum;
+  order: number;
+  mandatory: boolean;
+  /** @example true */
+  active: boolean;
+  options?: TenantInputSelectOptionDto[];
+  data?: object;
+  /** @example 1 */
+  step?: number;
+  /** @example "email" */
+  attributeName: string;
+}
+
 export interface CreateContextsDto {
   description: string;
   slug: string;
+  /**
+   * @default "user_properties"
+   * @example "user_properties"
+   */
+  type: 'user_properties' | 'form';
+  /**
+   * @default 1
+   * @example 1
+   */
+  maxSubmissions: number;
+  /**
+   * @default false
+   * @example 1
+   */
+  isPreOrder: boolean;
   tenantId?: string;
 }
 
 export interface UpdateContextsDto {
   description: string;
   slug: string;
+  /**
+   * @default 1
+   * @example 1
+   */
+  maxSubmissions: number;
+  /**
+   * @default false
+   * @example 1
+   */
+  isPreOrder: boolean;
 }
 
 export type DuplicatedContextException = object;
@@ -1961,62 +2083,6 @@ export interface DispatchNotificationEventDto {
   hiddenDestinationUserId?: string[];
 }
 
-export interface PublicDataDto {
-  WALLET_CONNECT?: object;
-  METAMASK?: object;
-}
-
-export interface PrivateDataDto {
-  WALLET_CONNECT?: object;
-  METAMASK?: object;
-}
-
-export enum IntegrationType {
-  WALLET_CONNECT = 'WALLET_CONNECT',
-  METAMASK = 'METAMASK',
-}
-
-export interface IntegrationResponseDto {
-  id: string;
-  tenantId: string;
-  type: IntegrationType;
-  publicData: PublicDataDto;
-  userId: string;
-  active: boolean;
-  /** @format date-time */
-  createdAt?: string;
-  /** @format date-time */
-  updatedAt?: string;
-}
-
-export enum DataTypesEnum {
-  Separator = 'separator',
-  File = 'file',
-  Url = 'url',
-  Cpf = 'cpf',
-  Phone = 'phone',
-  Text = 'text',
-  Email = 'email',
-  Birthdate = 'birthdate',
-  Date = 'date',
-  MultifaceSelfie = 'multiface_selfie',
-  UserName = 'user_name',
-  SimpleSelect = 'simple_select',
-  DynamicSelect = 'dynamic_select',
-  Image = 'image',
-  IdentificationDocument = 'identification_document',
-  SimpleLocation = 'simple_location',
-  Checkbox = 'checkbox',
-  CommerceProduct = 'commerce_product',
-}
-
-export interface TenantInputSelectOptionDto {
-  /** @example "Option label" */
-  label: string;
-  /** @example "Option value" */
-  value: string;
-}
-
 export interface CreateTenantInputDto {
   contextId: string;
   /** @example "Input label" */
@@ -2038,32 +2104,6 @@ export interface CreateTenantInputDto {
   step?: number;
   /** @example "email" */
   attributeName?: string;
-}
-
-export interface TenantInputEntityDto {
-  /** @format uuid */
-  id: string;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  /** @format uuid */
-  tenantId: string;
-  contextId: string;
-  label: string;
-  description: string;
-  /** @example "cpf" */
-  type: DataTypesEnum;
-  order: number;
-  mandatory: boolean;
-  /** @example true */
-  active: boolean;
-  options?: TenantInputSelectOptionDto[];
-  data?: object;
-  /** @example 1 */
-  step?: number;
-  /** @example "email" */
-  attributeName: string;
 }
 
 export interface UpdateTenantInputDto {
@@ -2090,6 +2130,34 @@ export interface TenantInputPaginateResponseDto {
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
   items: TenantInputEntityDto[];
+}
+
+export interface PublicDataDto {
+  WALLET_CONNECT?: object;
+  METAMASK?: object;
+}
+
+export interface PrivateDataDto {
+  WALLET_CONNECT?: object;
+  METAMASK?: object;
+}
+
+export enum IntegrationType {
+  WALLET_CONNECT = 'WALLET_CONNECT',
+  METAMASK = 'METAMASK',
+}
+
+export interface IntegrationResponseDto {
+  id: string;
+  tenantId: string;
+  type: IntegrationType;
+  publicData: PublicDataDto;
+  userId: string;
+  active: boolean;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
 }
 
 export interface ClearSaleTransactionCardDto {
@@ -4318,6 +4386,76 @@ export namespace TenantContext {
   }
 }
 
+export namespace Admin {
+  /**
+   * No description
+   * @tags Tenant Context
+   * @name CreateFullTenantContext
+   * @request POST:/admin/tenant-context/{tenantId}
+   * @secure
+   * @response `201` `TenantContextDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, integration
+   */
+  export namespace CreateFullTenantContext {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = CreateFullTenantContextDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantContextDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Context
+   * @name UpdateFullContextById
+   * @request PATCH:/admin/tenant-context/{tenantId}/{tenantContextId}
+   * @secure
+   * @response `200` `TenantContextDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace UpdateFullContextById {
+    export type RequestParams = {
+      tenantId: string;
+      tenantContextId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateFullTenantContextDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantContextDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Context
+   * @name ListTenantContextInputs
+   * @request GET:/admin/tenant-context/{tenantId}/{tenantContextId}/inputs
+   * @secure
+   * @response `200` `TenantInputEntityDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace ListTenantContextInputs {
+    export type RequestParams = {
+      tenantId: string;
+      tenantContextId: string;
+    };
+    export type RequestQuery = {
+      /** @default 1 */
+      page?: number;
+      /** @default 10 */
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantInputEntityDto;
+  }
+}
+
 export namespace Contexts {
   /**
  * @description Create a new context
@@ -4895,25 +5033,6 @@ export namespace Notifications {
   }
 }
 
-export namespace Integrations {
-  /**
-   * No description
-   * @tags Integration
-   * @name List
-   * @request GET:/integrations
-   * @secure
-   * @response `200` `(IntegrationResponseDto)[]`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   */
-  export namespace List {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = IntegrationResponseDto[];
-  }
-}
-
 export namespace TenantInput {
   /**
    * No description
@@ -5024,6 +5143,25 @@ export namespace TenantInput {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = TenantInputEntityDto[];
+  }
+}
+
+export namespace Integrations {
+  /**
+   * No description
+   * @tags Integration
+   * @name List
+   * @request GET:/integrations
+   * @secure
+   * @response `200` `(IntegrationResponseDto)[]`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   */
+  export namespace List {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = IntegrationResponseDto[];
   }
 }
 
@@ -5429,7 +5567,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.87
+ * @version 0.9.89
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
@@ -7637,6 +7775,90 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
+  admin = {
+    /**
+     * No description
+     *
+     * @tags Tenant Context
+     * @name CreateFullTenantContext
+     * @request POST:/admin/tenant-context/{tenantId}
+     * @secure
+     * @response `201` `TenantContextDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin, integration
+     */
+    createFullTenantContext: (tenantId: string, data: CreateFullTenantContextDto, params: RequestParams = {}) =>
+      this.request<TenantContextDto, void | HttpExceptionDto>({
+        path: `/admin/tenant-context/${tenantId}`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Context
+     * @name UpdateFullContextById
+     * @request PATCH:/admin/tenant-context/{tenantId}/{tenantContextId}
+     * @secure
+     * @response `200` `TenantContextDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    updateFullContextById: (
+      tenantId: string,
+      tenantContextId: string,
+      data: UpdateFullTenantContextDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<TenantContextDto, void | HttpExceptionDto>({
+        path: `/admin/tenant-context/${tenantId}/${tenantContextId}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tenant Context
+     * @name ListTenantContextInputs
+     * @request GET:/admin/tenant-context/{tenantId}/{tenantContextId}/inputs
+     * @secure
+     * @response `200` `TenantInputEntityDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    listTenantContextInputs: (
+      tenantId: string,
+      tenantContextId: string,
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: OrderByEnum;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TenantInputEntityDto, void | HttpExceptionDto>({
+        path: `/admin/tenant-context/${tenantId}/${tenantContextId}/inputs`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+  };
   contexts = {
     /**
  * @description Create a new context
@@ -8276,26 +8498,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
-  integrations = {
-    /**
-     * No description
-     *
-     * @tags Integration
-     * @name List
-     * @request GET:/integrations
-     * @secure
-     * @response `200` `(IntegrationResponseDto)[]`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     */
-    list: (params: RequestParams = {}) =>
-      this.request<IntegrationResponseDto[], void>({
-        path: `/integrations`,
-        method: 'GET',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-  };
   tenantInput = {
     /**
      * No description
@@ -8423,6 +8625,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       >({
         path: `/tenant-input/${tenantId}/slug/${slug}`,
         method: 'GET',
+        format: 'json',
+        ...params,
+      }),
+  };
+  integrations = {
+    /**
+     * No description
+     *
+     * @tags Integration
+     * @name List
+     * @request GET:/integrations
+     * @secure
+     * @response `200` `(IntegrationResponseDto)[]`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     */
+    list: (params: RequestParams = {}) =>
+      this.request<IntegrationResponseDto[], void>({
+        path: `/integrations`,
+        method: 'GET',
+        secure: true,
         format: 'json',
         ...params,
       }),

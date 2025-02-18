@@ -4697,6 +4697,255 @@
         ]
       }
     },
+    "/admin/tenant-context/{tenantId}": {
+      "post": {
+        "operationId": "createFullTenantContext",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFullTenantContextDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantContextDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, admin, integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Context"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/tenant-context/{tenantId}/{tenantContextId}": {
+      "patch": {
+        "operationId": "updateFullContextById",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantContextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFullTenantContextDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantContextDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Context"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/tenant-context/{tenantId}/{tenantContextId}/inputs": {
+      "get": {
+        "operationId": "listTenantContextInputs",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenantContextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantInputEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Context"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
     "/contexts": {
       "post": {
         "operationId": "create",
@@ -7812,47 +8061,6 @@
         ]
       }
     },
-    "/integrations": {
-      "get": {
-        "operationId": "list",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IntegrationResponseDto"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          }
-        },
-        "tags": [
-          "Integration"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
     "/tenant-input/{tenantId}": {
       "post": {
         "operationId": "createTenantInput",
@@ -8239,6 +8447,47 @@
         },
         "tags": [
           "Tenant Input"
+        ]
+      }
+    },
+    "/integrations": {
+      "get": {
+        "operationId": "list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IntegrationResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          }
+        },
+        "tags": [
+          "Integration"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
         ]
       }
     },
@@ -8948,7 +9197,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.87",
+    "version": "0.9.89",
     "contact": {}
   },
   "tags": [],
@@ -12150,6 +12399,203 @@
           "approvers"
         ]
       },
+      "CreateFullTenantContextDto": {
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "example": {}
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "user_properties",
+              "form"
+            ],
+            "example": "user_properties",
+            "default": "user_properties"
+          },
+          "maxSubmissions": {
+            "type": "number",
+            "example": 1,
+            "default": 1
+          },
+          "isPreOrder": {
+            "type": "boolean",
+            "example": 1,
+            "default": false
+          }
+        },
+        "required": [
+          "active",
+          "slug",
+          "description",
+          "type",
+          "maxSubmissions",
+          "isPreOrder"
+        ]
+      },
+      "UpdateFullTenantContextDto": {
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "example": {}
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "maxSubmissions": {
+            "type": "number",
+            "example": 1,
+            "default": 1
+          },
+          "isPreOrder": {
+            "type": "boolean",
+            "example": 1,
+            "default": false
+          }
+        },
+        "required": [
+          "active",
+          "slug",
+          "description",
+          "maxSubmissions",
+          "isPreOrder"
+        ]
+      },
+      "DataTypesEnum": {
+        "type": "string",
+        "enum": [
+          "separator",
+          "file",
+          "url",
+          "cpf",
+          "phone",
+          "text",
+          "email",
+          "birthdate",
+          "date",
+          "multiface_selfie",
+          "user_name",
+          "simple_select",
+          "dynamic_select",
+          "image",
+          "identification_document",
+          "simple_location",
+          "checkbox",
+          "commerce_product"
+        ]
+      },
+      "TenantInputSelectOptionDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "example": "Option label"
+          },
+          "value": {
+            "type": "string",
+            "example": "Option value"
+          }
+        },
+        "required": [
+          "label",
+          "value"
+        ]
+      },
+      "TenantInputEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contextId": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "example": "cpf",
+            "$ref": "#/components/schemas/DataTypesEnum"
+          },
+          "order": {
+            "type": "number"
+          },
+          "mandatory": {
+            "type": "boolean"
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantInputSelectOptionDto"
+            }
+          },
+          "data": {
+            "type": "object"
+          },
+          "step": {
+            "type": "number",
+            "example": 1
+          },
+          "attributeName": {
+            "type": "string",
+            "example": "email"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "tenantId",
+          "contextId",
+          "label",
+          "description",
+          "type",
+          "order",
+          "mandatory",
+          "active",
+          "attributeName"
+        ]
+      },
       "CreateContextsDto": {
         "type": "object",
         "properties": {
@@ -12159,13 +12605,35 @@
           "slug": {
             "type": "string"
           },
+          "type": {
+            "type": "string",
+            "enum": [
+              "user_properties",
+              "form"
+            ],
+            "example": "user_properties",
+            "default": "user_properties"
+          },
+          "maxSubmissions": {
+            "type": "number",
+            "example": 1,
+            "default": 1
+          },
+          "isPreOrder": {
+            "type": "boolean",
+            "example": 1,
+            "default": false
+          },
           "tenantId": {
             "type": "string"
           }
         },
         "required": [
           "description",
-          "slug"
+          "slug",
+          "type",
+          "maxSubmissions",
+          "isPreOrder"
         ]
       },
       "UpdateContextsDto": {
@@ -12176,11 +12644,23 @@
           },
           "slug": {
             "type": "string"
+          },
+          "maxSubmissions": {
+            "type": "number",
+            "example": 1,
+            "default": 1
+          },
+          "isPreOrder": {
+            "type": "boolean",
+            "example": 1,
+            "default": false
           }
         },
         "required": [
           "description",
-          "slug"
+          "slug",
+          "maxSubmissions",
+          "isPreOrder"
         ]
       },
       "DuplicatedContextException": {
@@ -13233,114 +13713,6 @@
           "event"
         ]
       },
-      "PublicDataDto": {
-        "type": "object",
-        "properties": {
-          "WALLET_CONNECT": {
-            "type": "object"
-          },
-          "METAMASK": {
-            "type": "object"
-          }
-        }
-      },
-      "PrivateDataDto": {
-        "type": "object",
-        "properties": {
-          "WALLET_CONNECT": {
-            "type": "object"
-          },
-          "METAMASK": {
-            "type": "object"
-          }
-        }
-      },
-      "IntegrationType": {
-        "type": "string",
-        "enum": [
-          "WALLET_CONNECT",
-          "METAMASK"
-        ]
-      },
-      "IntegrationResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "type": {
-            "$ref": "#/components/schemas/IntegrationType"
-          },
-          "publicData": {
-            "$ref": "#/components/schemas/PublicDataDto"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "active": {
-            "type": "boolean"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "tenantId",
-          "type",
-          "publicData",
-          "userId",
-          "active"
-        ]
-      },
-      "DataTypesEnum": {
-        "type": "string",
-        "enum": [
-          "separator",
-          "file",
-          "url",
-          "cpf",
-          "phone",
-          "text",
-          "email",
-          "birthdate",
-          "date",
-          "multiface_selfie",
-          "user_name",
-          "simple_select",
-          "dynamic_select",
-          "image",
-          "identification_document",
-          "simple_location",
-          "checkbox",
-          "commerce_product"
-        ]
-      },
-      "TenantInputSelectOptionDto": {
-        "type": "object",
-        "properties": {
-          "label": {
-            "type": "string",
-            "example": "Option label"
-          },
-          "value": {
-            "type": "string",
-            "example": "Option value"
-          }
-        },
-        "required": [
-          "label",
-          "value"
-        ]
-      },
       "CreateTenantInputDto": {
         "type": "object",
         "properties": {
@@ -13400,81 +13772,6 @@
           "order",
           "mandatory",
           "active"
-        ]
-      },
-      "TenantInputEntityDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "contextId": {
-            "type": "string"
-          },
-          "label": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "type": {
-            "example": "cpf",
-            "$ref": "#/components/schemas/DataTypesEnum"
-          },
-          "order": {
-            "type": "number"
-          },
-          "mandatory": {
-            "type": "boolean"
-          },
-          "active": {
-            "type": "boolean",
-            "example": true
-          },
-          "options": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TenantInputSelectOptionDto"
-            }
-          },
-          "data": {
-            "type": "object"
-          },
-          "step": {
-            "type": "number",
-            "example": 1
-          },
-          "attributeName": {
-            "type": "string",
-            "example": "email"
-          }
-        },
-        "required": [
-          "id",
-          "createdAt",
-          "updatedAt",
-          "tenantId",
-          "contextId",
-          "label",
-          "description",
-          "type",
-          "order",
-          "mandatory",
-          "active",
-          "attributeName"
         ]
       },
       "UpdateTenantInputDto": {
@@ -13548,6 +13845,74 @@
         "required": [
           "meta",
           "items"
+        ]
+      },
+      "PublicDataDto": {
+        "type": "object",
+        "properties": {
+          "WALLET_CONNECT": {
+            "type": "object"
+          },
+          "METAMASK": {
+            "type": "object"
+          }
+        }
+      },
+      "PrivateDataDto": {
+        "type": "object",
+        "properties": {
+          "WALLET_CONNECT": {
+            "type": "object"
+          },
+          "METAMASK": {
+            "type": "object"
+          }
+        }
+      },
+      "IntegrationType": {
+        "type": "string",
+        "enum": [
+          "WALLET_CONNECT",
+          "METAMASK"
+        ]
+      },
+      "IntegrationResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/IntegrationType"
+          },
+          "publicData": {
+            "$ref": "#/components/schemas/PublicDataDto"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "type",
+          "publicData",
+          "userId",
+          "active"
         ]
       },
       "ClearSaleTransactionCardDto": {
