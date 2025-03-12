@@ -31,7 +31,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: ^16.13.2
+          node-version: ^18.20.7
           registry-url: 'https://registry.npmjs.org'
       - name: Install modules
         run: npm install
