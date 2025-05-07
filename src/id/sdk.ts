@@ -30,7 +30,7 @@ export class W3blockIdSDK {
   protected refreshTokenDecoded: JwtPayload | undefined;
   protected refreshToken = '';
   protected options: W3blockIdSDKOptions;
-  protected timer: NodeJS.Timer | undefined;
+  protected timer: NodeJS.Timeout | undefined;
   protected credential: Credential | undefined;
   public emitter: Emitter<Events>;
 
