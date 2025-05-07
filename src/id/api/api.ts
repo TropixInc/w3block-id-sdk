@@ -1410,6 +1410,8 @@ export interface PasswordlessConfigurationsDto {
 export interface SignUpConfigurationDto {
   /** @example false */
   requireReferrer?: boolean;
+  /** @format uuid */
+  referrerBlacklistId?: string;
 }
 
 export interface ClearSaleConfigurationDto {
@@ -1579,6 +1581,7 @@ export enum DataTypesEnum {
   SimpleLocation = 'simple_location',
   Checkbox = 'checkbox',
   CommerceProduct = 'commerce_product',
+  Iframe = 'iframe',
 }
 
 export interface TenantInputSelectOptionDto {
@@ -2083,6 +2086,34 @@ export interface DispatchNotificationEventDto {
   hiddenDestinationUserId?: string[];
 }
 
+export interface PublicDataDto {
+  WALLET_CONNECT?: object;
+  METAMASK?: object;
+}
+
+export interface PrivateDataDto {
+  WALLET_CONNECT?: object;
+  METAMASK?: object;
+}
+
+export enum IntegrationType {
+  WALLET_CONNECT = 'WALLET_CONNECT',
+  METAMASK = 'METAMASK',
+}
+
+export interface IntegrationResponseDto {
+  id: string;
+  tenantId: string;
+  type: IntegrationType;
+  publicData: PublicDataDto;
+  userId: string;
+  active: boolean;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+}
+
 export interface CreateTenantInputDto {
   contextId: string;
   /** @example "Input label" */
@@ -2130,34 +2161,6 @@ export interface TenantInputPaginateResponseDto {
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
   items: TenantInputEntityDto[];
-}
-
-export interface PublicDataDto {
-  WALLET_CONNECT?: object;
-  METAMASK?: object;
-}
-
-export interface PrivateDataDto {
-  WALLET_CONNECT?: object;
-  METAMASK?: object;
-}
-
-export enum IntegrationType {
-  WALLET_CONNECT = 'WALLET_CONNECT',
-  METAMASK = 'METAMASK',
-}
-
-export interface IntegrationResponseDto {
-  id: string;
-  tenantId: string;
-  type: IntegrationType;
-  publicData: PublicDataDto;
-  userId: string;
-  active: boolean;
-  /** @format date-time */
-  createdAt?: string;
-  /** @format date-time */
-  updatedAt?: string;
 }
 
 export interface ClearSaleTransactionCardDto {
@@ -3463,6 +3466,7 @@ export namespace Users {
         | 'simple_location'
         | 'checkbox'
         | 'commerce_product'
+        | 'iframe'
       )[];
       /** Filter by document contextId */
       contextId?: string;
@@ -5033,6 +5037,25 @@ export namespace Notifications {
   }
 }
 
+export namespace Integrations {
+  /**
+   * No description
+   * @tags Integration
+   * @name List
+   * @request GET:/integrations
+   * @secure
+   * @response `200` `(IntegrationResponseDto)[]`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   */
+  export namespace List {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = IntegrationResponseDto[];
+  }
+}
+
 export namespace TenantInput {
   /**
    * No description
@@ -5143,25 +5166,6 @@ export namespace TenantInput {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = TenantInputEntityDto[];
-  }
-}
-
-export namespace Integrations {
-  /**
-   * No description
-   * @tags Integration
-   * @name List
-   * @request GET:/integrations
-   * @secure
-   * @response `200` `(IntegrationResponseDto)[]`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   */
-  export namespace List {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = IntegrationResponseDto[];
   }
 }
 
@@ -5567,7 +5571,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.90
+ * @version 0.9.95
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
@@ -6714,6 +6718,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           | 'simple_location'
           | 'checkbox'
           | 'commerce_product'
+          | 'iframe'
         )[];
         /** Filter by document contextId */
         contextId?: string;
@@ -8498,6 +8503,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
+  integrations = {
+    /**
+     * No description
+     *
+     * @tags Integration
+     * @name List
+     * @request GET:/integrations
+     * @secure
+     * @response `200` `(IntegrationResponseDto)[]`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     */
+    list: (params: RequestParams = {}) =>
+      this.request<IntegrationResponseDto[], void>({
+        path: `/integrations`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+  };
   tenantInput = {
     /**
      * No description
@@ -8625,26 +8650,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       >({
         path: `/tenant-input/${tenantId}/slug/${slug}`,
         method: 'GET',
-        format: 'json',
-        ...params,
-      }),
-  };
-  integrations = {
-    /**
-     * No description
-     *
-     * @tags Integration
-     * @name List
-     * @request GET:/integrations
-     * @secure
-     * @response `200` `(IntegrationResponseDto)[]`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     */
-    list: (params: RequestParams = {}) =>
-      this.request<IntegrationResponseDto[], void>({
-        path: `/integrations`,
-        method: 'GET',
-        secure: true,
         format: 'json',
         ...params,
       }),

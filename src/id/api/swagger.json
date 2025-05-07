@@ -6855,7 +6855,8 @@
                   "identification_document",
                   "simple_location",
                   "checkbox",
-                  "commerce_product"
+                  "commerce_product",
+                  "iframe"
                 ]
               }
             }
@@ -8061,6 +8062,47 @@
         ]
       }
     },
+    "/integrations": {
+      "get": {
+        "operationId": "list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IntegrationResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          }
+        },
+        "tags": [
+          "Integration"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
     "/tenant-input/{tenantId}": {
       "post": {
         "operationId": "createTenantInput",
@@ -8447,47 +8489,6 @@
         },
         "tags": [
           "Tenant Input"
-        ]
-      }
-    },
-    "/integrations": {
-      "get": {
-        "operationId": "list",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IntegrationResponseDto"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          }
-        },
-        "tags": [
-          "Integration"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
         ]
       }
     },
@@ -9197,7 +9198,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.90",
+    "version": "0.9.95",
     "contact": {}
   },
   "tags": [],
@@ -12106,6 +12107,10 @@
           "requireReferrer": {
             "type": "boolean",
             "example": false
+          },
+          "referrerBlacklistId": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
@@ -12501,7 +12506,8 @@
           "identification_document",
           "simple_location",
           "checkbox",
-          "commerce_product"
+          "commerce_product",
+          "iframe"
         ]
       },
       "TenantInputSelectOptionDto": {
@@ -13713,6 +13719,74 @@
           "event"
         ]
       },
+      "PublicDataDto": {
+        "type": "object",
+        "properties": {
+          "WALLET_CONNECT": {
+            "type": "object"
+          },
+          "METAMASK": {
+            "type": "object"
+          }
+        }
+      },
+      "PrivateDataDto": {
+        "type": "object",
+        "properties": {
+          "WALLET_CONNECT": {
+            "type": "object"
+          },
+          "METAMASK": {
+            "type": "object"
+          }
+        }
+      },
+      "IntegrationType": {
+        "type": "string",
+        "enum": [
+          "WALLET_CONNECT",
+          "METAMASK"
+        ]
+      },
+      "IntegrationResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/IntegrationType"
+          },
+          "publicData": {
+            "$ref": "#/components/schemas/PublicDataDto"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "type",
+          "publicData",
+          "userId",
+          "active"
+        ]
+      },
       "CreateTenantInputDto": {
         "type": "object",
         "properties": {
@@ -13845,74 +13919,6 @@
         "required": [
           "meta",
           "items"
-        ]
-      },
-      "PublicDataDto": {
-        "type": "object",
-        "properties": {
-          "WALLET_CONNECT": {
-            "type": "object"
-          },
-          "METAMASK": {
-            "type": "object"
-          }
-        }
-      },
-      "PrivateDataDto": {
-        "type": "object",
-        "properties": {
-          "WALLET_CONNECT": {
-            "type": "object"
-          },
-          "METAMASK": {
-            "type": "object"
-          }
-        }
-      },
-      "IntegrationType": {
-        "type": "string",
-        "enum": [
-          "WALLET_CONNECT",
-          "METAMASK"
-        ]
-      },
-      "IntegrationResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "type": {
-            "$ref": "#/components/schemas/IntegrationType"
-          },
-          "publicData": {
-            "$ref": "#/components/schemas/PublicDataDto"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "active": {
-            "type": "boolean"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "tenantId",
-          "type",
-          "publicData",
-          "userId",
-          "active"
         ]
       },
       "ClearSaleTransactionCardDto": {
