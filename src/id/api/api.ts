@@ -5567,7 +5567,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.89
+ * @version 0.9.90
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
