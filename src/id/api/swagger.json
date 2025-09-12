@@ -1521,6 +1521,74 @@
         ]
       }
     },
+    "/users/{tenantId}/{userId}/exclude-account": {
+      "patch": {
+        "operationId": "excludeTenantUserAccount",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestAccountExclusionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
     "/users/account-complete/retry": {
       "post": {
         "operationId": "accountCompleteRetry",
@@ -3381,6 +3449,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "queryCodeFlow",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -4200,6 +4276,283 @@
         },
         "tags": [
           "Tenant Public"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/withdraw-accounts/{userId}": {
+      "post": {
+        "operationId": "addUserWithdrawAccount",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddWithdrawAccountDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserWithdrawAccountEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          }
+        },
+        "tags": [
+          "Users Withdraw Accounts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "listUserWithdrawAccounts",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserWithdrawAccountEntityPaginatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          }
+        },
+        "tags": [
+          "Users Withdraw Accounts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/users/{tenantId}/withdraw-accounts/{userId}/{accountId}": {
+      "get": {
+        "operationId": "getUserWithdrawAccountById",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accountId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserWithdrawAccountEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          }
+        },
+        "tags": [
+          "Users Withdraw Accounts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteUserWithdrawAccount",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accountId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          }
+        },
+        "tags": [
+          "Users Withdraw Accounts"
         ],
         "security": [
           {
@@ -5200,283 +5553,6 @@
         },
         "tags": [
           "Contexts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/withdraw-accounts/{userId}": {
-      "post": {
-        "operationId": "addUserWithdrawAccount",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddWithdrawAccountDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserWithdrawAccountEntityDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          }
-        },
-        "tags": [
-          "Users Withdraw Accounts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      },
-      "get": {
-        "operationId": "listUserWithdrawAccounts",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserWithdrawAccountEntityPaginatedDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          }
-        },
-        "tags": [
-          "Users Withdraw Accounts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
-    "/users/{tenantId}/withdraw-accounts/{userId}/{accountId}": {
-      "get": {
-        "operationId": "getUserWithdrawAccountById",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "accountId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserWithdrawAccountEntityDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          }
-        },
-        "tags": [
-          "Users Withdraw Accounts"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      },
-      "delete": {
-        "operationId": "deleteUserWithdrawAccount",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "accountId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          }
-        },
-        "tags": [
-          "Users Withdraw Accounts"
         ],
         "security": [
           {
@@ -8062,6 +8138,471 @@
         ]
       }
     },
+    "/notifications/{tenantId}": {
+      "get": {
+        "operationId": "listTenantNotifications",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "example": "2022-01-30T10:30:40-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "example": 1,
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "example": 10,
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "providers",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "one_signal",
+                  "sendinblue_brevo_email",
+                  "twilio_whatsapp"
+                ]
+              }
+            }
+          },
+          {
+            "name": "events",
+            "required": false,
+            "in": "query",
+            "example": [
+              "admin_kyc_approved"
+            ],
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "user_kyc_approved",
+                  "user_kyc_rejected",
+                  "user_loyalty_staking_ready_to_redeem",
+                  "user_loyalty_staking_received",
+                  "admin_kyc_approved",
+                  "admin_kyc_rejected",
+                  "admin_tenant_payment_failed",
+                  "admin_user_account_exclusion_requested",
+                  "commissionPayment",
+                  "cashbackPayment",
+                  "key.loyaltyDeferredWithoutProfile",
+                  "key.loyaltyDeferredForCommission",
+                  "key.loyaltyDeferredForCashback",
+                  "key.token_transfer_in",
+                  "key.token_transfer_out",
+                  "key.ecommerce_order_created",
+                  "key.admin_withdraw_requested",
+                  "key.admin_withdraw_approved",
+                  "key.admin_withdraw_denied",
+                  "key.system_general_error",
+                  "key.system_contact_creation",
+                  "key.system_ecommerce_error",
+                  "commerce.user_manual_order_created",
+                  "commerce.user_order_waiting_delivery",
+                  "commerce.user_order_concluded",
+                  "commerce.destination_user_order_waiting_delivery",
+                  "commerce.user_provider_account_created",
+                  "commerce.user_provider_account_document_requested",
+                  "commerce.admin_refund_requested",
+                  "commerce.admin_manual_order_created",
+                  "commerce.admin_order_concluded",
+                  "commerce.admin_order_failed",
+                  "commerce.system_order_error",
+                  "commerce.system_general_error"
+                ]
+              }
+            }
+          },
+          {
+            "name": "services",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "id",
+                  "commerce",
+                  "key"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationPaginateResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createOrUpdateTenantNotification",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertNotificationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicNotificationEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/notifications/{tenantId}/{event}/{provider}": {
+      "get": {
+        "operationId": "getTenantNotificationByEventAndProvider",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "event",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicNotificationEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/notifications/{tenantId}/{event}/{provider}/enable": {
+      "patch": {
+        "operationId": "enableTenantNotification",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "event",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/notifications/{tenantId}/{event}/{provider}/disable": {
+      "patch": {
+        "operationId": "disableTenantNotification",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "event",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
     "/integrations": {
       "get": {
         "operationId": "list",
@@ -8489,66 +9030,6 @@
         },
         "tags": [
           "Tenant Input"
-        ]
-      }
-    },
-    "/tenant-badges-providers/{tenantId}/clear-sale/transaction-info": {
-      "post": {
-        "operationId": "requestTransactionInfo",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestClearSaleInfoDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Tenant Badge Providers"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
         ]
       }
     },
@@ -9028,6 +9509,69 @@
         ]
       }
     },
+    "/billing/{tenantId}/simulate-billing-event-usage": {
+      "get": {
+        "operationId": "simulateBillingEventUsage",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": true,
+            "in": "query",
+            "example": "commerce.purchase",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "amount",
+            "required": true,
+            "in": "query",
+            "example": 1,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingEventUsageSimulationResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Billing"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/billing/{tenantId}/billing-usages": {
       "get": {
         "operationId": "listBillingUsage",
@@ -9193,12 +9737,72 @@
           }
         ]
       }
+    },
+    "/tenant-badges-providers/{tenantId}/clear-sale/transaction-info": {
+      "post": {
+        "operationId": "requestTransactionInfo",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestClearSaleInfoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tenant Badge Providers"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
     }
   },
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.95",
+    "version": "0.9.107",
     "contact": {}
   },
   "tags": [],
@@ -10841,7 +11445,8 @@
         "enum": [
           "application",
           "administrator",
-          "integration"
+          "integration",
+          "contextApplication"
         ]
       },
       "TenantJwtPayloadDto": {
@@ -12245,6 +12850,103 @@
           "configuration"
         ]
       },
+      "WithdrawAccountTypeEnum": {
+        "type": "string",
+        "enum": [
+          "pix",
+          "bank"
+        ]
+      },
+      "AddWithdrawAccountDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "default": "pix",
+            "example": "pix",
+            "$ref": "#/components/schemas/WithdrawAccountTypeEnum"
+          },
+          "accountInfo": {
+            "type": "object",
+            "example": {
+              "key": "00000000000",
+              "ownerSsn": "00000000000",
+              "ownerName": "Test"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "accountInfo"
+        ]
+      },
+      "UserWithdrawAccountEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "example": "pix",
+            "$ref": "#/components/schemas/WithdrawAccountTypeEnum"
+          },
+          "accountInfo": {
+            "type": "object",
+            "example": {
+              "key": "00000000000",
+              "ownerSsn": "00000000000",
+              "ownerName": "Test"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "userId",
+          "type"
+        ]
+      },
+      "UserWithdrawAccountEntityPaginatedDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserWithdrawAccountEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
       "CreateTenantContextDto": {
         "type": "object",
         "properties": {
@@ -12672,103 +13374,6 @@
       "DuplicatedContextException": {
         "type": "object",
         "properties": {}
-      },
-      "WithdrawAccountTypeEnum": {
-        "type": "string",
-        "enum": [
-          "pix",
-          "bank"
-        ]
-      },
-      "AddWithdrawAccountDto": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "default": "pix",
-            "example": "pix",
-            "$ref": "#/components/schemas/WithdrawAccountTypeEnum"
-          },
-          "accountInfo": {
-            "type": "object",
-            "example": {
-              "key": "00000000000",
-              "ownerSsn": "00000000000",
-              "ownerName": "Test"
-            }
-          }
-        },
-        "required": [
-          "type",
-          "accountInfo"
-        ]
-      },
-      "UserWithdrawAccountEntityDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "type": {
-            "example": "pix",
-            "$ref": "#/components/schemas/WithdrawAccountTypeEnum"
-          },
-          "accountInfo": {
-            "type": "object",
-            "example": {
-              "key": "00000000000",
-              "ownerSsn": "00000000000",
-              "ownerName": "Test"
-            }
-          }
-        },
-        "required": [
-          "id",
-          "tenantId",
-          "userId",
-          "type"
-        ]
-      },
-      "UserWithdrawAccountEntityPaginatedDto": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserWithdrawAccountEntityDto"
-            }
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMetaDto"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PaginationLinksDto"
-          }
-        },
-        "required": [
-          "items",
-          "meta"
-        ]
       },
       "CreateTenantAccessDto": {
         "type": "object",
@@ -13686,6 +14291,13 @@
           "providerUploadParams"
         ]
       },
+      "ReceiverProfileEnum": {
+        "type": "string",
+        "enum": [
+          "tenant_admins",
+          "system_super_admins"
+        ]
+      },
       "DispatchNotificationEventDto": {
         "type": "object",
         "properties": {
@@ -13713,10 +14325,306 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          "includeDestinationProfiles": {
+            "type": "array",
+            "nullable": false,
+            "items": {
+              "$ref": "#/components/schemas/ReceiverProfileEnum"
+            }
           }
         },
         "required": [
           "event"
+        ]
+      },
+      "PublicNotificationEntityDto": {
+        "type": "object",
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "provider": {
+            "type": "string",
+            "enum": [
+              "one_signal",
+              "sendinblue_brevo_email",
+              "twilio_whatsapp"
+            ],
+            "example": "sendinblue_brevo_email"
+          },
+          "event": {
+            "type": "string",
+            "example": "kyc-approved"
+          },
+          "eventFilters": {
+            "type": "object",
+            "example": null,
+            "nullable": true
+          },
+          "disabled": {
+            "type": "boolean"
+          },
+          "userDisableKycInputId": {
+            "type": "string",
+            "format": "uuid",
+            "example": null,
+            "nullable": true
+          },
+          "userDisableKycAttributeName": {
+            "type": "string",
+            "example": null,
+            "nullable": true
+          },
+          "providerParams": {
+            "type": "object",
+            "example": null,
+            "nullable": true
+          },
+          "defaultConfig": {
+            "type": "object",
+            "example": {
+              "disabled": false,
+              "params": null
+            },
+            "nullable": true
+          }
+        },
+        "required": [
+          "createdAt",
+          "updatedAt",
+          "provider",
+          "event",
+          "disabled",
+          "defaultConfig"
+        ]
+      },
+      "NotificationPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicNotificationEntityDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
+        ]
+      },
+      "NotificationKycEventFilter": {
+        "type": "object",
+        "properties": {
+          "contextId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "contextId"
+        ]
+      },
+      "SendinblueBrevoEmailNotificationProviderParamsDto": {
+        "type": "object",
+        "properties": {
+          "replaceParams": {
+            "type": "object"
+          },
+          "subject": {
+            "type": "string",
+            "nullable": false
+          },
+          "htmlContent": {
+            "type": "string",
+            "nullable": false
+          },
+          "textContent": {
+            "type": "string",
+            "nullable": false
+          },
+          "bcc": {
+            "nullable": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "subject",
+          "htmlContent"
+        ]
+      },
+      "TwilioWhatsAppNotificationProviderParamsDto": {
+        "type": "object",
+        "properties": {
+          "replaceParams": {
+            "type": "object"
+          },
+          "templateId": {
+            "type": "string"
+          },
+          "includeUserIds": {
+            "nullable": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "templateId"
+        ]
+      },
+      "OneSignalTargetChannelEnum": {
+        "type": "string",
+        "enum": [
+          "push",
+          "email",
+          "sms"
+        ]
+      },
+      "OneSignalNotificationProviderParamsDto": {
+        "type": "object",
+        "properties": {
+          "replaceParams": {
+            "type": "object"
+          },
+          "targetChannel": {
+            "example": "push",
+            "nullable": false,
+            "$ref": "#/components/schemas/OneSignalTargetChannelEnum"
+          },
+          "content": {
+            "type": "string",
+            "nullable": false
+          },
+          "subtitle": {
+            "type": "string",
+            "nullable": false
+          },
+          "headings": {
+            "type": "string",
+            "nullable": false
+          }
+        },
+        "required": [
+          "targetChannel",
+          "content"
+        ]
+      },
+      "DefaultNotificationEventEnum": {
+        "type": "string",
+        "enum": [
+          "user_kyc_approved",
+          "user_kyc_rejected",
+          "user_loyalty_staking_ready_to_redeem",
+          "user_loyalty_staking_received",
+          "admin_kyc_approved",
+          "admin_kyc_rejected",
+          "admin_tenant_payment_failed",
+          "admin_user_account_exclusion_requested",
+          "commissionPayment",
+          "cashbackPayment",
+          "key.loyaltyDeferredWithoutProfile",
+          "key.loyaltyDeferredForCommission",
+          "key.loyaltyDeferredForCashback",
+          "key.token_transfer_in",
+          "key.token_transfer_out",
+          "key.ecommerce_order_created",
+          "key.admin_withdraw_requested",
+          "key.admin_withdraw_approved",
+          "key.admin_withdraw_denied",
+          "key.system_general_error",
+          "key.system_contact_creation",
+          "key.system_ecommerce_error",
+          "commerce.user_manual_order_created",
+          "commerce.user_order_waiting_delivery",
+          "commerce.user_order_concluded",
+          "commerce.destination_user_order_waiting_delivery",
+          "commerce.user_provider_account_created",
+          "commerce.user_provider_account_document_requested",
+          "commerce.admin_refund_requested",
+          "commerce.admin_manual_order_created",
+          "commerce.admin_order_concluded",
+          "commerce.admin_order_failed",
+          "commerce.system_order_error",
+          "commerce.system_general_error"
+        ]
+      },
+      "NotificationProviderEnum": {
+        "type": "string",
+        "enum": [
+          "one_signal",
+          "sendinblue_brevo_email",
+          "twilio_whatsapp"
+        ]
+      },
+      "UpsertNotificationDto": {
+        "type": "object",
+        "properties": {
+          "event": {
+            "example": "admin_kyc_approved",
+            "nullable": false,
+            "$ref": "#/components/schemas/DefaultNotificationEventEnum"
+          },
+          "provider": {
+            "example": "sendinblue_brevo_email",
+            "nullable": false,
+            "$ref": "#/components/schemas/NotificationProviderEnum"
+          },
+          "eventFilters": {
+            "$ref": "#/components/schemas/NotificationKycEventFilter"
+          },
+          "disabled": {
+            "type": "boolean"
+          },
+          "userDisableKycInputId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userDisableKycAttributeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "providerParams": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SendinblueBrevoEmailNotificationProviderParamsDto"
+              },
+              {
+                "$ref": "#/components/schemas/TwilioWhatsAppNotificationProviderParamsDto"
+              },
+              {
+                "$ref": "#/components/schemas/OneSignalNotificationProviderParamsDto"
+              }
+            ],
+            "nullable": false
+          }
+        },
+        "required": [
+          "event",
+          "provider",
+          "providerParams"
         ]
       },
       "PublicDataDto": {
@@ -13919,56 +14827,6 @@
         "required": [
           "meta",
           "items"
-        ]
-      },
-      "ClearSaleTransactionCardDto": {
-        "type": "object",
-        "properties": {
-          "bin": {
-            "type": "string",
-            "example": "123456"
-          },
-          "last4": {
-            "type": "string",
-            "example": "1234"
-          },
-          "ownerName": {
-            "type": "string",
-            "example": "João Santos Silva"
-          },
-          "ownerDocument": {
-            "type": "string",
-            "format": "xxxxxxxxxxx"
-          }
-        },
-        "required": [
-          "bin",
-          "last4",
-          "ownerName",
-          "ownerDocument"
-        ]
-      },
-      "RequestClearSaleInfoDto": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "phone": {
-            "type": "string",
-            "example": "+5511999999999"
-          },
-          "cpf": {
-            "type": "string",
-            "format": "xxxxxxxxxxx"
-          },
-          "card": {
-            "$ref": "#/components/schemas/ClearSaleTransactionCardDto"
-          }
-        },
-        "required": [
-          "userId"
         ]
       },
       "BillingPlanLimitDto": {
@@ -14593,6 +15451,58 @@
           "eventsSummary"
         ]
       },
+      "BillingEventUsageSimulationResponseDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "commerce.product_purchase",
+              "commerce.product_published",
+              "key.nft_minted",
+              "key.erc20_minted",
+              "key.nft_collection_created",
+              "key.nft_contract_created",
+              "key.erc20_contract_created",
+              "nft_sale_transaction",
+              "erc20_sale_transaction",
+              "nft_transaction",
+              "erc20_transaction"
+            ]
+          },
+          "currentPrice": {
+            "type": "number"
+          },
+          "currentEventsCount": {
+            "type": "number"
+          },
+          "planPrepaidLimit": {
+            "type": "number"
+          },
+          "planSingleItemPrice": {
+            "type": "number"
+          },
+          "newPrice": {
+            "type": "number"
+          },
+          "newEventsCount": {
+            "type": "number"
+          },
+          "requestPrice": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "type",
+          "currentPrice",
+          "currentEventsCount",
+          "planPrepaidLimit",
+          "planSingleItemPrice",
+          "newPrice",
+          "newEventsCount",
+          "requestPrice"
+        ]
+      },
       "BillingUsageEntityDto": {
         "type": "object",
         "properties": {
@@ -14662,6 +15572,56 @@
         "required": [
           "items",
           "meta"
+        ]
+      },
+      "ClearSaleTransactionCardDto": {
+        "type": "object",
+        "properties": {
+          "bin": {
+            "type": "string",
+            "example": "123456"
+          },
+          "last4": {
+            "type": "string",
+            "example": "1234"
+          },
+          "ownerName": {
+            "type": "string",
+            "example": "João Santos Silva"
+          },
+          "ownerDocument": {
+            "type": "string",
+            "format": "xxxxxxxxxxx"
+          }
+        },
+        "required": [
+          "bin",
+          "last4",
+          "ownerName",
+          "ownerDocument"
+        ]
+      },
+      "RequestClearSaleInfoDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+5511999999999"
+          },
+          "cpf": {
+            "type": "string",
+            "format": "xxxxxxxxxxx"
+          },
+          "card": {
+            "$ref": "#/components/schemas/ClearSaleTransactionCardDto"
+          }
+        },
+        "required": [
+          "userId"
         ]
       }
     }

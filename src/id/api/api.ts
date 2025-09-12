@@ -723,6 +723,7 @@ export enum TenantRoleEnum {
   Application = 'application',
   Administrator = 'administrator',
   Integration = 'integration',
+  ContextApplication = 'contextApplication',
 }
 
 export interface TenantJwtPayloadDto {
@@ -1462,6 +1463,46 @@ export interface TenantPublicDto {
   configuration: TenantConfigurationResponseDto;
 }
 
+export enum WithdrawAccountTypeEnum {
+  Pix = 'pix',
+  Bank = 'bank',
+}
+
+export interface AddWithdrawAccountDto {
+  /**
+   * @default "pix"
+   * @example "pix"
+   */
+  type: WithdrawAccountTypeEnum;
+  /** @example {"key":"00000000000","ownerSsn":"00000000000","ownerName":"Test"} */
+  accountInfo: object;
+}
+
+export interface UserWithdrawAccountEntityDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+  /** @format date-time */
+  deletedAt?: string;
+  /** @format uuid */
+  tenantId: string;
+  /** @format uuid */
+  userId: string;
+  /** @example "pix" */
+  type: WithdrawAccountTypeEnum;
+  /** @example {"key":"00000000000","ownerSsn":"00000000000","ownerName":"Test"} */
+  accountInfo?: object;
+}
+
+export interface UserWithdrawAccountEntityPaginatedDto {
+  items: UserWithdrawAccountEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
 export interface CreateTenantContextDto {
   contextId: string;
   /** @example true */
@@ -1654,46 +1695,6 @@ export interface UpdateContextsDto {
 }
 
 export type DuplicatedContextException = object;
-
-export enum WithdrawAccountTypeEnum {
-  Pix = 'pix',
-  Bank = 'bank',
-}
-
-export interface AddWithdrawAccountDto {
-  /**
-   * @default "pix"
-   * @example "pix"
-   */
-  type: WithdrawAccountTypeEnum;
-  /** @example {"key":"00000000000","ownerSsn":"00000000000","ownerName":"Test"} */
-  accountInfo: object;
-}
-
-export interface UserWithdrawAccountEntityDto {
-  /** @format uuid */
-  id: string;
-  /** @format date-time */
-  createdAt?: string;
-  /** @format date-time */
-  updatedAt?: string;
-  /** @format date-time */
-  deletedAt?: string;
-  /** @format uuid */
-  tenantId: string;
-  /** @format uuid */
-  userId: string;
-  /** @example "pix" */
-  type: WithdrawAccountTypeEnum;
-  /** @example {"key":"00000000000","ownerSsn":"00000000000","ownerName":"Test"} */
-  accountInfo?: object;
-}
-
-export interface UserWithdrawAccountEntityPaginatedDto {
-  items: UserWithdrawAccountEntityDto[];
-  meta: PaginationMetaDto;
-  links?: PaginationLinksDto;
-}
 
 export interface CreateTenantAccessDto {
   /** @format uuid */
@@ -2077,6 +2078,11 @@ export interface AssetEntityWithProviderUploadParamsDto {
   providerUploadParams: CloudinaryProviderUploadParamsDto;
 }
 
+export enum ReceiverProfileEnum {
+  TenantAdmins = 'tenant_admins',
+  SystemSuperAdmins = 'system_super_admins',
+}
+
 export interface DispatchNotificationEventDto {
   /** @example "kyc-approved" */
   event: string;
@@ -2084,6 +2090,133 @@ export interface DispatchNotificationEventDto {
   metadata?: object | null;
   destinationUserId?: string[];
   hiddenDestinationUserId?: string[];
+  includeDestinationProfiles?: ReceiverProfileEnum[];
+}
+
+export interface PublicNotificationEntityDto {
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId?: string | null;
+  /** @example "sendinblue_brevo_email" */
+  provider: 'one_signal' | 'sendinblue_brevo_email' | 'twilio_whatsapp';
+  /** @example "kyc-approved" */
+  event: string;
+  /** @example null */
+  eventFilters?: object | null;
+  disabled: boolean;
+  /**
+   * @format uuid
+   * @example null
+   */
+  userDisableKycInputId?: string | null;
+  /** @example null */
+  userDisableKycAttributeName?: string | null;
+  /** @example null */
+  providerParams?: object | null;
+  /** @example {"disabled":false,"params":null} */
+  defaultConfig: object | null;
+}
+
+export interface NotificationPaginateResponseDto {
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+  items: PublicNotificationEntityDto[];
+}
+
+export interface NotificationKycEventFilter {
+  /** @format uuid */
+  contextId: string | null;
+}
+
+export interface SendinblueBrevoEmailNotificationProviderParamsDto {
+  replaceParams?: object;
+  subject: string;
+  htmlContent: string;
+  textContent?: string;
+  bcc?: string[];
+}
+
+export interface TwilioWhatsAppNotificationProviderParamsDto {
+  replaceParams?: object;
+  templateId: string;
+  includeUserIds?: string[];
+}
+
+export enum OneSignalTargetChannelEnum {
+  Push = 'push',
+  Email = 'email',
+  Sms = 'sms',
+}
+
+export interface OneSignalNotificationProviderParamsDto {
+  replaceParams?: object;
+  /** @example "push" */
+  targetChannel: OneSignalTargetChannelEnum;
+  content: string;
+  subtitle?: string;
+  headings?: string;
+}
+
+export enum DefaultNotificationEventEnum {
+  UserKycApproved = 'user_kyc_approved',
+  UserKycRejected = 'user_kyc_rejected',
+  UserLoyaltyStakingReadyToRedeem = 'user_loyalty_staking_ready_to_redeem',
+  UserLoyaltyStakingReceived = 'user_loyalty_staking_received',
+  AdminKycApproved = 'admin_kyc_approved',
+  AdminKycRejected = 'admin_kyc_rejected',
+  AdminTenantPaymentFailed = 'admin_tenant_payment_failed',
+  AdminUserAccountExclusionRequested = 'admin_user_account_exclusion_requested',
+  CommissionPayment = 'commissionPayment',
+  CashbackPayment = 'cashbackPayment',
+  KeyLoyaltyDeferredWithoutProfile = 'key.loyaltyDeferredWithoutProfile',
+  KeyLoyaltyDeferredForCommission = 'key.loyaltyDeferredForCommission',
+  KeyLoyaltyDeferredForCashback = 'key.loyaltyDeferredForCashback',
+  KeyTokenTransferIn = 'key.token_transfer_in',
+  KeyTokenTransferOut = 'key.token_transfer_out',
+  KeyEcommerceOrderCreated = 'key.ecommerce_order_created',
+  KeyAdminWithdrawRequested = 'key.admin_withdraw_requested',
+  KeyAdminWithdrawApproved = 'key.admin_withdraw_approved',
+  KeyAdminWithdrawDenied = 'key.admin_withdraw_denied',
+  KeySystemGeneralError = 'key.system_general_error',
+  KeySystemContactCreation = 'key.system_contact_creation',
+  KeySystemEcommerceError = 'key.system_ecommerce_error',
+  CommerceUserManualOrderCreated = 'commerce.user_manual_order_created',
+  CommerceUserOrderWaitingDelivery = 'commerce.user_order_waiting_delivery',
+  CommerceUserOrderConcluded = 'commerce.user_order_concluded',
+  CommerceDestinationUserOrderWaitingDelivery = 'commerce.destination_user_order_waiting_delivery',
+  CommerceUserProviderAccountCreated = 'commerce.user_provider_account_created',
+  CommerceUserProviderAccountDocumentRequested = 'commerce.user_provider_account_document_requested',
+  CommerceAdminRefundRequested = 'commerce.admin_refund_requested',
+  CommerceAdminManualOrderCreated = 'commerce.admin_manual_order_created',
+  CommerceAdminOrderConcluded = 'commerce.admin_order_concluded',
+  CommerceAdminOrderFailed = 'commerce.admin_order_failed',
+  CommerceSystemOrderError = 'commerce.system_order_error',
+  CommerceSystemGeneralError = 'commerce.system_general_error',
+}
+
+export enum NotificationProviderEnum {
+  OneSignal = 'one_signal',
+  SendinblueBrevoEmail = 'sendinblue_brevo_email',
+  TwilioWhatsapp = 'twilio_whatsapp',
+}
+
+export interface UpsertNotificationDto {
+  /** @example "admin_kyc_approved" */
+  event: DefaultNotificationEventEnum;
+  /** @example "sendinblue_brevo_email" */
+  provider: NotificationProviderEnum;
+  eventFilters?: NotificationKycEventFilter;
+  disabled?: boolean;
+  /** @format uuid */
+  userDisableKycInputId?: string;
+  userDisableKycAttributeName?: string | null;
+  providerParams:
+    | SendinblueBrevoEmailNotificationProviderParamsDto
+    | TwilioWhatsAppNotificationProviderParamsDto
+    | OneSignalNotificationProviderParamsDto;
 }
 
 export interface PublicDataDto {
@@ -2161,27 +2294,6 @@ export interface TenantInputPaginateResponseDto {
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
   items: TenantInputEntityDto[];
-}
-
-export interface ClearSaleTransactionCardDto {
-  /** @example "123456" */
-  bin: string;
-  /** @example "1234" */
-  last4: string;
-  /** @example "João Santos Silva" */
-  ownerName: string;
-  /** @format xxxxxxxxxxx */
-  ownerDocument: string;
-}
-
-export interface RequestClearSaleInfoDto {
-  /** @format uuid */
-  userId: string;
-  /** @example "+5511999999999" */
-  phone?: string;
-  /** @format xxxxxxxxxxx */
-  cpf?: string;
-  card?: ClearSaleTransactionCardDto;
 }
 
 export interface BillingPlanLimitDto {
@@ -2438,6 +2550,28 @@ export interface BillingSummaryResponseDto {
   eventsSummary: BillingSummaryItemByTypeDto[];
 }
 
+export interface BillingEventUsageSimulationResponseDto {
+  type:
+    | 'commerce.product_purchase'
+    | 'commerce.product_published'
+    | 'key.nft_minted'
+    | 'key.erc20_minted'
+    | 'key.nft_collection_created'
+    | 'key.nft_contract_created'
+    | 'key.erc20_contract_created'
+    | 'nft_sale_transaction'
+    | 'erc20_sale_transaction'
+    | 'nft_transaction'
+    | 'erc20_transaction';
+  currentPrice: number;
+  currentEventsCount: number;
+  planPrepaidLimit: number;
+  planSingleItemPrice: number;
+  newPrice: number;
+  newEventsCount: number;
+  requestPrice: number;
+}
+
 export interface BillingUsageEntityDto {
   /** @format uuid */
   id: string;
@@ -2461,6 +2595,27 @@ export interface BillingUsageEntityPaginatedDto {
   items: BillingUsageEntityDto[];
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
+}
+
+export interface ClearSaleTransactionCardDto {
+  /** @example "123456" */
+  bin: string;
+  /** @example "1234" */
+  last4: string;
+  /** @example "João Santos Silva" */
+  ownerName: string;
+  /** @format xxxxxxxxxxx */
+  ownerDocument: string;
+}
+
+export interface RequestClearSaleInfoDto {
+  /** @format uuid */
+  userId: string;
+  /** @example "+5511999999999" */
+  phone?: string;
+  /** @format xxxxxxxxxxx */
+  cpf?: string;
+  card?: ClearSaleTransactionCardDto;
 }
 
 export namespace Users {
@@ -2933,6 +3088,26 @@ export namespace Users {
     export type RequestBody = UpdateUserDto;
     export type RequestHeaders = {};
     export type ResponseBody = UserPublicResponseDto;
+  }
+  /**
+   * No description
+   * @tags Users
+   * @name ExcludeTenantUserAccount
+   * @request PATCH:/users/{tenantId}/{userId}/exclude-account
+   * @secure
+   * @response `204` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace ExcludeTenantUserAccount {
+    export type RequestParams = {
+      tenantId: string;
+      userId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = RequestAccountExclusionDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
   }
   /**
    * No description
@@ -3976,7 +4151,9 @@ export namespace Auth {
     export type RequestParams = {
       tenantId: string;
     };
-    export type RequestQuery = {};
+    export type RequestQuery = {
+      queryCodeFlow?: boolean;
+    };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = any;
@@ -5035,6 +5212,162 @@ export namespace Notifications {
     export type RequestHeaders = {};
     export type ResponseBody = void;
   }
+  /**
+   * No description
+   * @tags Notifications
+   * @name ListTenantNotifications
+   * @request GET:/notifications/{tenantId}
+   * @secure
+   * @response `200` `NotificationPaginateResponseDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace ListTenantNotifications {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      /** @example "2022-01-30T10:30:40-03:00" */
+      createdAt?: string;
+      sortBy?: string[];
+      orderBy?: OrderByEnum;
+      /**
+       * @default 1
+       * @example 1
+       */
+      page?: number;
+      /**
+       * @default 10
+       * @example 10
+       */
+      limit?: number;
+      search?: string;
+      providers?: ('one_signal' | 'sendinblue_brevo_email' | 'twilio_whatsapp')[];
+      /** @example ["admin_kyc_approved"] */
+      events?: (
+        | 'user_kyc_approved'
+        | 'user_kyc_rejected'
+        | 'user_loyalty_staking_ready_to_redeem'
+        | 'user_loyalty_staking_received'
+        | 'admin_kyc_approved'
+        | 'admin_kyc_rejected'
+        | 'admin_tenant_payment_failed'
+        | 'admin_user_account_exclusion_requested'
+        | 'commissionPayment'
+        | 'cashbackPayment'
+        | 'key.loyaltyDeferredWithoutProfile'
+        | 'key.loyaltyDeferredForCommission'
+        | 'key.loyaltyDeferredForCashback'
+        | 'key.token_transfer_in'
+        | 'key.token_transfer_out'
+        | 'key.ecommerce_order_created'
+        | 'key.admin_withdraw_requested'
+        | 'key.admin_withdraw_approved'
+        | 'key.admin_withdraw_denied'
+        | 'key.system_general_error'
+        | 'key.system_contact_creation'
+        | 'key.system_ecommerce_error'
+        | 'commerce.user_manual_order_created'
+        | 'commerce.user_order_waiting_delivery'
+        | 'commerce.user_order_concluded'
+        | 'commerce.destination_user_order_waiting_delivery'
+        | 'commerce.user_provider_account_created'
+        | 'commerce.user_provider_account_document_requested'
+        | 'commerce.admin_refund_requested'
+        | 'commerce.admin_manual_order_created'
+        | 'commerce.admin_order_concluded'
+        | 'commerce.admin_order_failed'
+        | 'commerce.system_order_error'
+        | 'commerce.system_general_error'
+      )[];
+      services?: ('id' | 'commerce' | 'key')[];
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = NotificationPaginateResponseDto;
+  }
+  /**
+   * No description
+   * @tags Notifications
+   * @name CreateOrUpdateTenantNotification
+   * @request POST:/notifications/{tenantId}
+   * @secure
+   * @response `200` `PublicNotificationEntityDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace CreateOrUpdateTenantNotification {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpsertNotificationDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = PublicNotificationEntityDto;
+  }
+  /**
+   * No description
+   * @tags Notifications
+   * @name GetTenantNotificationByEventAndProvider
+   * @request GET:/notifications/{tenantId}/{event}/{provider}
+   * @secure
+   * @response `200` `PublicNotificationEntityDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace GetTenantNotificationByEventAndProvider {
+    export type RequestParams = {
+      tenantId: string;
+      event: string;
+      provider: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = PublicNotificationEntityDto;
+  }
+  /**
+   * No description
+   * @tags Notifications
+   * @name EnableTenantNotification
+   * @request PATCH:/notifications/{tenantId}/{event}/{provider}/enable
+   * @secure
+   * @response `204` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace EnableTenantNotification {
+    export type RequestParams = {
+      tenantId: string;
+      event: string;
+      provider: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Notifications
+   * @name DisableTenantNotification
+   * @request PATCH:/notifications/{tenantId}/{event}/{provider}/disable
+   * @secure
+   * @response `204` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace DisableTenantNotification {
+    export type RequestParams = {
+      tenantId: string;
+      event: string;
+      provider: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
 }
 
 export namespace Integrations {
@@ -5166,28 +5499,6 @@ export namespace TenantInput {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = TenantInputEntityDto[];
-  }
-}
-
-export namespace TenantBadgesProviders {
-  /**
-   * No description
-   * @tags Tenant Badge Providers
-   * @name RequestTransactionInfo
-   * @request POST:/tenant-badges-providers/{tenantId}/clear-sale/transaction-info
-   * @secure
-   * @response `200` `void`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
-   */
-  export namespace RequestTransactionInfo {
-    export type RequestParams = {
-      tenantId: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = RequestClearSaleInfoDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
   }
 }
 
@@ -5374,6 +5685,29 @@ export namespace Billing {
   /**
    * No description
    * @tags Billing
+   * @name SimulateBillingEventUsage
+   * @request GET:/billing/{tenantId}/simulate-billing-event-usage
+   * @secure
+   * @response `200` `BillingEventUsageSimulationResponseDto`
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+   */
+  export namespace SimulateBillingEventUsage {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      /** @example "commerce.purchase" */
+      type: string;
+      /** @example 1 */
+      amount: number;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = BillingEventUsageSimulationResponseDto;
+  }
+  /**
+   * No description
+   * @tags Billing
    * @name ListBillingUsage
    * @request GET:/billing/{tenantId}/billing-usages
    * @secure
@@ -5434,6 +5768,28 @@ export namespace Billing {
     };
     export type RequestQuery = {};
     export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+}
+
+export namespace TenantBadgesProviders {
+  /**
+   * No description
+   * @tags Tenant Badge Providers
+   * @name RequestTransactionInfo
+   * @request POST:/tenant-badges-providers/{tenantId}/clear-sale/transaction-info
+   * @secure
+   * @response `200` `void`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+   */
+  export namespace RequestTransactionInfo {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = RequestClearSaleInfoDto;
     export type RequestHeaders = {};
     export type ResponseBody = void;
   }
@@ -5571,7 +5927,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.95
+ * @version 0.9.107
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
@@ -6119,6 +6475,32 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         secure: true,
         type: ContentType.Json,
         format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name ExcludeTenantUserAccount
+     * @request PATCH:/users/{tenantId}/{userId}/exclude-account
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    excludeTenantUserAccount: (
+      tenantId: string,
+      userId: string,
+      data: RequestAccountExclusionDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/users/${tenantId}/${userId}/exclude-account`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
 
@@ -7310,10 +7692,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @response `308` `void` Redirects user to make apple login under tenant scope using token code strategy
      * @response `400` `BadRequestExceptionDto`
      */
-    appleAuthByCodeRedirect: (tenantId: string, params: RequestParams = {}) =>
+    appleAuthByCodeRedirect: (
+      tenantId: string,
+      query?: {
+        queryCodeFlow?: boolean;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<any, void | BadRequestExceptionDto>({
         path: `/auth/${tenantId}/signin/apple`,
         method: 'GET',
+        query: query,
         ...params,
       }),
 
@@ -8502,6 +8891,171 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         type: ContentType.Json,
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags Notifications
+     * @name ListTenantNotifications
+     * @request GET:/notifications/{tenantId}
+     * @secure
+     * @response `200` `NotificationPaginateResponseDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    listTenantNotifications: (
+      tenantId: string,
+      query?: {
+        /** @example "2022-01-30T10:30:40-03:00" */
+        createdAt?: string;
+        sortBy?: string[];
+        orderBy?: OrderByEnum;
+        /**
+         * @default 1
+         * @example 1
+         */
+        page?: number;
+        /**
+         * @default 10
+         * @example 10
+         */
+        limit?: number;
+        search?: string;
+        providers?: ('one_signal' | 'sendinblue_brevo_email' | 'twilio_whatsapp')[];
+        /** @example ["admin_kyc_approved"] */
+        events?: (
+          | 'user_kyc_approved'
+          | 'user_kyc_rejected'
+          | 'user_loyalty_staking_ready_to_redeem'
+          | 'user_loyalty_staking_received'
+          | 'admin_kyc_approved'
+          | 'admin_kyc_rejected'
+          | 'admin_tenant_payment_failed'
+          | 'admin_user_account_exclusion_requested'
+          | 'commissionPayment'
+          | 'cashbackPayment'
+          | 'key.loyaltyDeferredWithoutProfile'
+          | 'key.loyaltyDeferredForCommission'
+          | 'key.loyaltyDeferredForCashback'
+          | 'key.token_transfer_in'
+          | 'key.token_transfer_out'
+          | 'key.ecommerce_order_created'
+          | 'key.admin_withdraw_requested'
+          | 'key.admin_withdraw_approved'
+          | 'key.admin_withdraw_denied'
+          | 'key.system_general_error'
+          | 'key.system_contact_creation'
+          | 'key.system_ecommerce_error'
+          | 'commerce.user_manual_order_created'
+          | 'commerce.user_order_waiting_delivery'
+          | 'commerce.user_order_concluded'
+          | 'commerce.destination_user_order_waiting_delivery'
+          | 'commerce.user_provider_account_created'
+          | 'commerce.user_provider_account_document_requested'
+          | 'commerce.admin_refund_requested'
+          | 'commerce.admin_manual_order_created'
+          | 'commerce.admin_order_concluded'
+          | 'commerce.admin_order_failed'
+          | 'commerce.system_order_error'
+          | 'commerce.system_general_error'
+        )[];
+        services?: ('id' | 'commerce' | 'key')[];
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<NotificationPaginateResponseDto, void | HttpExceptionDto>({
+        path: `/notifications/${tenantId}`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Notifications
+     * @name CreateOrUpdateTenantNotification
+     * @request POST:/notifications/{tenantId}
+     * @secure
+     * @response `200` `PublicNotificationEntityDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    createOrUpdateTenantNotification: (tenantId: string, data: UpsertNotificationDto, params: RequestParams = {}) =>
+      this.request<PublicNotificationEntityDto, void | HttpExceptionDto>({
+        path: `/notifications/${tenantId}`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Notifications
+     * @name GetTenantNotificationByEventAndProvider
+     * @request GET:/notifications/{tenantId}/{event}/{provider}
+     * @secure
+     * @response `200` `PublicNotificationEntityDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    getTenantNotificationByEventAndProvider: (
+      tenantId: string,
+      event: string,
+      provider: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<PublicNotificationEntityDto, void | HttpExceptionDto>({
+        path: `/notifications/${tenantId}/${event}/${provider}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Notifications
+     * @name EnableTenantNotification
+     * @request PATCH:/notifications/{tenantId}/{event}/{provider}/enable
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    enableTenantNotification: (tenantId: string, event: string, provider: string, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/notifications/${tenantId}/${event}/${provider}/enable`,
+        method: 'PATCH',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Notifications
+     * @name DisableTenantNotification
+     * @request PATCH:/notifications/{tenantId}/{event}/{provider}/disable
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    disableTenantNotification: (tenantId: string, event: string, provider: string, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/notifications/${tenantId}/${event}/${provider}/disable`,
+        method: 'PATCH',
+        secure: true,
+        ...params,
+      }),
   };
   integrations = {
     /**
@@ -8651,28 +9205,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/tenant-input/${tenantId}/slug/${slug}`,
         method: 'GET',
         format: 'json',
-        ...params,
-      }),
-  };
-  tenantBadgesProviders = {
-    /**
-     * No description
-     *
-     * @tags Tenant Badge Providers
-     * @name RequestTransactionInfo
-     * @request POST:/tenant-badges-providers/{tenantId}/clear-sale/transaction-info
-     * @secure
-     * @response `200` `void`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
-     */
-    requestTransactionInfo: (tenantId: string, data: RequestClearSaleInfoDto, params: RequestParams = {}) =>
-      this.request<void, void | HttpExceptionDto>({
-        path: `/tenant-badges-providers/${tenantId}/clear-sale/transaction-info`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
         ...params,
       }),
   };
@@ -8883,6 +9415,35 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Billing
+     * @name SimulateBillingEventUsage
+     * @request GET:/billing/{tenantId}/simulate-billing-event-usage
+     * @secure
+     * @response `200` `BillingEventUsageSimulationResponseDto`
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    simulateBillingEventUsage: (
+      tenantId: string,
+      query: {
+        /** @example "commerce.purchase" */
+        type: string;
+        /** @example 1 */
+        amount: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<BillingEventUsageSimulationResponseDto, HttpExceptionDto>({
+        path: `/billing/${tenantId}/simulate-billing-event-usage`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Billing
      * @name ListBillingUsage
      * @request GET:/billing/{tenantId}/billing-usages
      * @secure
@@ -8948,6 +9509,28 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/billing/${tenantId}/invoice-and-charge`,
         method: 'PATCH',
         secure: true,
+        ...params,
+      }),
+  };
+  tenantBadgesProviders = {
+    /**
+     * No description
+     *
+     * @tags Tenant Badge Providers
+     * @name RequestTransactionInfo
+     * @request POST:/tenant-badges-providers/{tenantId}/clear-sale/transaction-info
+     * @secure
+     * @response `200` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+     */
+    requestTransactionInfo: (tenantId: string, data: RequestClearSaleInfoDto, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/tenant-badges-providers/${tenantId}/clear-sale/transaction-info`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
   };
