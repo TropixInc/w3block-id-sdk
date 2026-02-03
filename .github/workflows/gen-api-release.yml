@@ -9,6 +9,10 @@ on:
         required: false
         default: 'main'
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   gen-api:
     runs-on: ubuntu-latest
@@ -104,15 +108,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Git pull with tags
         run: git pull --tags
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.20.7
+          node-version: '24'
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
 
@@ -120,10 +124,9 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run build
+        run: npm run build --if-present
 
       - name: Publish to npm
         run: npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           scope: '@w3block'
