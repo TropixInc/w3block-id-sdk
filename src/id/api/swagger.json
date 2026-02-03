@@ -4047,7 +4047,7 @@
             "description": "Unauthorized - Integration API key or JWT required"
           },
           "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration",
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration, admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -5567,6 +5567,48 @@
           {
             "x-w3block-secret": []
           }
+        ]
+      }
+    },
+    "/assets/{tenantId}": {
+      "post": {
+        "operationId": "requestUpload",
+        "summary": "",
+        "description": "Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestAssetUploadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Asset upload request successfully created!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetEntityWithProviderUploadParamsDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Assets"
         ]
       }
     },
@@ -8036,614 +8078,6 @@
         ]
       }
     },
-    "/assets/{tenantId}": {
-      "post": {
-        "operationId": "requestUpload",
-        "summary": "",
-        "description": "Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestAssetUploadDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Asset upload request successfully created!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AssetEntityWithProviderUploadParamsDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Assets"
-        ]
-      }
-    },
-    "/notifications/{tenantId}/event": {
-      "post": {
-        "operationId": "dispatchNotificationEvent",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DispatchNotificationEventDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Notifications"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
-    "/notifications/{tenantId}": {
-      "get": {
-        "operationId": "listTenantNotifications",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "createdAt",
-            "required": false,
-            "in": "query",
-            "example": "2022-01-30T10:30:40-03:00",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "example": 1,
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "example": 10,
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "providers",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "one_signal",
-                  "sendinblue_brevo_email",
-                  "twilio_whatsapp"
-                ]
-              }
-            }
-          },
-          {
-            "name": "events",
-            "required": false,
-            "in": "query",
-            "example": [
-              "admin_kyc_approved"
-            ],
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "user_kyc_approved",
-                  "user_kyc_rejected",
-                  "user_loyalty_staking_ready_to_redeem",
-                  "user_loyalty_staking_received",
-                  "admin_kyc_approved",
-                  "admin_kyc_rejected",
-                  "admin_tenant_payment_failed",
-                  "admin_user_account_exclusion_requested",
-                  "commissionPayment",
-                  "cashbackPayment",
-                  "key.loyaltyDeferredWithoutProfile",
-                  "key.loyaltyDeferredForCommission",
-                  "key.loyaltyDeferredForCashback",
-                  "key.token_transfer_in",
-                  "key.token_transfer_out",
-                  "key.ecommerce_order_created",
-                  "key.admin_withdraw_requested",
-                  "key.admin_withdraw_approved",
-                  "key.admin_withdraw_denied",
-                  "key.system_general_error",
-                  "key.system_contact_creation",
-                  "key.system_ecommerce_error",
-                  "commerce.user_manual_order_created",
-                  "commerce.user_order_waiting_delivery",
-                  "commerce.user_order_concluded",
-                  "commerce.destination_user_order_waiting_delivery",
-                  "commerce.user_provider_account_created",
-                  "commerce.user_provider_account_document_requested",
-                  "commerce.admin_refund_requested",
-                  "commerce.admin_manual_order_created",
-                  "commerce.admin_order_concluded",
-                  "commerce.admin_order_failed",
-                  "commerce.system_order_error",
-                  "commerce.system_general_error"
-                ]
-              }
-            }
-          },
-          {
-            "name": "services",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "id",
-                  "commerce",
-                  "key"
-                ]
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotificationPaginateResponseDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Notifications"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      },
-      "post": {
-        "operationId": "createOrUpdateTenantNotification",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpsertNotificationDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PublicNotificationEntityDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Notifications"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
-    "/notifications/{tenantId}/{event}/{provider}": {
-      "get": {
-        "operationId": "getTenantNotificationByEventAndProvider",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "event",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "provider",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PublicNotificationEntityDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Notifications"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
-    "/notifications/{tenantId}/{event}/{provider}/enable": {
-      "patch": {
-        "operationId": "enableTenantNotification",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "event",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "provider",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Notifications"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
-    "/notifications/{tenantId}/{event}/{provider}/disable": {
-      "patch": {
-        "operationId": "disableTenantNotification",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "event",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "provider",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          },
-          "403": {
-            "description": "Need user with one of these roles: superAdmin, integration, admin",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpExceptionDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Notifications"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
-    "/integrations": {
-      "get": {
-        "operationId": "list",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IntegrationResponseDto"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Integration API key or JWT required"
-          }
-        },
-        "tags": [
-          "Integration"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
     "/tenant-input/{tenantId}": {
       "post": {
         "operationId": "createTenantInput",
@@ -9030,6 +8464,584 @@
         },
         "tags": [
           "Tenant Input"
+        ]
+      }
+    },
+    "/notifications/{tenantId}/event": {
+      "post": {
+        "operationId": "dispatchNotificationEvent",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DispatchNotificationEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, superAdmin, integration, application, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/notifications/{tenantId}": {
+      "get": {
+        "operationId": "listTenantNotifications",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "example": "2022-01-30T10:30:40-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "example": 1,
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "example": 10,
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "providers",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "one_signal",
+                  "sendinblue_brevo_email",
+                  "twilio_whatsapp"
+                ]
+              }
+            }
+          },
+          {
+            "name": "events",
+            "required": false,
+            "in": "query",
+            "example": [
+              "kyc_admin_approved"
+            ],
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "auth_code",
+                  "system_wallet_low_balances",
+                  "default_account_confirmation",
+                  "invite_account_confirmation",
+                  "signup_account_confirmation",
+                  "signup_code_account_confirmation",
+                  "finish_account_creation",
+                  "password_recover_by_code",
+                  "password_recover_by_link",
+                  "user_loyalty_staking_ready_to_redeem",
+                  "admin_user_account_exclusion_requested",
+                  "admin_tenant_payment_failed",
+                  "kyc_approval_request",
+                  "kyc_require_user_review",
+                  "kyc_user_approved",
+                  "kyc_admin_approved",
+                  "kyc_user_rejected",
+                  "kyc_admin_rejected",
+                  "user_loyalty_staking_received",
+                  "commissionPayment",
+                  "cashbackPayment",
+                  "key.loyaltyDeferredWithoutProfile",
+                  "key.loyaltyDeferredForCommission",
+                  "key.loyaltyDeferredForCashback",
+                  "key.token_transfer_in",
+                  "key.token_transfer_out",
+                  "key.ecommerce_order_created",
+                  "key.admin_withdraw_requested",
+                  "key.admin_withdraw_approved",
+                  "key.admin_withdraw_denied",
+                  "key.system_general_error",
+                  "key.system_contact_creation",
+                  "key.system_ecommerce_error",
+                  "commerce.user_manual_order_created",
+                  "commerce.user_order_waiting_delivery",
+                  "commerce.user_order_concluded",
+                  "commerce.destination_user_order_waiting_delivery",
+                  "commerce.user_provider_account_created",
+                  "commerce.user_provider_account_document_requested",
+                  "commerce.admin_refund_requested",
+                  "commerce.admin_refund_failed",
+                  "commerce.admin_manual_order_created",
+                  "commerce.admin_order_concluded",
+                  "commerce.admin_order_failed",
+                  "commerce.system_order_error",
+                  "commerce.system_general_error"
+                ]
+              }
+            }
+          },
+          {
+            "name": "services",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "id",
+                  "commerce",
+                  "key"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationPaginateResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createOrUpdateTenantNotification",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertNotificationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicNotificationEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/notifications/{tenantId}/{event}/{provider}": {
+      "get": {
+        "operationId": "getTenantNotificationByEventAndProvider",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "event",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicNotificationEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/notifications/{tenantId}/{event}/{provider}/enable": {
+      "patch": {
+        "operationId": "enableTenantNotification",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "event",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/notifications/{tenantId}/{event}/{provider}/disable": {
+      "patch": {
+        "operationId": "disableTenantNotification",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "event",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          },
+          "403": {
+            "description": "Need user with one of these roles: superAdmin, integration, admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/integrations": {
+      "get": {
+        "operationId": "list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IntegrationResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Integration API key or JWT required"
+          }
+        },
+        "tags": [
+          "Integration"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
         ]
       }
     },
@@ -9802,7 +9814,7 @@
   "info": {
     "title": "Pixway ID",
     "description": "",
-    "version": "0.9.107",
+    "version": "0.9.119",
     "contact": {}
   },
   "tags": [],
@@ -10670,7 +10682,8 @@
         "type": "string",
         "enum": [
           "userDocument",
-          "export"
+          "export",
+          "emailLogo"
         ]
       },
       "AssetAccess": {
@@ -12659,6 +12672,10 @@
         "properties": {
           "name": {
             "type": "string"
+          },
+          "emailLogoAssetId": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
@@ -12984,7 +13001,8 @@
           },
           "tenantId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "contextId": {
             "type": "string"
@@ -13026,7 +13044,6 @@
           "id",
           "createdAt",
           "updatedAt",
-          "tenantId",
           "contextId",
           "active",
           "data",
@@ -13374,6 +13391,172 @@
       "DuplicatedContextException": {
         "type": "object",
         "properties": {}
+      },
+      "AssetTypeEnum": {
+        "type": "string",
+        "enum": [
+          "image",
+          "document"
+        ]
+      },
+      "AssetTargetEnum": {
+        "type": "string",
+        "enum": [
+          "userDocument",
+          "export",
+          "emailLogo"
+        ]
+      },
+      "RequestAssetUploadDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "default": "image",
+            "example": "image",
+            "$ref": "#/components/schemas/AssetTypeEnum"
+          },
+          "target": {
+            "example": "userDocument",
+            "$ref": "#/components/schemas/AssetTargetEnum"
+          }
+        },
+        "required": [
+          "type",
+          "target"
+        ]
+      },
+      "CloudinaryQueryParamsDto": {
+        "type": "object",
+        "properties": {
+          "filename_override": {
+            "type": "boolean",
+            "example": false
+          },
+          "public_id": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "number",
+            "example": 1666215568
+          },
+          "unique_filename": {
+            "type": "boolean",
+            "example": true
+          },
+          "upload_preset": {
+            "type": "string",
+            "example": "upload_preset",
+            "nullable": true
+          }
+        },
+        "required": [
+          "filename_override",
+          "public_id",
+          "timestamp",
+          "unique_filename"
+        ]
+      },
+      "CloudinaryProviderUploadParamsDto": {
+        "type": "object",
+        "properties": {
+          "apiKey": {
+            "type": "string",
+            "example": "000000000000"
+          },
+          "timestamp": {
+            "type": "number",
+            "example": 1666215568
+          },
+          "publicId": {
+            "type": "string",
+            "example": "directory/3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          },
+          "signature": {
+            "type": "string",
+            "example": "bfd09f95f331f558cbd1320e67aa8d488770583e"
+          },
+          "signedParams": {
+            "type": "string",
+            "example": "filename_override=false&public_id=directory/3fa85f64-5717-4562-b3fc-2c963f66afa6&timestamp=1666215568&unique_filename=true&upload_preset=upload_preset&api_key=000000000000&signature=bfd09f95f331f558cbd1320e67aa8d488770583e"
+          },
+          "queryParams": {
+            "$ref": "#/components/schemas/CloudinaryQueryParamsDto"
+          },
+          "uploadPreset": {
+            "type": "string",
+            "example": "upload_preset",
+            "nullable": true
+          }
+        },
+        "required": [
+          "apiKey",
+          "timestamp",
+          "publicId",
+          "signature",
+          "signedParams",
+          "queryParams"
+        ]
+      },
+      "AssetEntityWithProviderUploadParamsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "example": "image",
+            "$ref": "#/components/schemas/AssetType"
+          },
+          "status": {
+            "example": "associated",
+            "$ref": "#/components/schemas/AssetStatus"
+          },
+          "provider": {
+            "example": "cloudinary",
+            "$ref": "#/components/schemas/AssetProvider"
+          },
+          "directLink": {
+            "type": "string",
+            "example": "https://dummyimage.com/200x200/fff/000",
+            "nullable": true
+          },
+          "target": {
+            "example": "userDocument",
+            "$ref": "#/components/schemas/AssetTarget"
+          },
+          "access": {
+            "example": "public",
+            "nullable": true,
+            "$ref": "#/components/schemas/AssetAccess"
+          },
+          "providerUploadParams": {
+            "$ref": "#/components/schemas/CloudinaryProviderUploadParamsDto"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "tenantId",
+          "type",
+          "status",
+          "provider",
+          "target",
+          "providerUploadParams"
+        ]
       },
       "CreateTenantAccessDto": {
         "type": "object",
@@ -14126,169 +14309,138 @@
           "value"
         ]
       },
-      "AssetTypeEnum": {
-        "type": "string",
-        "enum": [
-          "image",
-          "document"
-        ]
-      },
-      "AssetTargetEnum": {
-        "type": "string",
-        "enum": [
-          "userDocument",
-          "export"
-        ]
-      },
-      "RequestAssetUploadDto": {
+      "CreateTenantInputDto": {
         "type": "object",
         "properties": {
-          "type": {
-            "default": "image",
-            "example": "image",
-            "$ref": "#/components/schemas/AssetTypeEnum"
-          },
-          "target": {
-            "example": "userDocument",
-            "$ref": "#/components/schemas/AssetTargetEnum"
-          }
-        },
-        "required": [
-          "type",
-          "target"
-        ]
-      },
-      "CloudinaryQueryParamsDto": {
-        "type": "object",
-        "properties": {
-          "filename_override": {
-            "type": "boolean",
-            "example": false
-          },
-          "public_id": {
+          "contextId": {
             "type": "string"
           },
-          "timestamp": {
-            "type": "number",
-            "example": 1666215568
+          "label": {
+            "type": "string",
+            "example": "Input label"
           },
-          "unique_filename": {
+          "description": {
+            "type": "string",
+            "example": "Input description"
+          },
+          "type": {
+            "example": "cpf",
+            "$ref": "#/components/schemas/DataTypesEnum"
+          },
+          "order": {
+            "type": "number",
+            "example": 1
+          },
+          "mandatory": {
             "type": "boolean",
             "example": true
           },
-          "upload_preset": {
-            "type": "string",
-            "example": "upload_preset",
-            "nullable": true
-          }
-        },
-        "required": [
-          "filename_override",
-          "public_id",
-          "timestamp",
-          "unique_filename"
-        ]
-      },
-      "CloudinaryProviderUploadParamsDto": {
-        "type": "object",
-        "properties": {
-          "apiKey": {
-            "type": "string",
-            "example": "000000000000"
+          "active": {
+            "type": "boolean",
+            "example": true
           },
-          "timestamp": {
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantInputSelectOptionDto"
+            }
+          },
+          "data": {
+            "type": "object",
+            "example": {
+              "key": "value"
+            }
+          },
+          "step": {
             "type": "number",
-            "example": 1666215568
+            "example": 1
           },
-          "publicId": {
+          "attributeName": {
             "type": "string",
-            "example": "directory/3fa85f64-5717-4562-b3fc-2c963f66afa6"
-          },
-          "signature": {
-            "type": "string",
-            "example": "bfd09f95f331f558cbd1320e67aa8d488770583e"
-          },
-          "signedParams": {
-            "type": "string",
-            "example": "filename_override=false&public_id=directory/3fa85f64-5717-4562-b3fc-2c963f66afa6&timestamp=1666215568&unique_filename=true&upload_preset=upload_preset&api_key=000000000000&signature=bfd09f95f331f558cbd1320e67aa8d488770583e"
-          },
-          "queryParams": {
-            "$ref": "#/components/schemas/CloudinaryQueryParamsDto"
-          },
-          "uploadPreset": {
-            "type": "string",
-            "example": "upload_preset",
-            "nullable": true
+            "example": "email"
           }
         },
         "required": [
-          "apiKey",
-          "timestamp",
-          "publicId",
-          "signature",
-          "signedParams",
-          "queryParams"
+          "contextId",
+          "label",
+          "description",
+          "type",
+          "order",
+          "mandatory",
+          "active"
         ]
       },
-      "AssetEntityWithProviderUploadParamsDto": {
+      "UpdateTenantInputDto": {
         "type": "object",
         "properties": {
-          "id": {
+          "label": {
             "type": "string",
-            "format": "uuid"
+            "example": "Input label"
           },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "tenantId": {
+          "description": {
             "type": "string",
-            "format": "uuid"
+            "example": "Input description"
           },
-          "type": {
-            "example": "image",
-            "$ref": "#/components/schemas/AssetType"
+          "order": {
+            "type": "number",
+            "example": 1
           },
-          "status": {
-            "example": "associated",
-            "$ref": "#/components/schemas/AssetStatus"
+          "mandatory": {
+            "type": "boolean",
+            "example": true
           },
-          "provider": {
-            "example": "cloudinary",
-            "$ref": "#/components/schemas/AssetProvider"
+          "active": {
+            "type": "boolean",
+            "example": true
           },
-          "directLink": {
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantInputSelectOptionDto"
+            }
+          },
+          "data": {
+            "type": "object",
+            "example": {
+              "key": "value"
+            }
+          },
+          "step": {
+            "type": "number",
+            "example": 1
+          },
+          "attributeName": {
             "type": "string",
-            "example": "https://dummyimage.com/200x200/fff/000",
-            "nullable": true
-          },
-          "target": {
-            "example": "userDocument",
-            "$ref": "#/components/schemas/AssetTarget"
-          },
-          "access": {
-            "example": "public",
-            "nullable": true,
-            "$ref": "#/components/schemas/AssetAccess"
-          },
-          "providerUploadParams": {
-            "$ref": "#/components/schemas/CloudinaryProviderUploadParamsDto"
+            "example": "email"
           }
         },
         "required": [
-          "id",
-          "createdAt",
-          "updatedAt",
-          "tenantId",
-          "type",
-          "status",
-          "provider",
-          "target",
-          "providerUploadParams"
+          "label",
+          "description",
+          "order",
+          "mandatory",
+          "active"
+        ]
+      },
+      "TenantInputPaginateResponseDto": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantInputEntityDto"
+            }
+          }
+        },
+        "required": [
+          "meta",
+          "items"
         ]
       },
       "ReceiverProfileEnum": {
@@ -14535,14 +14687,25 @@
       "DefaultNotificationEventEnum": {
         "type": "string",
         "enum": [
-          "user_kyc_approved",
-          "user_kyc_rejected",
+          "auth_code",
+          "system_wallet_low_balances",
+          "default_account_confirmation",
+          "invite_account_confirmation",
+          "signup_account_confirmation",
+          "signup_code_account_confirmation",
+          "finish_account_creation",
+          "password_recover_by_code",
+          "password_recover_by_link",
           "user_loyalty_staking_ready_to_redeem",
-          "user_loyalty_staking_received",
-          "admin_kyc_approved",
-          "admin_kyc_rejected",
-          "admin_tenant_payment_failed",
           "admin_user_account_exclusion_requested",
+          "admin_tenant_payment_failed",
+          "kyc_approval_request",
+          "kyc_require_user_review",
+          "kyc_user_approved",
+          "kyc_admin_approved",
+          "kyc_user_rejected",
+          "kyc_admin_rejected",
+          "user_loyalty_staking_received",
           "commissionPayment",
           "cashbackPayment",
           "key.loyaltyDeferredWithoutProfile",
@@ -14564,6 +14727,7 @@
           "commerce.user_provider_account_created",
           "commerce.user_provider_account_document_requested",
           "commerce.admin_refund_requested",
+          "commerce.admin_refund_failed",
           "commerce.admin_manual_order_created",
           "commerce.admin_order_concluded",
           "commerce.admin_order_failed",
@@ -14583,7 +14747,7 @@
         "type": "object",
         "properties": {
           "event": {
-            "example": "admin_kyc_approved",
+            "example": "kyc_admin_approved",
             "nullable": false,
             "$ref": "#/components/schemas/DefaultNotificationEventEnum"
           },
@@ -14693,140 +14857,6 @@
           "publicData",
           "userId",
           "active"
-        ]
-      },
-      "CreateTenantInputDto": {
-        "type": "object",
-        "properties": {
-          "contextId": {
-            "type": "string"
-          },
-          "label": {
-            "type": "string",
-            "example": "Input label"
-          },
-          "description": {
-            "type": "string",
-            "example": "Input description"
-          },
-          "type": {
-            "example": "cpf",
-            "$ref": "#/components/schemas/DataTypesEnum"
-          },
-          "order": {
-            "type": "number",
-            "example": 1
-          },
-          "mandatory": {
-            "type": "boolean",
-            "example": true
-          },
-          "active": {
-            "type": "boolean",
-            "example": true
-          },
-          "options": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TenantInputSelectOptionDto"
-            }
-          },
-          "data": {
-            "type": "object",
-            "example": {
-              "key": "value"
-            }
-          },
-          "step": {
-            "type": "number",
-            "example": 1
-          },
-          "attributeName": {
-            "type": "string",
-            "example": "email"
-          }
-        },
-        "required": [
-          "contextId",
-          "label",
-          "description",
-          "type",
-          "order",
-          "mandatory",
-          "active"
-        ]
-      },
-      "UpdateTenantInputDto": {
-        "type": "object",
-        "properties": {
-          "label": {
-            "type": "string",
-            "example": "Input label"
-          },
-          "description": {
-            "type": "string",
-            "example": "Input description"
-          },
-          "order": {
-            "type": "number",
-            "example": 1
-          },
-          "mandatory": {
-            "type": "boolean",
-            "example": true
-          },
-          "active": {
-            "type": "boolean",
-            "example": true
-          },
-          "options": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TenantInputSelectOptionDto"
-            }
-          },
-          "data": {
-            "type": "object",
-            "example": {
-              "key": "value"
-            }
-          },
-          "step": {
-            "type": "number",
-            "example": 1
-          },
-          "attributeName": {
-            "type": "string",
-            "example": "email"
-          }
-        },
-        "required": [
-          "label",
-          "description",
-          "order",
-          "mandatory",
-          "active"
-        ]
-      },
-      "TenantInputPaginateResponseDto": {
-        "type": "object",
-        "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMetaDto"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PaginationLinksDto"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TenantInputEntityDto"
-            }
-          }
-        },
-        "required": [
-          "meta",
-          "items"
         ]
       },
       "BillingPlanLimitDto": {

@@ -379,6 +379,7 @@ export enum AssetProvider {
 export enum AssetTarget {
   UserDocument = 'userDocument',
   Export = 'export',
+  EmailLogo = 'emailLogo',
 }
 
 export enum AssetAccess {
@@ -1386,6 +1387,8 @@ export interface TenantClientResponseDto {
 
 export interface UpdateTenantProfileDto {
   name?: string;
+  /** @format uuid */
+  emailLogoAssetId?: string;
 }
 
 export interface UpdateTenantDto {
@@ -1519,7 +1522,7 @@ export interface TenantContextDto {
   /** @format date-time */
   updatedAt: string;
   /** @format uuid */
-  tenantId: string;
+  tenantId?: string | null;
   contextId: string;
   context?: ContextDto;
   /** @example true */
@@ -1695,6 +1698,79 @@ export interface UpdateContextsDto {
 }
 
 export type DuplicatedContextException = object;
+
+export enum AssetTypeEnum {
+  Image = 'image',
+  Document = 'document',
+}
+
+export enum AssetTargetEnum {
+  UserDocument = 'userDocument',
+  Export = 'export',
+  EmailLogo = 'emailLogo',
+}
+
+export interface RequestAssetUploadDto {
+  /**
+   * @default "image"
+   * @example "image"
+   */
+  type: AssetTypeEnum;
+  /** @example "userDocument" */
+  target: AssetTargetEnum;
+}
+
+export interface CloudinaryQueryParamsDto {
+  /** @example false */
+  filename_override: boolean;
+  public_id: string;
+  /** @example 1666215568 */
+  timestamp: number;
+  /** @example true */
+  unique_filename: boolean;
+  /** @example "upload_preset" */
+  upload_preset?: string | null;
+}
+
+export interface CloudinaryProviderUploadParamsDto {
+  /** @example "000000000000" */
+  apiKey: string;
+  /** @example 1666215568 */
+  timestamp: number;
+  /** @example "directory/3fa85f64-5717-4562-b3fc-2c963f66afa6" */
+  publicId: string;
+  /** @example "bfd09f95f331f558cbd1320e67aa8d488770583e" */
+  signature: string;
+  /** @example "filename_override=false&public_id=directory/3fa85f64-5717-4562-b3fc-2c963f66afa6&timestamp=1666215568&unique_filename=true&upload_preset=upload_preset&api_key=000000000000&signature=bfd09f95f331f558cbd1320e67aa8d488770583e" */
+  signedParams: string;
+  queryParams: CloudinaryQueryParamsDto;
+  /** @example "upload_preset" */
+  uploadPreset?: string | null;
+}
+
+export interface AssetEntityWithProviderUploadParamsDto {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format uuid */
+  tenantId: string;
+  /** @example "image" */
+  type: AssetType;
+  /** @example "associated" */
+  status: AssetStatus;
+  /** @example "cloudinary" */
+  provider: AssetProvider;
+  /** @example "https://dummyimage.com/200x200/fff/000" */
+  directLink?: string | null;
+  /** @example "userDocument" */
+  target: AssetTarget;
+  /** @example "public" */
+  access?: AssetAccess | null;
+  providerUploadParams: CloudinaryProviderUploadParamsDto;
+}
 
 export interface CreateTenantAccessDto {
   /** @format uuid */
@@ -2006,76 +2082,53 @@ export interface CreateWhitelistEntryDto {
   additionalData?: object;
 }
 
-export enum AssetTypeEnum {
-  Image = 'image',
-  Document = 'document',
-}
-
-export enum AssetTargetEnum {
-  UserDocument = 'userDocument',
-  Export = 'export',
-}
-
-export interface RequestAssetUploadDto {
-  /**
-   * @default "image"
-   * @example "image"
-   */
-  type: AssetTypeEnum;
-  /** @example "userDocument" */
-  target: AssetTargetEnum;
-}
-
-export interface CloudinaryQueryParamsDto {
-  /** @example false */
-  filename_override: boolean;
-  public_id: string;
-  /** @example 1666215568 */
-  timestamp: number;
+export interface CreateTenantInputDto {
+  contextId: string;
+  /** @example "Input label" */
+  label: string;
+  /** @example "Input description" */
+  description: string;
+  /** @example "cpf" */
+  type: DataTypesEnum;
+  /** @example 1 */
+  order: number;
   /** @example true */
-  unique_filename: boolean;
-  /** @example "upload_preset" */
-  upload_preset?: string | null;
+  mandatory: boolean;
+  /** @example true */
+  active: boolean;
+  options?: TenantInputSelectOptionDto[];
+  /** @example {"key":"value"} */
+  data?: object;
+  /** @example 1 */
+  step?: number;
+  /** @example "email" */
+  attributeName?: string;
 }
 
-export interface CloudinaryProviderUploadParamsDto {
-  /** @example "000000000000" */
-  apiKey: string;
-  /** @example 1666215568 */
-  timestamp: number;
-  /** @example "directory/3fa85f64-5717-4562-b3fc-2c963f66afa6" */
-  publicId: string;
-  /** @example "bfd09f95f331f558cbd1320e67aa8d488770583e" */
-  signature: string;
-  /** @example "filename_override=false&public_id=directory/3fa85f64-5717-4562-b3fc-2c963f66afa6&timestamp=1666215568&unique_filename=true&upload_preset=upload_preset&api_key=000000000000&signature=bfd09f95f331f558cbd1320e67aa8d488770583e" */
-  signedParams: string;
-  queryParams: CloudinaryQueryParamsDto;
-  /** @example "upload_preset" */
-  uploadPreset?: string | null;
+export interface UpdateTenantInputDto {
+  /** @example "Input label" */
+  label: string;
+  /** @example "Input description" */
+  description: string;
+  /** @example 1 */
+  order: number;
+  /** @example true */
+  mandatory: boolean;
+  /** @example true */
+  active: boolean;
+  options?: TenantInputSelectOptionDto[];
+  /** @example {"key":"value"} */
+  data?: object;
+  /** @example 1 */
+  step?: number;
+  /** @example "email" */
+  attributeName?: string;
 }
 
-export interface AssetEntityWithProviderUploadParamsDto {
-  /** @format uuid */
-  id: string;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  /** @format uuid */
-  tenantId: string;
-  /** @example "image" */
-  type: AssetType;
-  /** @example "associated" */
-  status: AssetStatus;
-  /** @example "cloudinary" */
-  provider: AssetProvider;
-  /** @example "https://dummyimage.com/200x200/fff/000" */
-  directLink?: string | null;
-  /** @example "userDocument" */
-  target: AssetTarget;
-  /** @example "public" */
-  access?: AssetAccess | null;
-  providerUploadParams: CloudinaryProviderUploadParamsDto;
+export interface TenantInputPaginateResponseDto {
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+  items: TenantInputEntityDto[];
 }
 
 export enum ReceiverProfileEnum {
@@ -2161,14 +2214,25 @@ export interface OneSignalNotificationProviderParamsDto {
 }
 
 export enum DefaultNotificationEventEnum {
-  UserKycApproved = 'user_kyc_approved',
-  UserKycRejected = 'user_kyc_rejected',
+  AuthCode = 'auth_code',
+  SystemWalletLowBalances = 'system_wallet_low_balances',
+  DefaultAccountConfirmation = 'default_account_confirmation',
+  InviteAccountConfirmation = 'invite_account_confirmation',
+  SignupAccountConfirmation = 'signup_account_confirmation',
+  SignupCodeAccountConfirmation = 'signup_code_account_confirmation',
+  FinishAccountCreation = 'finish_account_creation',
+  PasswordRecoverByCode = 'password_recover_by_code',
+  PasswordRecoverByLink = 'password_recover_by_link',
   UserLoyaltyStakingReadyToRedeem = 'user_loyalty_staking_ready_to_redeem',
-  UserLoyaltyStakingReceived = 'user_loyalty_staking_received',
-  AdminKycApproved = 'admin_kyc_approved',
-  AdminKycRejected = 'admin_kyc_rejected',
-  AdminTenantPaymentFailed = 'admin_tenant_payment_failed',
   AdminUserAccountExclusionRequested = 'admin_user_account_exclusion_requested',
+  AdminTenantPaymentFailed = 'admin_tenant_payment_failed',
+  KycApprovalRequest = 'kyc_approval_request',
+  KycRequireUserReview = 'kyc_require_user_review',
+  KycUserApproved = 'kyc_user_approved',
+  KycAdminApproved = 'kyc_admin_approved',
+  KycUserRejected = 'kyc_user_rejected',
+  KycAdminRejected = 'kyc_admin_rejected',
+  UserLoyaltyStakingReceived = 'user_loyalty_staking_received',
   CommissionPayment = 'commissionPayment',
   CashbackPayment = 'cashbackPayment',
   KeyLoyaltyDeferredWithoutProfile = 'key.loyaltyDeferredWithoutProfile',
@@ -2190,6 +2254,7 @@ export enum DefaultNotificationEventEnum {
   CommerceUserProviderAccountCreated = 'commerce.user_provider_account_created',
   CommerceUserProviderAccountDocumentRequested = 'commerce.user_provider_account_document_requested',
   CommerceAdminRefundRequested = 'commerce.admin_refund_requested',
+  CommerceAdminRefundFailed = 'commerce.admin_refund_failed',
   CommerceAdminManualOrderCreated = 'commerce.admin_manual_order_created',
   CommerceAdminOrderConcluded = 'commerce.admin_order_concluded',
   CommerceAdminOrderFailed = 'commerce.admin_order_failed',
@@ -2204,7 +2269,7 @@ export enum NotificationProviderEnum {
 }
 
 export interface UpsertNotificationDto {
-  /** @example "admin_kyc_approved" */
+  /** @example "kyc_admin_approved" */
   event: DefaultNotificationEventEnum;
   /** @example "sendinblue_brevo_email" */
   provider: NotificationProviderEnum;
@@ -2245,55 +2310,6 @@ export interface IntegrationResponseDto {
   createdAt?: string;
   /** @format date-time */
   updatedAt?: string;
-}
-
-export interface CreateTenantInputDto {
-  contextId: string;
-  /** @example "Input label" */
-  label: string;
-  /** @example "Input description" */
-  description: string;
-  /** @example "cpf" */
-  type: DataTypesEnum;
-  /** @example 1 */
-  order: number;
-  /** @example true */
-  mandatory: boolean;
-  /** @example true */
-  active: boolean;
-  options?: TenantInputSelectOptionDto[];
-  /** @example {"key":"value"} */
-  data?: object;
-  /** @example 1 */
-  step?: number;
-  /** @example "email" */
-  attributeName?: string;
-}
-
-export interface UpdateTenantInputDto {
-  /** @example "Input label" */
-  label: string;
-  /** @example "Input description" */
-  description: string;
-  /** @example 1 */
-  order: number;
-  /** @example true */
-  mandatory: boolean;
-  /** @example true */
-  active: boolean;
-  options?: TenantInputSelectOptionDto[];
-  /** @example {"key":"value"} */
-  data?: object;
-  /** @example 1 */
-  step?: number;
-  /** @example "email" */
-  attributeName?: string;
-}
-
-export interface TenantInputPaginateResponseDto {
-  meta: PaginationMetaDto;
-  links?: PaginationLinksDto;
-  items: TenantInputEntityDto[];
 }
 
 export interface BillingPlanLimitDto {
@@ -4336,7 +4352,7 @@ export namespace Tenant {
    * @request PUT:/tenant/profile/{tenantId}
    * @secure
    * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration, admin
    */
   export namespace UpdateProfile {
     export type RequestParams = {
@@ -4719,6 +4735,25 @@ export namespace Contexts {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = void;
+  }
+}
+
+export namespace Assets {
+  /**
+   * @description Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)
+   * @tags Assets
+   * @name RequestUpload
+   * @request POST:/assets/{tenantId}
+   * @response `201` `AssetEntityWithProviderUploadParamsDto` Asset upload request successfully created!
+   */
+  export namespace RequestUpload {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = RequestAssetUploadDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = AssetEntityWithProviderUploadParamsDto;
   }
 }
 
@@ -5173,22 +5208,116 @@ export namespace Whitelists {
   }
 }
 
-export namespace Assets {
+export namespace TenantInput {
   /**
-   * @description Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)
-   * @tags Assets
-   * @name RequestUpload
-   * @request POST:/assets/{tenantId}
-   * @response `201` `AssetEntityWithProviderUploadParamsDto` Asset upload request successfully created!
+   * No description
+   * @tags Tenant Input
+   * @name CreateTenantInput
+   * @request POST:/tenant-input/{tenantId}
+   * @secure
+   * @response `201` `TenantInputEntityDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
    */
-  export namespace RequestUpload {
+  export namespace CreateTenantInput {
     export type RequestParams = {
       tenantId: string;
     };
     export type RequestQuery = {};
-    export type RequestBody = RequestAssetUploadDto;
+    export type RequestBody = CreateTenantInputDto;
     export type RequestHeaders = {};
-    export type ResponseBody = AssetEntityWithProviderUploadParamsDto;
+    export type ResponseBody = TenantInputEntityDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Input
+   * @name FindTenantInput
+   * @request GET:/tenant-input/{tenantId}
+   * @secure
+   * @response `200` `TenantInputPaginateResponseDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
+   */
+  export namespace FindTenantInput {
+    export type RequestParams = {
+      tenantId: string;
+    };
+    export type RequestQuery = {
+      /** @default 1 */
+      page?: number;
+      /** @default 10 */
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantInputPaginateResponseDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Input
+   * @name UpdateByInputId
+   * @request PATCH:/tenant-input/{tenantId}/{inputId}
+   * @secure
+   * @response `201` `TenantInputEntityDto`
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
+   */
+  export namespace UpdateByInputId {
+    export type RequestParams = {
+      tenantId: string;
+      inputId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateTenantInputDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantInputEntityDto;
+  }
+  /**
+   * No description
+   * @tags Tenant Input
+   * @name FindTenantInputById
+   * @request GET:/tenant-input/{tenantId}/{inputId}
+   * @secure
+   * @response `401` `void` Unauthorized - Integration API key or JWT required
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
+   */
+  export namespace FindTenantInputById {
+    export type RequestParams = {
+      tenantId: string;
+      inputId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  } /**
+ * @description Get all tenant param by tenant and context
+ * @tags Tenant Input
+ * @name ListBySlugContext
+ * @request GET:/tenant-input/{tenantId}/slug/{slug}
+ * @response `200` `(TenantInputEntityDto)[]`
+ * @response `404` `{
+  \** @example 404 *\
+    statusCode: number,
+  \** @example "Tenant context 'slug' is disabled from 'tenant'" *\
+    message: string,
+  \** @example "Not Found" *\
+    error?: string,
+
+}`
+*/
+  export namespace ListBySlugContext {
+    export type RequestParams = {
+      tenantId: string;
+      slug: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TenantInputEntityDto[];
   }
 }
 
@@ -5201,7 +5330,7 @@ export namespace Notifications {
    * @secure
    * @response `204` `void`
    * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration, application, admin
    */
   export namespace DispatchNotificationEvent {
     export type RequestParams = {
@@ -5243,16 +5372,27 @@ export namespace Notifications {
       limit?: number;
       search?: string;
       providers?: ('one_signal' | 'sendinblue_brevo_email' | 'twilio_whatsapp')[];
-      /** @example ["admin_kyc_approved"] */
+      /** @example ["kyc_admin_approved"] */
       events?: (
-        | 'user_kyc_approved'
-        | 'user_kyc_rejected'
+        | 'auth_code'
+        | 'system_wallet_low_balances'
+        | 'default_account_confirmation'
+        | 'invite_account_confirmation'
+        | 'signup_account_confirmation'
+        | 'signup_code_account_confirmation'
+        | 'finish_account_creation'
+        | 'password_recover_by_code'
+        | 'password_recover_by_link'
         | 'user_loyalty_staking_ready_to_redeem'
-        | 'user_loyalty_staking_received'
-        | 'admin_kyc_approved'
-        | 'admin_kyc_rejected'
-        | 'admin_tenant_payment_failed'
         | 'admin_user_account_exclusion_requested'
+        | 'admin_tenant_payment_failed'
+        | 'kyc_approval_request'
+        | 'kyc_require_user_review'
+        | 'kyc_user_approved'
+        | 'kyc_admin_approved'
+        | 'kyc_user_rejected'
+        | 'kyc_admin_rejected'
+        | 'user_loyalty_staking_received'
         | 'commissionPayment'
         | 'cashbackPayment'
         | 'key.loyaltyDeferredWithoutProfile'
@@ -5274,6 +5414,7 @@ export namespace Notifications {
         | 'commerce.user_provider_account_created'
         | 'commerce.user_provider_account_document_requested'
         | 'commerce.admin_refund_requested'
+        | 'commerce.admin_refund_failed'
         | 'commerce.admin_manual_order_created'
         | 'commerce.admin_order_concluded'
         | 'commerce.admin_order_failed'
@@ -5386,119 +5527,6 @@ export namespace Integrations {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = IntegrationResponseDto[];
-  }
-}
-
-export namespace TenantInput {
-  /**
-   * No description
-   * @tags Tenant Input
-   * @name CreateTenantInput
-   * @request POST:/tenant-input/{tenantId}
-   * @secure
-   * @response `201` `TenantInputEntityDto`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
-   */
-  export namespace CreateTenantInput {
-    export type RequestParams = {
-      tenantId: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = CreateTenantInputDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = TenantInputEntityDto;
-  }
-  /**
-   * No description
-   * @tags Tenant Input
-   * @name FindTenantInput
-   * @request GET:/tenant-input/{tenantId}
-   * @secure
-   * @response `200` `TenantInputPaginateResponseDto`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
-   */
-  export namespace FindTenantInput {
-    export type RequestParams = {
-      tenantId: string;
-    };
-    export type RequestQuery = {
-      /** @default 1 */
-      page?: number;
-      /** @default 10 */
-      limit?: number;
-      search?: string;
-      sortBy?: string;
-      orderBy?: OrderByEnum;
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = TenantInputPaginateResponseDto;
-  }
-  /**
-   * No description
-   * @tags Tenant Input
-   * @name UpdateByInputId
-   * @request PATCH:/tenant-input/{tenantId}/{inputId}
-   * @secure
-   * @response `201` `TenantInputEntityDto`
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
-   */
-  export namespace UpdateByInputId {
-    export type RequestParams = {
-      tenantId: string;
-      inputId: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = UpdateTenantInputDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = TenantInputEntityDto;
-  }
-  /**
-   * No description
-   * @tags Tenant Input
-   * @name FindTenantInputById
-   * @request GET:/tenant-input/{tenantId}/{inputId}
-   * @secure
-   * @response `401` `void` Unauthorized - Integration API key or JWT required
-   * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, admin, integration
-   */
-  export namespace FindTenantInputById {
-    export type RequestParams = {
-      tenantId: string;
-      inputId: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = any;
-  } /**
- * @description Get all tenant param by tenant and context
- * @tags Tenant Input
- * @name ListBySlugContext
- * @request GET:/tenant-input/{tenantId}/slug/{slug}
- * @response `200` `(TenantInputEntityDto)[]`
- * @response `404` `{
-  \** @example 404 *\
-    statusCode: number,
-  \** @example "Tenant context 'slug' is disabled from 'tenant'" *\
-    message: string,
-  \** @example "Not Found" *\
-    error?: string,
-
-}`
-*/
-  export namespace ListBySlugContext {
-    export type RequestParams = {
-      tenantId: string;
-      slug: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = TenantInputEntityDto[];
   }
 }
 
@@ -5927,7 +5955,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title Pixway ID
- * @version 0.9.107
+ * @version 0.9.119
  * @baseUrl https://pixwayid.stg.w3block.io
  * @contact
  */
@@ -7909,7 +7937,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PUT:/tenant/profile/{tenantId}
      * @secure
      * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration, admin
      */
     updateProfile: (tenantId: string, data: UpdateTenantProfileDto, params: RequestParams = {}) =>
       this.request<any, void | HttpExceptionDto>({
@@ -8355,6 +8383,25 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/contexts/${id}`,
         method: 'DELETE',
         secure: true,
+        ...params,
+      }),
+  };
+  assets = {
+    /**
+     * @description Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)
+     *
+     * @tags Assets
+     * @name RequestUpload
+     * @request POST:/assets/{tenantId}
+     * @response `201` `AssetEntityWithProviderUploadParamsDto` Asset upload request successfully created!
+     */
+    requestUpload: (tenantId: string, data: RequestAssetUploadDto, params: RequestParams = {}) =>
+      this.request<AssetEntityWithProviderUploadParamsDto, any>({
+        path: `/assets/${tenantId}`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
         ...params,
       }),
   };
@@ -8851,232 +8898,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
-  assets = {
-    /**
-     * @description Creates a new request to upload some asset (image or pdf) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)
-     *
-     * @tags Assets
-     * @name RequestUpload
-     * @request POST:/assets/{tenantId}
-     * @response `201` `AssetEntityWithProviderUploadParamsDto` Asset upload request successfully created!
-     */
-    requestUpload: (tenantId: string, data: RequestAssetUploadDto, params: RequestParams = {}) =>
-      this.request<AssetEntityWithProviderUploadParamsDto, any>({
-        path: `/assets/${tenantId}`,
-        method: 'POST',
-        body: data,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-  };
-  notifications = {
-    /**
-     * No description
-     *
-     * @tags Notifications
-     * @name DispatchNotificationEvent
-     * @request POST:/notifications/{tenantId}/event
-     * @secure
-     * @response `204` `void`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration
-     */
-    dispatchNotificationEvent: (tenantId: string, data: DispatchNotificationEventDto, params: RequestParams = {}) =>
-      this.request<void, void | HttpExceptionDto>({
-        path: `/notifications/${tenantId}/event`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Notifications
-     * @name ListTenantNotifications
-     * @request GET:/notifications/{tenantId}
-     * @secure
-     * @response `200` `NotificationPaginateResponseDto`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
-     */
-    listTenantNotifications: (
-      tenantId: string,
-      query?: {
-        /** @example "2022-01-30T10:30:40-03:00" */
-        createdAt?: string;
-        sortBy?: string[];
-        orderBy?: OrderByEnum;
-        /**
-         * @default 1
-         * @example 1
-         */
-        page?: number;
-        /**
-         * @default 10
-         * @example 10
-         */
-        limit?: number;
-        search?: string;
-        providers?: ('one_signal' | 'sendinblue_brevo_email' | 'twilio_whatsapp')[];
-        /** @example ["admin_kyc_approved"] */
-        events?: (
-          | 'user_kyc_approved'
-          | 'user_kyc_rejected'
-          | 'user_loyalty_staking_ready_to_redeem'
-          | 'user_loyalty_staking_received'
-          | 'admin_kyc_approved'
-          | 'admin_kyc_rejected'
-          | 'admin_tenant_payment_failed'
-          | 'admin_user_account_exclusion_requested'
-          | 'commissionPayment'
-          | 'cashbackPayment'
-          | 'key.loyaltyDeferredWithoutProfile'
-          | 'key.loyaltyDeferredForCommission'
-          | 'key.loyaltyDeferredForCashback'
-          | 'key.token_transfer_in'
-          | 'key.token_transfer_out'
-          | 'key.ecommerce_order_created'
-          | 'key.admin_withdraw_requested'
-          | 'key.admin_withdraw_approved'
-          | 'key.admin_withdraw_denied'
-          | 'key.system_general_error'
-          | 'key.system_contact_creation'
-          | 'key.system_ecommerce_error'
-          | 'commerce.user_manual_order_created'
-          | 'commerce.user_order_waiting_delivery'
-          | 'commerce.user_order_concluded'
-          | 'commerce.destination_user_order_waiting_delivery'
-          | 'commerce.user_provider_account_created'
-          | 'commerce.user_provider_account_document_requested'
-          | 'commerce.admin_refund_requested'
-          | 'commerce.admin_manual_order_created'
-          | 'commerce.admin_order_concluded'
-          | 'commerce.admin_order_failed'
-          | 'commerce.system_order_error'
-          | 'commerce.system_general_error'
-        )[];
-        services?: ('id' | 'commerce' | 'key')[];
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<NotificationPaginateResponseDto, void | HttpExceptionDto>({
-        path: `/notifications/${tenantId}`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Notifications
-     * @name CreateOrUpdateTenantNotification
-     * @request POST:/notifications/{tenantId}
-     * @secure
-     * @response `200` `PublicNotificationEntityDto`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
-     */
-    createOrUpdateTenantNotification: (tenantId: string, data: UpsertNotificationDto, params: RequestParams = {}) =>
-      this.request<PublicNotificationEntityDto, void | HttpExceptionDto>({
-        path: `/notifications/${tenantId}`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Notifications
-     * @name GetTenantNotificationByEventAndProvider
-     * @request GET:/notifications/{tenantId}/{event}/{provider}
-     * @secure
-     * @response `200` `PublicNotificationEntityDto`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
-     */
-    getTenantNotificationByEventAndProvider: (
-      tenantId: string,
-      event: string,
-      provider: string,
-      params: RequestParams = {},
-    ) =>
-      this.request<PublicNotificationEntityDto, void | HttpExceptionDto>({
-        path: `/notifications/${tenantId}/${event}/${provider}`,
-        method: 'GET',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Notifications
-     * @name EnableTenantNotification
-     * @request PATCH:/notifications/{tenantId}/{event}/{provider}/enable
-     * @secure
-     * @response `204` `void`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
-     */
-    enableTenantNotification: (tenantId: string, event: string, provider: string, params: RequestParams = {}) =>
-      this.request<void, void | HttpExceptionDto>({
-        path: `/notifications/${tenantId}/${event}/${provider}/enable`,
-        method: 'PATCH',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Notifications
-     * @name DisableTenantNotification
-     * @request PATCH:/notifications/{tenantId}/{event}/{provider}/disable
-     * @secure
-     * @response `204` `void`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
-     */
-    disableTenantNotification: (tenantId: string, event: string, provider: string, params: RequestParams = {}) =>
-      this.request<void, void | HttpExceptionDto>({
-        path: `/notifications/${tenantId}/${event}/${provider}/disable`,
-        method: 'PATCH',
-        secure: true,
-        ...params,
-      }),
-  };
-  integrations = {
-    /**
-     * No description
-     *
-     * @tags Integration
-     * @name List
-     * @request GET:/integrations
-     * @secure
-     * @response `200` `(IntegrationResponseDto)[]`
-     * @response `401` `void` Unauthorized - Integration API key or JWT required
-     */
-    list: (params: RequestParams = {}) =>
-      this.request<IntegrationResponseDto[], void>({
-        path: `/integrations`,
-        method: 'GET',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-  };
   tenantInput = {
     /**
      * No description
@@ -9204,6 +9025,225 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       >({
         path: `/tenant-input/${tenantId}/slug/${slug}`,
         method: 'GET',
+        format: 'json',
+        ...params,
+      }),
+  };
+  notifications = {
+    /**
+     * No description
+     *
+     * @tags Notifications
+     * @name DispatchNotificationEvent
+     * @request POST:/notifications/{tenantId}/event
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, superAdmin, integration, application, admin
+     */
+    dispatchNotificationEvent: (tenantId: string, data: DispatchNotificationEventDto, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/notifications/${tenantId}/event`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Notifications
+     * @name ListTenantNotifications
+     * @request GET:/notifications/{tenantId}
+     * @secure
+     * @response `200` `NotificationPaginateResponseDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    listTenantNotifications: (
+      tenantId: string,
+      query?: {
+        /** @example "2022-01-30T10:30:40-03:00" */
+        createdAt?: string;
+        sortBy?: string[];
+        orderBy?: OrderByEnum;
+        /**
+         * @default 1
+         * @example 1
+         */
+        page?: number;
+        /**
+         * @default 10
+         * @example 10
+         */
+        limit?: number;
+        search?: string;
+        providers?: ('one_signal' | 'sendinblue_brevo_email' | 'twilio_whatsapp')[];
+        /** @example ["kyc_admin_approved"] */
+        events?: (
+          | 'auth_code'
+          | 'system_wallet_low_balances'
+          | 'default_account_confirmation'
+          | 'invite_account_confirmation'
+          | 'signup_account_confirmation'
+          | 'signup_code_account_confirmation'
+          | 'finish_account_creation'
+          | 'password_recover_by_code'
+          | 'password_recover_by_link'
+          | 'user_loyalty_staking_ready_to_redeem'
+          | 'admin_user_account_exclusion_requested'
+          | 'admin_tenant_payment_failed'
+          | 'kyc_approval_request'
+          | 'kyc_require_user_review'
+          | 'kyc_user_approved'
+          | 'kyc_admin_approved'
+          | 'kyc_user_rejected'
+          | 'kyc_admin_rejected'
+          | 'user_loyalty_staking_received'
+          | 'commissionPayment'
+          | 'cashbackPayment'
+          | 'key.loyaltyDeferredWithoutProfile'
+          | 'key.loyaltyDeferredForCommission'
+          | 'key.loyaltyDeferredForCashback'
+          | 'key.token_transfer_in'
+          | 'key.token_transfer_out'
+          | 'key.ecommerce_order_created'
+          | 'key.admin_withdraw_requested'
+          | 'key.admin_withdraw_approved'
+          | 'key.admin_withdraw_denied'
+          | 'key.system_general_error'
+          | 'key.system_contact_creation'
+          | 'key.system_ecommerce_error'
+          | 'commerce.user_manual_order_created'
+          | 'commerce.user_order_waiting_delivery'
+          | 'commerce.user_order_concluded'
+          | 'commerce.destination_user_order_waiting_delivery'
+          | 'commerce.user_provider_account_created'
+          | 'commerce.user_provider_account_document_requested'
+          | 'commerce.admin_refund_requested'
+          | 'commerce.admin_refund_failed'
+          | 'commerce.admin_manual_order_created'
+          | 'commerce.admin_order_concluded'
+          | 'commerce.admin_order_failed'
+          | 'commerce.system_order_error'
+          | 'commerce.system_general_error'
+        )[];
+        services?: ('id' | 'commerce' | 'key')[];
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<NotificationPaginateResponseDto, void | HttpExceptionDto>({
+        path: `/notifications/${tenantId}`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Notifications
+     * @name CreateOrUpdateTenantNotification
+     * @request POST:/notifications/{tenantId}
+     * @secure
+     * @response `200` `PublicNotificationEntityDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    createOrUpdateTenantNotification: (tenantId: string, data: UpsertNotificationDto, params: RequestParams = {}) =>
+      this.request<PublicNotificationEntityDto, void | HttpExceptionDto>({
+        path: `/notifications/${tenantId}`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Notifications
+     * @name GetTenantNotificationByEventAndProvider
+     * @request GET:/notifications/{tenantId}/{event}/{provider}
+     * @secure
+     * @response `200` `PublicNotificationEntityDto`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    getTenantNotificationByEventAndProvider: (
+      tenantId: string,
+      event: string,
+      provider: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<PublicNotificationEntityDto, void | HttpExceptionDto>({
+        path: `/notifications/${tenantId}/${event}/${provider}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Notifications
+     * @name EnableTenantNotification
+     * @request PATCH:/notifications/{tenantId}/{event}/{provider}/enable
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    enableTenantNotification: (tenantId: string, event: string, provider: string, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/notifications/${tenantId}/${event}/${provider}/enable`,
+        method: 'PATCH',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Notifications
+     * @name DisableTenantNotification
+     * @request PATCH:/notifications/{tenantId}/{event}/{provider}/disable
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     * @response `403` `HttpExceptionDto` Need user with one of these roles: superAdmin, integration, admin
+     */
+    disableTenantNotification: (tenantId: string, event: string, provider: string, params: RequestParams = {}) =>
+      this.request<void, void | HttpExceptionDto>({
+        path: `/notifications/${tenantId}/${event}/${provider}/disable`,
+        method: 'PATCH',
+        secure: true,
+        ...params,
+      }),
+  };
+  integrations = {
+    /**
+     * No description
+     *
+     * @tags Integration
+     * @name List
+     * @request GET:/integrations
+     * @secure
+     * @response `200` `(IntegrationResponseDto)[]`
+     * @response `401` `void` Unauthorized - Integration API key or JWT required
+     */
+    list: (params: RequestParams = {}) =>
+      this.request<IntegrationResponseDto[], void>({
+        path: `/integrations`,
+        method: 'GET',
+        secure: true,
         format: 'json',
         ...params,
       }),
